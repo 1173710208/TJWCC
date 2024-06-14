@@ -1,0 +1,1066 @@
+﻿@{
+    ViewBag.Title = "index";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script src="~/Content/js/datepicker/WdatePicker.js"></script>
+<script src="~/Areas/DataDisplay/Content/js/main.js"></script>
+<script src="~/Areas/DataDisplay/Content/js/echarts.min.js"></script>
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/dataClean.css" rel="stylesheet" />
+<div class="main-container">
+    <div class="left">
+        <div class="refresh">
+            <strong style="font-size:25px;padding-right:10px;align-items:center">数据统计</strong>
+            <button class="right17" onclick="reload(this)"><span class="glyphicon glyphicon-refresh right171"></span></button>
+        </div>
+        <div class="left1">
+            <div class="left1_left">
+                <strong class="left1_left_wenzi">当天原始数据和清洗数据统计：</strong>
+                <div style="padding-left:40px;padding-top:10px;display:flex;">
+                    <div>
+                        <img src="~/Areas/DataDisplay/Content/img/原始数据.png" style="padding-top:15px;padding-right:5px" />
+                        <div style="display: inline-flex; flex-direction: column;">
+                            <strong>当天原始数据总数</strong>
+                            <strong id="initialDataTotal"></strong>
+                        </div>
+                    </div>
+                    <div style="padding-left:20px">
+                        <img src="~/Areas/DataDisplay/Content/img/清洗数据.png" style="padding-top:15px;padding-right:5px" />
+                        <div style="display: inline-flex; flex-direction: column;">
+                            <strong>当天清洗数据总数</strong>
+                            <strong id="cleanDataToatl"></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="left1_left_echart"></div>
+            </div>
+            <div class="left1_right"></div>
+        </div>
+        <div class="left2">
+            <div class="top-bar" style="padding-left:20px">
+                <div class="dropdown right11" style="margin-right:15px">
+                    <button id="water_works" type="button" class="font13 dropdown-toggle right111"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <ul id="water_works_type" class="dropdown-menu right112">
+                    </ul>
+                </div>
+                <div class="dropdown right11">
+                    <button id="statistical" type="button" class="font13 dropdown-toggle right111"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px">
+                    </button>
+                    <ul id="statistical_type" class="dropdown-menu right112">
+                    </ul>
+                </div>
+                <div class="top-bar-data" style="padding-left:30px;width:100px">
+                    <div class="font18 topcontent1" style="font-weight:bold; color:black;">时间日期:</div>
+                </div>
+                <input id="sDate1" name="sDate1" type="text" class="form-control input-wdatepicker right1121" style="margin-right: 5px; height: 25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                <div class="top-bar1" style="width:30px;">
+                    <div class="font18 topcontent1" style="width: 30px; font-weight: bold; color: black;">到</div>
+                </div>
+                <input id="eDate1" name="eDate1" type="text" class="form-control input-wdatepicker right1121" style="margin-right: 5px; height: 25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                <span id="btn_search1" onclick="onclicksearch(this)" class="glyphicon glyphicon-search right1421" aria-hidden="true" style="margin-left:5px;"></span>
+            </div>
+        </div>
+        <div id="left3" class="left3">
+            @*<div  class="small_echart"></div>*@
+        </div>
+        <div class="left4">
+            <strong style="margin-left: 15px; font-size: 15px;">累计正常数据占比统计：</strong>
+            @*<div style="margin-left: 30px; margin-top: 10px; display: flex; flex-direction: row">
+                    <div style="width:20%">
+                            <span style="color: #96a0af;">本月累计正常数据</span>
+                            <strong id="accumulateNormalData" style="display: block; font-size: 30px; font-weight: bold"></strong>
+                        </div>
+                        <div style="margin-right:30px">
+                            <span style="color: #96a0af;"id="tongbiText">同比增加</span>
+                            <div style="margin-top: 10px; display: flex; justify-content: space-between">
+                                <img id="tongbiImg" src="~/Areas/DataDisplay/Content/img/增加.png" />
+                                <span id="equalAdd" style="color: #71df9a"></span>
+                            </div>
+                        </div>
+                        <div>
+                            <span style="color: #96a0af;" id="huanbiText">环比减少</span>
+                            <div style="margin-top:10px;display:flex;justify-content:space-between">
+                                <img id="huanbiImg" src="~/Areas/DataDisplay/Content/img/降低.png" />
+                                <span id="ringAdd" style="color: #cf4e2c"></span>
+                            </div>
+                        </div>
+                </div>*@
+            <div class="left4_echarts"></div>
+        </div>
+    </div>
+    <div class="right">
+        <div class="right1 ">
+            <div class="data_complie">
+                <strong style="font-size:25px;padding-right:20px">数据对照</strong>
+                <button class="right16" id="btn_download">导出excel</button>
+            </div>
+            <div class="top-bar">
+                <select id="ORGANIZEID" name="ORGANIZEID" class="form-control right1121 " onchange="organizeidSelect(this)">
+                    <option value="">请选择</option>
+                </select>
+                <div class="dropdown right11 ">
+                    <select id="AREATYPEO" name="AREATYPEO" class="form-control right1121 " onchange="onclickarea1(this)">
+                        <option value="" selected>请选择</option>
+                    </select>
+                </div>
+                <div class="top-bar-data">
+                    <div class="font18 topcontent1" style="font-weight:bold; color:black;margin-left:70px">时间日期:</div>
+                </div>
+                <input id="ssDate" name="sDate" type="text" class="form-control input-wdatepicker right1121" style="margin-right: 5px; height: 25px; width: 150px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                <div class="top-bar1" style="width:30px;">
+                    <div class="font18 topcontent1" style="width: 30px; font-weight: bold; color: black;">到</div>
+                </div>
+                <input id="eeDate" name="eDate" type="text" class="form-control input-wdatepicker right1121" style="margin-right: 5px; height: 25px; width: 150px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                <div class="dropdown right11 " style="width:316px">
+                    <select id="AREATYPET" name="AREATYPET" class="form-control right1121 " style="width: 316px; margin-top: 5px;" onchange="onclickarea2(this)">
+                        <option value="all" selected>全部节点</option>
+                    </select>
+                </div>
+                <div id="srk" style="width: 401px; height: 27px; color: black; background-color: #216fed; border: 1px solid #216fed; border-radius: 10px; margin-left: 13px; overflow-y: auto; display: flex; flex-wrap: wrap; margin-bottom: 2px; margin-top: 5px;">
+                </div>
+                <span id="btn_search" class="glyphicon glyphicon-search right1421" aria-hidden="true" style="margin-left:5px;" onclick="btn_search(this)"></span>
+
+
+            </div>
+        </div>
+        <div class="right2">
+            <div class="middle1">
+                <div id="gridPanel" class="gridPanel">
+                    <table id="gridList"></table>
+                    <div id="gridPager"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var initialData; //原始数据
+    var cleanData;//清洗数据
+    var xCoordinator;//横坐标
+    var initialDataTotal; //当天原始数据总数
+    var cleanDataToatl;//当天清洗数据总数
+    var rawWaterData = [];//原水数据
+    var waterPlantData;//水厂数据
+    var pipeNetworkData;//管网数据
+    var pressureDataT;//压力数据正常
+    var pressureDataF;//压力数据异常
+    var dataFlowT;//流量数据正常
+    var dataFlowF;//流量数据异常
+    var residualChlorineDateT;//余氯正常
+    var residualChlorineDateF;//余氯异常
+    var turbidityDataT;//浊度正常
+    var turbidityDataF;//浊度异常
+    var R1jiekouid = "3";
+    var R2jiekouid = "1";
+    var R1length;
+    var R2length;
+    var R1c = document.getElementsByClassName("water_works_type");
+    var R2c = document.getElementsByClassName("statistical_type");
+    var selected_sks = [];
+    var selected_sks_name = [];
+    var sks = [];
+    var sks_name = [];
+    var option1Color = ["rgba(51,153,255,1)", "rgba(255, 122, 48, 1)", "rgba(100, 24, 195, 1)", "#07ab2b"]
+    //完成接口1.2 获取一级菜单水厂工艺类别
+    function jiekou1_24() {
+        var urlLink24 = '/SystemManage/SysDic/GetItemList?typeId=4';
+        var water_works = document.getElementById("water_works");
+        $.ajax({
+            type: "GET",
+            url: urlLink24,
+            dataType: "JSON",
+            success: function (adata) {
+                R1length = adata.length;
+                let water_works_type = document.getElementById("water_works_type");
+                water_works_type.innerHTML = '';
+                for (let i = 0; i < R1length; i++) {
+                    water_works_type.innerHTML += '<li><a id="R1_' + i + '" value = "' + adata[i].ItemID + '" onclick="onclickR1(this)" href="#">' + adata[i].ItemName + '</a></li>';
+                    if (R1jiekouid == 0) {
+                        water_works.innerHTML = '请选择参数<span class="caret"></span>';
+                    }
+                    else {
+                        if (R1jiekouid == adata[i].ItemID) {
+                            water_works.innerHTML = adata[i].ItemName + '<span class="caret"></span>';
+                        }
+                    }
+                }
+            }
+        });
+    }
+    var statistical = document.getElementById("statistical");
+    //完成接口1.6 根据工艺一级菜单获取周期下拉菜单
+    function jiekou1_6() {
+        var urlLink6 = '/SystemManage/DataClean/GetCycleList';
+        $.ajax({
+            type: "GET",
+            url: urlLink6,
+            dataType: "JSON",
+            success: function (adata) {
+                R2length = adata.length;
+                let statistical_type = document.getElementById("statistical_type");
+                statistical_type.innerHTML = '';
+                for (let i = 0; i < R2length; i++) {
+                    statistical_type.innerHTML += '<li><a id="R2_' + i + '" value = "' + adata[i].Value + '" onclick="onclickR2(this)" href="#">' + adata[i].Name + '</a></li>';
+                    if (R2jiekouid == 0) {
+                        statistical.innerHTML = '请选择参数<span class="caret"></span>';
+                    }
+                    else {
+                        if (R2jiekouid == adata[i].Value) {
+                            statistical.innerHTML = adata[i].Name + '<span class="caret"></span>';
+                        }
+                    }
+                }
+            }
+        });
+    }
+    //获取左侧当天左侧图标数据(6元素数组：原始数据，清洗数据，横坐标，当天原始数据总数，当天清洗数据总数，饼图数据)
+    function getLeftData() {
+        let initialDataTage = document.querySelector("#initialDataTotal");
+        let cleanDataTage = document.querySelector("#cleanDataToatl");
+        initialDataTage.innerHTML = '';
+        cleanDataTage.innerHTML = '';
+        initialData = []
+        cleanData = []
+        xCoordinator = []
+        initialDataTotal = []
+        cleanDataToatl = []
+        rawWaterData = []
+        $.ajax({
+            type: 'GET',
+            url: '/SystemManage/DataClean/GetCleanStatistics',
+            dataType: 'JSON',
+            success: function (adata) {
+                initialData = adata[0]
+                cleanData = adata[1]
+                xCoordinator = adata[2]
+                initialDataTotal = adata[3]
+                cleanDataToatl = adata[4]
+                initialDataTage.innerHTML = initialDataTotal;
+                cleanDataTage.innerHTML = cleanDataToatl;
+                for (let i = 0; i < adata[5].length; i++) {
+                    rawWaterData.push({
+                        value: adata[5][i].Totality,
+                        name: adata[5][i].TypeName + "数据",
+                        itemStyle: {
+                            color: option1Color[i]
+                        }
+                    })
+                }
+                option.xAxis.data = xCoordinator
+                option.series[0].data = initialData
+                option.series[1].data = cleanData
+                option && myChart.setOption(option);
+                //console.log(option1.series[0])
+                option1.series[0].data = rawWaterData
+                option1 && myChart1.setOption(option1);
+            }
+        })
+    }
+    function initControl() {
+        $("#ORGANIZEID").bindSelect({
+            url: "/SystemManage/SysDic/GetTreeSelectJson",
+
+        })
+    }
+    var right_area1_id;
+    var Rareajiekouid;
+    var Rarealength;
+    function organizeidSelect() {
+        selected_sks = [];
+        selected_sks_name = [];
+        document.getElementById("srk").innerHTML = "";
+        $("#AREATYPEO").find("option").remove();
+        $("#AREATYPET").find("option").remove();
+        $("#AREATYPET").append('<option value="all" selected>全部节点</option>');
+        right_area1_id = $("#ORGANIZEID").val();
+        jiekou1_area()
+        jiekou1_area2()
+    }
+    //完成接口5.6 获取数据清洗中数据类型下拉列表
+    function jiekou1_area() {
+        right_area1_id = $("#ORGANIZEID").val();
+        $("#AREATYPEO").bindSelect({
+            url: "/SystemManage/DataClean/GetDataTypeList?areaId=" + right_area1_id,
+            text: "Name",
+            id: "Value",
+        })
+        Rareajiekouid = $("#AREATYPEO").val()
+    }
+    var Rareajiekouid2 = "";
+    var area2 = document.getElementById("area2");
+    //完成接口5.7数据清洗中监测点下拉列表
+    function jiekou1_area2() {
+        console.log(right_area1_id, Rareajiekouid)
+        $("#AREATYPET").bindSelect({
+            url: "/SystemManage/DataClean/GetPointList?areaId=" + right_area1_id + "&type=" + Rareajiekouid,
+            text: "Name",
+            id: "Value",
+            search: true
+        })
+        $.ajax({
+            type: "GET",
+            url: "/SystemManage/DataClean/GetPointList?areaId=" + right_area1_id + "&type=" + Rareajiekouid,
+            dataType: "JSON",
+            success: function (adata) {
+                console.log(adata)
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+            }
+        });
+    }
+    var sDate1 = document.querySelector('#sDate1')
+    var eDate1 = document.querySelector('#eDate1')
+    var dataShu1;
+    var dataShu2;
+    var dataShu3;
+    var dataShu4;
+    var dataShu5;
+    //let accumulateNormalData = document.querySelector('#accumulateNormalData')
+    //let equalAdd = document.querySelector('#equalAdd')
+    //let ringAdd = document.querySelector('#ringAdd')
+    //5.4条件查询数据统计
+    var charts = [];
+    var colorArr = [[{ offset: 0, color: '#2574d8' }, { offset: 1, color: '#5aafee' }], [{ offset: 0, color: '#07ab2b' }, { offset: 1, color: '#1bf94b' }],
+        [{ offset: 0, color: '#d96a0d' }, { offset: 1, color: '#ffb16f' }], [{ offset: 0, color: '#2574d8' }, { offset: 1, color: '#5aafee' }], [{ offset: 0, color: '#07ab2b' }, { offset: 1, color: '#1bf94b' }],
+        [{ offset: 0, color: '#d96a0d' }, { offset: 1, color: '#ffb16f' }],]
+    function getLeftDate2() {
+        dataShu1 = []
+        dataShu2 = []
+        dataShu3 = []
+        dataShu4 = []
+        dataShu5 = []
+        $('#left3')[0].innerHTML=""
+        let jieKou1 = '/SystemManage/DataClean/GetCleanStatistics?type='
+        $.ajax({
+            type: 'GET',
+            url: jieKou1 + R1jiekouid + '&cycle=' + R2jiekouid + '&sDate=' + sDate1.value + '&eDate=' + eDate1.value,
+            dataType: 'JSON',
+            success: function (adata) {
+                pressureDataT = 0
+                pressureDataF = 0
+                dataFlowT = 0
+                dataFlowF = 0
+                residualChlorineDateT = 0
+                residualChlorineDateF = 0
+                turbidityDataT = 0
+                turbidityDataF = 0
+
+                for (let i = 0; i < adata[2].length; i++) {
+                    var divs = document.createElement('div')
+                    divs.className = "small_echart"
+                    document.getElementById("left3").appendChild(divs)
+                    var roseCharts = document.getElementsByClassName('small_echart')
+                    for (var j = 0; j < roseCharts.length; j++) {
+                        var myChart = echarts.init(roseCharts[j])
+                        myChart.setOption(optionFun(adata[2][j], colorArr[j]));
+                        charts.push(myChart);
+                    }
+                    
+                }
+                dataShu1 = adata[0]
+                dataShu2 = adata[1]
+                dataShu3 = adata[3]
+                dataShu4 = adata[4]
+                dataShu5 = adata[5]
+                option66.series[0].data = dataShu1[0];
+                option66.series[1].data = dataShu1[1];
+                option66.series[2].data = dataShu1[2];
+                option66.xAxis.data = dataShu2
+                option66 && myChart66.setOption(option66);
+            }
+        })
+    }
+    function optionFun(value,clors) {
+        var option2l = {
+            title: {
+                text: value.TypeName + '正常数据占比：',
+                show: true,
+                left: 9,
+                top: 0,
+                textStyle: {
+                    fontSize: 13,
+                    color: "#96a0af"
+                },
+
+            },
+            series: [
+                {
+                    startAngle: 90,//图的角度
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: ['25%', '50%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'bottom'
+                    },
+                    left: 50,
+                    labelLine: {
+                        show: false
+                    },
+                    hoverAnimation: false,
+                    data: [
+                        {
+                            value: parseInt(value.Totality) - parseInt(value.Clean),
+                            name: value.TypeName + '正常',
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, clors)
+                            },
+                            label: {
+                                normal: {
+                                    formatter: '{d}%',
+                                    show: true,
+                                    position: 'center',
+                                    fontSize: 20,
+                                    padding: [0, 145, 0, 0],
+                                    color: '#000',
+                                    fontWeight: "bolder",
+                                    fontFamily: "Microsoft YaHei"
+                                },
+                            },
+                        },
+                        {
+                            value: parseInt(value.Clean),
+                            name: value.TypeName + '异常',
+                            itemStyle: {
+                                color: "#fff"
+                            }
+                        },
+                    ]
+                }
+            ]
+        };
+        return option2l;
+    }
+    function reload() {
+        myChart.clear();
+        myChart1.clear();
+        getLeftData()
+    }
+    //var gridLink =""
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.jqGrid("clearGridData");
+        $gridList.dataGrid({
+            url: "/SystemManage/DataClean/GetCleanData",
+            height: 650,
+            colModel: [
+                { label: '日期时间', name: 'Save_date', width: 120, align: 'center' },
+                { label: '数据类型', name: 'Tag_key', width: 120, align: 'center' },
+                { label: '检测点', name: 'Meter_Name', width: 220, align: 'center' },
+                { label: '原始数据', name: 'Tag_value', width: 100, align: 'center' },
+                { label: '清洗后数量', name: 'CleanedValue', width: 100, align: 'center' },
+                {
+                    label: '操作', width: 150, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+
+                        var detail = "<button class='right22111' onclick='btn_detail(\"" + rowObject.Station_key + "," + rowObject.Save_date + "\")' style='line-height: 20px;'>查看</button>";
+                        return detail;
+                    },
+                }
+            ],
+            pager: "#gridPager",
+            sortname: 'Save_date desc',
+            //viewrecords: true
+        });
+
+        $("#btn_search").click(function () {
+            Rareajiekouid2 = ''
+            if ($("#AREATYPET option:selected").val() == "all") {
+
+                for (let i = 0; i < sks.length; i++) {
+                    if (i != (sks.length - 1)) {
+                        Rareajiekouid2 += sks[i] + ",";
+                    }
+                    else {
+                        Rareajiekouid2 += sks[i];
+                    }
+                }
+            } else {
+                for (let i = 0; i < selected_sks.length; i++) {
+                    if (i != (selected_sks.length - 1)) {
+                        Rareajiekouid2 += selected_sks[i] + ",";
+                    }
+                    else {
+                        Rareajiekouid2 += selected_sks[i];
+                    }
+                }
+            }
+            if ($("#AREATYPET option:selected").val() != "all" && selected_sks.length == 0) {
+                //console.log("1");
+                alert("请选择节点进行查询")
+            }
+            else {
+                $gridList.jqGrid('setGridParam', {
+                    postData: {
+                        sks: Rareajiekouid2,
+                        sDate: $("#ssDate").val(),
+                        eDate: $("#eeDate").val(),
+                    },
+                }).trigger('reloadGrid');
+            }
+        })
+        $("#btn_download").click(function () {
+            $.loading(true);
+            $.ajax({
+                type: "GET",
+                url: "/SystemManage/DataClean/GetDownloadJson?sks=" + Rareajiekouid2 + "&sDate=" + $("#ssDate").val() + "&eDate=" + $("#eeDate").val(),
+                success: function (adata) {
+                    let link = document.createElement('a');
+                    link.href = adata;
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    $.loading();
+                    $.modalMsg("导出Excel成功！", "success");
+                }
+            });
+
+        });
+    }
+    function btn_search() {
+        gridList()
+
+    }
+
+    window.onresize = function () {
+        $("#gridList").setGridWidth($("#gridPanel").width());
+    }
+
+    function btn_detail(originalVal) {
+
+        $.modalOpen({
+            id: "Details",
+            title: "查看详细对比",
+            url: "/SystemManage/DataClean/Details?originalVal=" + originalVal,
+            width: "900px",
+            height: "600px",
+            btn: null,
+        });
+    }
+    function onclicksearch() {
+
+        myChart66.clear();
+        getLeftDate2()
+
+    }
+    function onclickR1(node) {
+        R1jiekouid = node.getAttribute("value");
+        jiekou1_24();
+    }
+    function onclickR2(node) {
+        R2jiekouid = node.getAttribute("value");
+        if (R2jiekouid == 3) {
+            document.querySelector("#sDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy' }) }
+            document.querySelector("#eDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy' }) }
+        } else if (R2jiekouid == 2) {
+            document.querySelector("#sDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM' }) }
+            document.querySelector("#eDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM' }) }
+        } else {
+            document.querySelector("#sDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd' }) }
+            document.querySelector("#eDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd' }) }
+        }
+
+        jiekou1_6();
+    }
+
+    function onclickarea1(node) {
+        $("#AREATYPET").find("option").remove();
+        $("#AREATYPET").append('<option value="all" selected>全部节点</option>');
+        Rareajiekouid = $("#AREATYPEO").val();
+        srk.innerHTML = ""
+        selected_sks = []
+        selected_sks_name = []
+        jiekou1_area2();
+    }
+    function onclickarea2(node) {
+        let srk = document.getElementById("srk");
+
+        if ($("#AREATYPET option:selected").text() != "全部节点") {
+            let ls_selectedid = $("#AREATYPET option:selected").val();
+            if (selected_sks.indexOf(ls_selectedid) != -1) {
+                alert("请勿重复添加同一节点！");
+            }
+            else {
+                if (selected_sks_name.indexOf("全部节点") != -1) {
+                    srk.innerHTML = ""
+                    selected_sks = []
+                    selected_sks_name = []
+                    selected_sks.push($("#AREATYPET option:selected").val());
+                    selected_sks_name.push($("#AREATYPET option:selected").text());
+                    srk.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                        + $("#AREATYPET option:selected").text() + '<button id="' + $("#AREATYPET option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                } else {
+                    selected_sks.push($("#AREATYPET option:selected").val());
+                    selected_sks_name.push($("#AREATYPET option:selected").text());
+                    srk.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                        + $("#AREATYPET option:selected").text() + '<button id="' + $("#AREATYPET option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                }
+
+            }
+        } else if ($("#AREATYPET option:selected").text() == "全部节点") {
+            srk.innerHTML = ""
+            selected_sks = []
+            selected_sks_name = ['全部节点']
+            srk.innerHTML +=
+                '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                + $("#AREATYPET option:selected").text() + '<button id="' + $("#AREATYPET option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                + '</div>'
+        }
+        Rareajiekouid2 = $("#AREATYPET").val();
+
+    }
+    function onclickdelete(node) {
+        for (let i = 0; i < selected_sks.length; i++) {
+            if (selected_sks[i] == node.id) {
+                selected_sks.splice(i, 1);
+                selected_sks_name.splice(i, 1);
+            }
+        }
+        let srk = document.getElementById("srk");
+        srk.innerHTML = '';
+        for (let j = 0; j < selected_sks.length; j++) {
+            srk.innerHTML +=
+                '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                + selected_sks_name[j] + '<button id="' + selected_sks[j] + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                + '</div>'
+        }
+    }
+
+    function inits() {
+        getLeftData()
+        getLeftDate2()
+        jiekou1_24();
+        jiekou1_6();
+        //gridList();
+        initControl()
+        jiekou1_area();
+        jiekou1_area2();
+        btn_search();
+    }
+    window.onload = inits();
+
+    var myChart = echarts.init(document.querySelector(".left1_left_echart"));
+    var option = {
+        xAxis: {
+            splitLine: {
+                show: false
+            },
+            name: '时间',
+            type: 'category',
+            data: xCoordinator,
+            nameTextStyle: {
+                color: "rgba(11, 11, 11, 1)",
+                align: "center",
+                fontWeight: '1000',
+                fontFamily: "Microsoft YaHei"
+            },
+            nameLocation: "middle",
+            nameGap: 30,
+            axisLine: {
+                lineStyle: {
+                    color: '#000',
+                    width: 5,
+                },
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                fontSize: 13,
+                fontWeight: "1000",
+                align: "right"
+            },
+        },
+        yAxis: [
+            {
+                splitLine: {
+                    show: false
+                },
+                //name: '数量',
+                type: 'value',
+                nameTextStyle: {
+                    color: "rgba(11, 11, 11, 1)",
+                    fontWeight: '1000',
+                    fontFamily: "Microsoft YaHei"
+                },
+
+                axisLine: {
+                    lineStyle: {
+                        color: '#000',
+                        width: 1,
+                    }
+                },
+                axisLabel: {
+                    fontSize: 13,
+                    fontWeight: "1000",
+                    margin: -5,
+                    fontFamily: "Microsoft YaHe"
+                },
+                nameLocation: "middle",
+                nameGap: 20,
+                nameRotate: 360,
+
+            },
+            {
+                splitLine: {
+                    show: false
+                },
+                //name: '数量',
+                type: 'value',
+                nameTextStyle: {
+                    color: "rgba(11, 11, 11, 1)",
+                    fontWeight: '1000',
+                    fontFamily: "Microsoft YaHei"
+                },
+
+                axisLine: {
+                    lineStyle: {
+                        color: '#000',
+                        width: 1,
+                    }
+                },
+                axisLabel: {
+                    fontSize: 13,
+                    fontWeight: "1000",
+                    margin: -5,
+                    fontFamily: "Microsoft YaHe"
+                },
+                nameLocation: "middle",
+                nameGap: 20,
+                nameRotate: 360,
+
+            },
+        ],
+        series: [
+            {
+                name: '原始数据',
+                data: [0, 0],
+                type: 'line',
+                smooth: true,
+                itemStyle: {
+                    normal: {
+                        color: "#196aec",
+                        lineStyle: {
+                            width: 6,
+                            color: "#196aec",
+                        }
+                    }
+                },
+                showSymbol: false,
+                symbol: 'circle',     //折点设定为实心点
+                symbolSize: 8,
+                yAxisIndex:0
+            },
+            {
+                name: '清洗数据',
+                data: [0, 0],
+                type: 'line',
+                smooth: true,
+                itemStyle: {
+                    normal: {
+                        color: "#37d159",
+                        lineStyle: {
+                            width: 6,
+                            color: "#37d159"
+                        }
+                    }
+                },
+                showSymbol: false,
+                symbol: 'circle',     //折点设定为实心点
+                symbolSize: 8,   //设定实心点的大小
+                yAxisIndex: 1
+            },
+        ],
+        grid: {
+            width: '85%',
+            height: '75%',
+            top: '10%',
+        },
+        tooltip: {
+            show: true,
+            trigger: 'axis',
+            formatter: function (params) {
+                let nowDate = getNowFormatDate();
+                let str = '<strong style="color:#000">' + params[0].axisValue + '</strong>' + "<br />";
+                params.forEach((item) => {
+                    str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + '</strong>' + "<br />";
+                });
+                return str;
+            },
+        },
+    };
+    myChart.setOption(option);
+    var chartDom1 = document.querySelector('.left1_right');
+    var myChart1 = echarts.init(chartDom1);
+    var option1;
+    option1 = {
+        title: {
+            text: '当天原始数据占比统计：',
+            show: true,
+            left: 9,
+            top: 0,
+            textStyle: {
+                fontSize: 15
+            },
+        },
+        legend: {
+            show: true,
+            //data: ["原水数据", "水厂数据", "管网数据"],
+            bottom: '5%',
+            left: 'center',
+            itemWidth: 15,
+            itemHeight: 15,
+            icon: "circle",
+            textStyle: {
+                fontFamily: "Microsoft YaHei",
+                color: "#313131",
+                fontWeight: "bolder"
+            }
+        },
+        series: [
+            {
+                type: 'pie',
+                radius: ['70%', '58%'],
+                avoidLabelOverlap: false,
+                label: {
+                    position: 'center',
+                    show: false,
+                },
+                emphasis: {
+                    hoverAnimation: true,
+                    scaleSize: -40,
+                    scale: true,
+                    itemStyle: {
+                        color: "#d6f2ff",
+                        borderMiterLimit: 18,
+                        borderType: "solid",
+                        borderCap: "square",
+                        opacity: 1,
+                        shadowColor: "rgba(245, 246, 247, 1)",
+                        borderColor: "#67c6ef",
+                        borderWidth: 5,
+                        shadowBlur: 30,
+                        borderJoin: "round"
+                    },
+                    label: {
+                        show: true,
+                        fontSize: '20',
+                        fontWeight: 'bold',
+                        formatter: "{d}%",
+                        backgroundColor: '#ffffff',
+                        borderColor: "rgba(242, 227, 227, 1)",
+                        width: 80,
+                        height: 80,
+                        borderRadius: [80, 80, 80, 80],
+                        shadowBlur: 5,
+                        shadowOffsetX: -0.5,
+                        shadowOffsetY: -0.5
+
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    //{
+                    //    value: 500,
+                    //    name: "原水数据",
+                    //    itemStyle: {
+                    //        color: "rgba(51, 153, 255, 1)"
+                    //    },
+                    //},
+                    //{
+                    //    value: 500,
+                    //    name: "水厂数据",
+                    //    itemStyle: {
+                    //        color: "rgba(255, 122, 48, 1)"
+                    //    }
+                    //},
+                    //{
+                    //    value: 500,
+                    //    name: "管网数据",
+                    //    itemStyle: {
+                    //        color: "rgba(100, 24, 195, 1)"
+                    //    }
+                    //},
+                ]
+            }
+        ]
+    };
+    option1 && myChart1.setOption(option1);
+
+    var chartDom66 = document.querySelector('.left4_echarts');
+    var myChart66 = echarts.init(chartDom66);
+    var option66;
+
+    option66 = {
+        xAxis: {
+            type: 'category',
+            data: [],
+            axisLine: {
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+        },
+        yAxis: [
+            {
+                type: 'value',
+                name: '数据占比(%)',
+                splitLine: {
+                    show: false
+                },
+            },
+            {
+                type: 'value',
+                name: '同比/环比(%)',
+                splitLine: {
+                    show: false
+                },
+            }
+        ],
+        dataZoom: [{
+            backgroundColor: "rgba(245, 1, 50, 0)",
+            show: true,
+            type: 'slider',
+            bottom: "10%",
+            height: 10
+        }],
+        series: [
+            {
+                name: '数据占比',
+                data: [],
+                type: 'bar',
+                barWidth: 10,
+                showBackground: true,
+                color: '#206fed',
+                backgroundStyle: {
+                    color: 'rgba(180, 180, 180, 0.2)'
+                },
+                itemStyle: {    // 图形的形状
+                    barBorderRadius: [18, 18, 18, 18]
+                },
+            },
+            {
+                name: '同比',
+                data: [],
+                type: 'bar',
+                barWidth: 10,
+                yAxisIndex: 1,
+                showBackground: true,
+                color: '#71df9a',
+                backgroundStyle: {
+                    color: 'rgba(180, 180, 180, 0.2)'
+                },
+                itemStyle: {    // 图形的形状
+                    barBorderRadius: [18, 18, 18, 18]
+                },
+            },
+            {
+                name: '环比',
+                data: [],
+                type: 'bar',
+                barWidth: 10,
+                yAxisIndex: 1,
+                showBackground: true,
+                color: '#cf4e2c',
+                backgroundStyle: {
+                    color: 'rgba(180, 180, 180, 0.2)'
+                },
+                itemStyle: {    // 图形的形状
+                    barBorderRadius: [18, 18, 18, 18]
+                },
+            },
+
+        ],
+        grid: {
+            width: '85%',
+            height: '60%',
+            top: '15%',
+            left: "9%"
+        },
+        tooltip: {
+            show: true,
+            trigger: 'axis',
+            formatter: function (params) {
+                let nowDate = getNowFormatDate();
+                let str = '<strong style="color:#000">' + params[0].axisValue + '</strong>' + "<br />";
+                params.forEach((item) => {
+                    str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + '%</strong>' + "<br />";
+                });
+                return str;
+            },
+        },
+    };
+    option66 && myChart66.setOption(option66);
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "/";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+    window.onresize = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height();
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        myChart.resize()
+        myChart1.resize()
+        for (var i = 0; i < charts.length; i++) {
+            charts[i].resize();
+        }
+        myChart66.resize()
+    }
+    window.onload = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height()
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        $("#gridList").setGridHeight($(window).height() * 0.77); // grid_selector 是 DIV 的 ID
+        myChart.resize()
+        myChart1.resize()
+        myChart66.resize()
+        for (var i = 0; i < charts.length; i++) {
+            charts[i].resize();
+        }
+
+    }
+    $(window).resize(function () {
+        // 宽度自动适应
+        /* $("#gridList").setGridWidth($(window).width() - 30);*/
+        // 高度自动适应
+        $(window).unbind("onresize");
+        $("#gridList").setGridHeight($(window).height() * 0.77); // grid_selector 是 DIV 的 ID
+        $(window).bind("onresize", this);
+
+
+    });
+</script>

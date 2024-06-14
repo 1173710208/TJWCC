@@ -1,0 +1,1370 @@
+﻿
+@{
+    ViewBag.Title = "实时监测数据";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/DataDisplay.css" rel="stylesheet" />
+<link href="~/Content/js/select2/select2.min.css" rel="stylesheet" />
+<script src="~/Content/js/select2/select2.min.js"></script>
+<script src="~/Content/js/datepicker/WdatePicker.js"></script>
+<!-- 总栏右 -->
+<div class="main-right">
+    <div class="right1" style="background-color: #f9f9f9; margin-left:0px; padding-left:0px;">
+        @*<div id="Button_1" class="dropdown right11">
+            <button id="Button_1_c" type="button" class="font13 dropdown-toggle right111"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                压力  <span class="caret"></span>
+            </button>
+            <ul id="Button_ul_1" class="dropdown-menu right112">
+            </ul>
+        </div>*@
+        <div class="" style="margin-left: 0px; height: 26px; width: 220px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: flex; align-items: center;">
+            <select id="Region" name="Region" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 210px; border-radius: 10px; margin-left: 5px;">
+                @*<option value=""></option>*@
+            </select>
+        </div>
+        <div class="" style="margin-left: 0px; height: 26px; width: 140px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: flex; align-items: center;">
+            <select id="GetDataTypeList" name="GetDataTypeList" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 130px; border-radius: 10px; margin-left: 5px;">
+                @*<option value=""></option>*@
+            </select>
+        </div>
+
+
+        <div id="hide1" class="" style="margin-left: 0px; height: 26px; width: 140px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: none; align-items: center;">
+            <select id="GetSWaterList" name="GetSWaterList" class="" style="margin-left: 0px; height: 30px; width: 130px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 5px;">
+                <option value="none" selected>请选择</option>
+            </select>
+        </div>
+        <div id="hide2" class="" style="margin-left: 0px; height: 26px; width: 140px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: none; align-items: center;">
+            <select id="GetSPList" name="GetSPList" class="" style="margin-left: 0px; height: 30px; width: 130px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 5px;">
+                <option value="none" selected>请选择</option>
+            </select>
+        </div>
+
+        <div class="" style="margin-left: 0px; height: 26px; width: 200px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: flex; align-items: center;">
+            <select id="GetPointList" name="GetPointList" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 190px; border-radius: 10px; margin-left: 5px;">
+                @*<option value=""></option>*@
+                @*<option value="none" selected disabled hidden>全部节点</option>*@
+                <option value="all" selected>全部节点</option>
+            </select>
+        </div>
+
+        <div id="srk" style="width: 450px; height: 30px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 10px; overflow-y: auto; display: flex; flex-wrap: wrap; ">
+            @*<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">
+                asdadafafasfasfa四十五中&emsp;<button class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>
+            </div>*@
+        </div>
+
+        <!-- 搜索 -->
+        <div class="right152" style="width: 25px; text-align: center; font-size: 15px; background: transparent; color: #216fec; margin-left:20px; margin-top:5px;">
+            <span onclick="onclicknewsearch(this)" id="btn_search" class="glyphicon glyphicon-search right1421" aria-hidden="true"></span>
+        </div>
+        <!-- 搜索 -->
+        <!--<div style="height: 26px; display: flex; align-items: center; border-radius: 8px; background-color: #fff; margin-left: 10px; margin-right: 95px;">
+    <input id="txt_keyword" class="right151" type="search" style="height: 26px; width: 224px; border: 0; border-radius: 8px;" />-->
+        <!-- 搜索？！！ -->
+        <!--<div class="right152" style="width: 25px; text-align: center; font-size: 15px; background: transparent; color: #216fec;">
+            <span onclick="onclicksearch(this)"  id="btn_search" class="glyphicon glyphicon-search right1421" aria-hidden="true"></span>
+        </div>
+    </div>-->
+        @*<button>
+            <span class="glyphicon glyphicon-search right1421" aria-hidden="true"></span>
+        </button>*@
+        @*<div class="right14">
+            <input class="right141" type="search" />
+            <div class="right142">
+                <span class="glyphicon glyphicon-search right1421" aria-hidden="true"></span>
+            </div>
+        </div>*@
+        @*时间*@
+        <div id="show_time" style="position:absolute; right:10px; top:3px; border-radius:10px; font-size: 14px; height:25px; width:260px;  padding-left:7px; line-height: 25px; font-weight: bold; background-color: #ff8723; color:white;">
+            <script>
+                setInterval("fun(show_time)", 1);
+                function fun(timeID) {
+                    var date = new Date(); //创建对象
+                    var y = date.getFullYear(); //获取年份
+                    var m = date.getMonth() + 1; //获取月份  返回0-11
+                    var d = date.getDate(); // 获取日
+                    var w = date.getDay(); //获取星期几  返回0-6   (0=星期天)
+                    var ww = ' 星期' + '日一二三四五六'.charAt(new Date().getDay()); //星期几
+                    var h = date.getHours(); //时
+                    var minute = date.getMinutes() //分
+                    var s = date.getSeconds(); //秒
+                    var sss = date.getMilliseconds(); //毫秒
+                    if (m < 10) {
+                        m = "0" + m;
+                    }
+                    if (d < 10) {
+                        d = "0" + d;
+                    }
+                    if (h < 10) {
+                        h = "0" + h;
+                    }
+                    if (minute < 10) {
+                        minute = "0" + minute;
+                    }
+                    if (s < 10) {
+                        s = "0" + s;
+                    }
+                    if (sss < 10) {
+                        sss = "00" + sss;
+                    } else if (sss < 100) {
+                        sss = "0" + sss;
+                    }
+                    document.getElementById(timeID.id).innerHTML = "系统时间：" + y + "-" + m + "-" + d + " " + h + ":" + minute +":"+s+ ww;
+                    //document.write(y+"-"+m+"-"+d+"   "+h+":"+minute+":"+s);
+                }
+            </script>
+        </div>
+    </div>
+
+
+    <!-- 数据集一 -->
+    <div class="right21_monitoring">
+        <div class="right211">
+            <table class="right211_title">
+                <tr class="right2111">
+                    <th class="right21111" style="width:250px;">监测点名称</th>
+                    <th id="danwei0" class="right21111" style="width: 150px;">数值(MPa)</th>
+                    <th style="width: 25px; background-color: #edf2f6; "></th>
+                    <th class="right21111" style="width: 250px;">监测点名称</th>
+                    <th id="danwei1" class="right21111" style="width: 150px;">数值(MPa)</th>
+                    <th style="width: 25px; background-color: #edf2f6; "></th>
+                    <th class="right21111" style="width: 250px;">监测点名称</th>
+                    <th id="danwei2" class="right21111" style="width: 150px;">数值(MPa)</th>
+                    <th style="width: 25px; background-color: #edf2f6; "></th>
+                    <th class="right21111" style="width: 250px;">监测点名称</th>
+                    <th id="danwei3" class="right21111" style="width: 150px;">数值(MPa)</th>
+                </tr>
+            </table>
+        </div>
+        <div id="datadetail" class="right212" style="display: flex; width: 1675px; flex-wrap: wrap; ">
+            @*<table class="right212_data">
+                    <script type="text/javascript">
+                        for (var i = 0; i < 10; i++) {
+                            document.write("<tr class='right2121'>" +
+                                "<td class='right21211' style='width: 180px;'>" +
+                                "43路终点站" +
+                                "</td>" +
+                                "<td class='right21211' style='width: 180px;'>" +
+                                "20201010 9:00" +
+                                "</td>" +
+                                "<td class='right21211' style='width: 180px;'>" +
+                                "0.265" + "</td>" +
+                                "<td style='width:25px;background-color: #edf2f6;'></td>" +
+                                "<td class='right21211' style='width: 180px;'>" +
+                                "43路终点站" +
+                                "</td>" +
+                                "<td class='right21211' style='width: 180px;'>" +
+                                "20201010 9:00" +
+                                "</td>" +
+                                "<td class='right21211' style='width: 180px;'>" +
+                                "0.265" + "</td>" +
+                                "<td style='width:25px;background-color: #edf2f6;'></td>" +
+                                "<td class='right21211' style='width: 180px;'>" +
+                                "43路终点站" +
+                                "</td>" +
+                                "<td class='right21211' style='width: 180px;'>" +
+                                "20201010 9:00" +
+                                "</td>" +
+                                "<td class='right21211' style='width: 180px;'>" +
+                                "0.265" + "</td>" +
+                                "</tr>")
+                        }
+                    </script>
+                </table>*@
+        </div>
+    </div>
+</div>
+<!-- 总栏右 -->
+
+<script>
+    var jiekou2_1id = 2;
+    var B1length = 0;
+    var jiekou2_2id = null;
+    var jiekou2_2value = null;
+    var B2length = 0;
+    var jiekou2_3value = null;
+    var B3length = 0;
+    var Data24length = 0;
+    var Data25length = 0;
+    var Data26length = 0;
+    var Data27length = 0;
+    var url_2_3 = "";
+    var url_2_4 = "";
+    var areaId = "";
+    var type = "";
+    var sks = [];
+    var sks_name = [];
+    var selected_sks = [];
+    var selected_sks_name = [];
+    var sks_list = "";
+
+    function init() {
+        //jiekou2_1();
+        //jiekou2_2();
+        //jiekou2_3();
+        //jiekou2_6();
+        $("#Region").bindSelect({
+            url: "/SystemManage/SysDic/GetTreeSelectJson",
+        });
+        var Region = $("#Region").select();
+        Region.val("56").trigger("change");
+        Region.change();
+        //console.log($("#Region option:selected").val());
+        //$("#Region option[value='56']").attr("selected", "selected");
+        //$("#Region").val("56");
+        //console.log(document.getElementById("Region"));
+        //console.log($("#Region option:selected").val());
+
+        @*$("#GetDataTypeList").bindSelect({
+            url: "/DataSynthetical/CurrentData/GetDataTypeList?areaId=" + $("#Region option:selected").val(),
+            text: "Name",
+            id: "Value"
+        });*@
+        var GetDataTypeList = $("#GetDataTypeList").select();
+        GetDataTypeList.val("2").trigger("change");
+        GetDataTypeList.change();
+        //console.log(document.getElementById("GetDataTypeList"));
+        //$("#GetDataTypeList option[value='2']").attr("selected", "selected");
+
+        if ($("#GetDataTypeList option:selected").val() == undefined) {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        }
+        else {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+            if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+                url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+            }
+        }
+
+        @*$("#GetPointList").bindSelect({
+            url: url_2_3,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });*@
+
+        //console.log($("#GetPointList option:selected").val());
+
+        $.ajax({
+            type: "GET",
+            url: url_2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);    
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                console.log(sks);
+                onclicknewsearch();
+            }
+        });
+
+        $("#GetSPList").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetSPList",
+            text: "Name",
+            id: "Value"
+        });
+
+        $("#GetSWaterList").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetSWaterList",
+            text: "Name",
+            id: "Value"
+        });
+        //console.log($("#Region option:selected").val());
+        //console.log($("#GetDataTypeList option:selected").val());
+
+    }
+
+    $("#Region").change(function () {
+        $("#GetDataTypeList").find("option").remove();
+        //console.log($("#Region option:selected").val());
+        $("#GetDataTypeList").bindSelect({
+            url: "/DataSynthetical/CurrentData/GetDataTypeList?areaId=" + $("#Region option:selected").val(),
+            text: "Name",
+            id: "Value"
+        });
+
+        if ($("#GetDataTypeList option:selected").val() == undefined) {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        }
+        else {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+            if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+                url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+            }
+        }
+        console.log(url_2_3);
+        $("#GetPointList").find("option").remove();
+        $("#GetPointList").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList").bindSelect({
+            url: url_2_3,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+        $.ajax({
+            type: "GET",
+            url: url_2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);   
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+        selected_sks = [];
+        selected_sks_name = [];
+        document.getElementById("srk").innerHTML = "";
+        let checkVal = $("#GetDataTypeList option:selected").val()
+        //console.log($("#Region option:selected").val());
+        let hide1 = document.getElementById("hide1");
+        let hide2 = document.getElementById("hide2");
+        if (checkVal == 2 || checkVal == 3 || checkVal == 4) {
+            hide1.style.display = "flex";
+            hide2.style.display = "flex";
+        }
+        else if (checkVal == 1 || checkVal == 9) {
+            hide1.style.display = "flex";
+            hide2.style.display = "none";
+        }
+        else {
+            hide1.style.display = "none";
+            hide2.style.display = "none";
+        }
+        //console.log($("#GetDataTypeList"));
+    })
+
+    $("#GetDataTypeList").change(function () {
+        let checkVal = $("#GetDataTypeList option:selected").val()
+        //console.log($("#Region option:selected").val());
+        let hide1 = document.getElementById("hide1");
+        let hide2 = document.getElementById("hide2");
+        if (checkVal == 2 || checkVal == 3 || checkVal == 4) {
+            hide1.style.display = "flex";
+            hide2.style.display = "flex";
+        }
+        else if (checkVal == 1 || checkVal == 9) {
+            hide1.style.display = "flex";
+            hide2.style.display = "none";
+        }
+        else {
+            hide1.style.display = "none";
+            hide2.style.display = "none";
+        }
+        if ($("#GetDataTypeList option:selected").val() == undefined) {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        }
+        else {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+            if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+                url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+            }
+        }
+        console.log(url_2_3);
+        $("#GetPointList").find("option").remove();
+        $("#GetPointList").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList").bindSelect({
+            url: url_2_3,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+
+        $.ajax({
+            type: "GET",
+            url: url_2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);     
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+
+        selected_sks = [];
+        selected_sks_name = [];
+        document.getElementById("srk").innerHTML = "";
+        //console.log($("#GetDataTypeList option:selected").val());
+        //console.log($("#GetDataTypeList"));
+    })
+
+    $("#GetPointList").change(function () {
+        if ($("#GetPointList option:selected").text() != "全部节点") {
+            //console.log($("#GetPointList option:selected").val());
+            let ls_selectedid = $("#GetPointList option:selected").val();
+            //console.log(ls_selectedid);
+            //console.log(selected_sks);
+            //console.log($("#GetPointList option:selected").text());
+            if (selected_sks.indexOf(ls_selectedid) != -1) {
+                alert("请勿重复添加同一节点！");
+            }
+            else {
+                selected_sks.push($("#GetPointList option:selected").val());
+                selected_sks_name.push($("#GetPointList option:selected").text());
+                let srk = document.getElementById("srk");
+                srk.innerHTML +=
+                    '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                    + $("#GetPointList option:selected").text() + '<button id="' + $("#GetPointList option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                    + '</div>'
+            }
+        }
+        else {
+            let srk = document.getElementById("srk");
+            selected_sks = [];
+            srk.innerHTML = '';
+        }
+    })
+
+    $("#GetSPList").change(function () {
+        if ($("#GetDataTypeList option:selected").val() == undefined) {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        }
+        else {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+            if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+                url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+            }
+        }
+        console.log(url_2_3);
+        $("#GetPointList").find("option").remove();
+        $("#GetPointList").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList").bindSelect({
+            url: url_2_3,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+
+        $.ajax({
+            type: "GET",
+            url: url_2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);     
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+        let srk = document.getElementById("srk");
+        selected_sks = [];
+        srk.innerHTML = '';
+    })
+
+    $("#GetSWaterList").change(function () {
+        if ($("#GetDataTypeList option:selected").val() == undefined) {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        }
+        else {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+            if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+                url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+            }
+        }
+        console.log(url_2_3);
+        $("#GetPointList").find("option").remove();
+        $("#GetPointList").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList").bindSelect({
+            url: url_2_3,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+
+        $.ajax({
+            type: "GET",
+            url: url_2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);     
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+        let srk = document.getElementById("srk");
+        selected_sks = [];
+        srk.innerHTML = '';
+    })
+
+
+    function onclickdelete(node) {
+            for (let i = 0; i < selected_sks.length; i++) {
+                if (selected_sks[i] == node.id) {
+                    selected_sks.splice(i, 1);
+                    selected_sks_name.splice(i, 1);
+                }
+            }
+            let srk = document.getElementById("srk");
+            srk.innerHTML = '';
+            for (let j = 0; j < selected_sks.length; j++) {
+                srk.innerHTML +=
+                    '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                    + selected_sks_name[j] + '<button id="' + selected_sks[j] + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                    + '</div>'
+            }
+        
+        //console.log(selected_sks);
+    }
+
+    function onclicknewsearch(node) {
+        
+        url_2_4 = "/DataSynthetical/CurrentData/GetCurrentData?sks=";
+        sks_list = "";
+        //console.log($("#GetPointList option:selected").val());
+        if ($("#GetPointList option:selected").val() == "all") {
+            //console.log("onclicknewsearch");
+            for (let i = 0; i < sks.length; i++) {
+                if (i != (sks.length - 1)) {
+                    url_2_4 += sks[i] + ",";
+                    sks_list += sks[i] + ","
+                }
+                else {
+                    url_2_4 += sks[i];
+                    sks_list += sks[i]
+                }
+            }
+        }
+        else {
+            for (let i = 0; i < selected_sks.length; i++) {
+                if (i != (selected_sks.length - 1)) {
+                    url_2_4 += selected_sks[i] + ",";
+                    sks_list += selected_sks[i] + ",";
+                }
+                else {
+                    url_2_4 += selected_sks[i];
+                    sks_list += selected_sks[i];
+                }
+            }
+        }
+
+
+
+        //console.log($("#GetPointList option:selected").val());
+        //console.log(selected_sks);
+        if ( $("#GetPointList option:selected").val() != "all" && selected_sks.length == 0) {
+            //console.log("1");
+            alert("请选择节点进行查询")
+        }
+        else {
+            //console.log("2");
+
+            $.ajax({
+                type: "POST",
+                url: "/DataSynthetical/CurrentData/GetCurrentData",
+                data: { sks: sks_list },
+                dataType: "JSON",
+                success: function (adata) {
+                    //console.log(adata);
+                    Data24length = adata.length;
+                    //console.log(Data24length);
+                    let datadetail = document.getElementById("datadetail");
+                    datadetail.innerHTML = '';
+                    for (let i = 0; i < Data24length; i++) {
+                        if (i % 4 == 0) {
+                            if (adata[i].Tag_value == null) {
+                                datadetail.innerHTML += '<table class="right212_data" style="height:45px; width:425px;">'
+                                    + '<tr class="right2121" style="height:45px;">'
+                                    + '<td class="right21211" style="width: 250px;height:45px;">' + adata[i].Meter_Name + '</td>'
+                                    + '<td class="right21211" style="width: 150px;height:45px; background-color:#f1dfc4;">' + '-' + '</td>'
+                                    + '<td style="width:25px;height:45px;background-color: #edf2f6;">' + '</td>';
+                                + '</tr>'
+                                    + '</table>'
+                            } else {
+                                datadetail.innerHTML += '<table class="right212_data" style="height:45px; width:425px;">'
+                                    + '<tr class="right2121" style="height:45px;">'
+                                    + '<td class="right21211" style="width: 250px;height:45px;">' + adata[i].Meter_Name + '</td>'
+                                    + '<td class="right21211" style="width: 150px;height:45px;">' + adata[i].Tag_value + '</td>'
+                                    + '<td style="width:25px;background-color: #edf2f6;height:45px;">' + '</td>';
+                                + '</tr>'
+                                    + '</table>'
+                            }
+                        }
+                        else if (i % 4 == 1) {
+                            if (adata[i].Tag_value == null) {
+                                datadetail.innerHTML += '<table class="right212_data" style="height:45px; width:425px;">'
+                                    + '<tr class="right2121" style="height:45px;">'
+                                    + '<td class="right21211" style="width: 250px; height:45px;">' + adata[i].Meter_Name + '</td>'
+                                    + '<td class="right21211" style="width: 150px; height:45px; background-color:#f1dfc4;">' + '-' + '</td>'
+                                    + '<td style="width:25px; height:45px; background-color: #edf2f6;">' + '</td>';
+                                + '</tr>'
+                                    + '</table>'
+                            } else {
+                                datadetail.innerHTML += '<table class="right212_data" style="height:45px; width:425px;">'
+                                    + '<tr class="right2121" style="height:45px;">'
+                                    + '<td class="right21211" style="width: 250px; height:45px;">' + adata[i].Meter_Name + '</td>'
+                                    + '<td class="right21211" style="width: 150px; height:45px;">' + adata[i].Tag_value + '</td>'
+                                    + '<td style="width:25px; height:45px; background-color: #edf2f6;">' + '</td>';
+                                + '</tr>'
+                                    + '</table>'
+                            }
+                        }
+                        else if (i % 4 == 2) {
+                            if (adata[i].Tag_value == null) {
+                                datadetail.innerHTML += '<table class="right212_data" style="height:45px; width:425px;">'
+                                    + '<tr class="right2121" style="height:45px;">'
+                                    + '<td class="right21211" style="width: 250px; height:45px;">' + adata[i].Meter_Name + '</td>'
+                                    + '<td class="right21211" style="width: 150px; height:45px; background-color:#f1dfc4;">' + '-' + '</td>'
+                                    + '<td style="width:25px;background-color: #edf2f6; height:45px;">' + '</td>';
+                                + '</tr>'
+                                    + '</table>'
+                            } else {
+                                datadetail.innerHTML += '<table class="right212_data" style="height:45px; width:425px;">'
+                                    + '<tr class="right2121" style="height:45px;">'
+                                    + '<td class="right21211" style="width: 250px; height:45px;">' + adata[i].Meter_Name + '</td>'
+                                    + '<td class="right21211" style="width: 150px; height:45px;">' + adata[i].Tag_value + '</td>'
+                                    + '<td style="width:25px;background-color: #edf2f6; height:45px;">' + '</td>';
+                                + '</tr>'
+                                    + '</table>'
+                            }
+                        }
+                        else if (i % 4 == 3) {
+                            if (adata[i].Tag_value == null) {
+                                datadetail.innerHTML += '<table class="right212_data" style="height:45px; width:400px;">'
+                                    + '<tr class="right2121" style="height:45px;">'
+                                    + '<td class="right21211" style="width: 250px; height:45px;">' + adata[i].Meter_Name + '</td>'
+                                    + '<td class="right21211" style="width: 150px; height:45px; background-color:#f1dfc4;">' + '-' + '</td>'
+                                    + '</tr>'
+                                    + '</table>'
+                            } else {
+                                datadetail.innerHTML += '<table class="right212_data" style="height:45px; width:400px;">'
+                                    + '<tr class="right2121" style="height:45px;">'
+                                    + '<td class="right21211" style="width: 250px; height:45px;">' + adata[i].Meter_Name + '</td>'
+                                    + '<td class="right21211" style="width: 150px; height:45px;">' + adata[i].Tag_value + '</td>'
+                                    + '</tr>'
+                                    + '</table>'
+                            }
+                        }
+                    }
+                    //console.log(datadetail);
+                }
+            });
+            //console.log($("#GetDataTypeList option:selected").val());
+
+            let Danwei0 = document.getElementById("danwei0");
+            let Danwei1 = document.getElementById("danwei1");
+            let Danwei2 = document.getElementById("danwei2");
+            let Danwei3 = document.getElementById("danwei3");
+
+            //console.log(Danwei);
+            if ($("#GetDataTypeList option:selected").val() == 421 || $("#GetDataTypeList option:selected").val() == 1 || $("#GetDataTypeList option:selected").val() == 8 || $("#GetDataTypeList option:selected").val() == 9 || $("#GetDataTypeList option:selected").val() == 83 || $("#GetDataTypeList option:selected").val() == 101 || $("#GetDataTypeList option:selected").val() == 106 || $("#GetDataTypeList option:selected").val() == 111 || $("#GetDataTypeList option:selected").val() == 118 || $("#GetDataTypeList option:selected").val() == 131 || $("#GetDataTypeList option:selected").val() == 204 || $("#GetDataTypeList option:selected").val() == 451 || $("#GetDataTypeList option:selected").val() == 454 || $("#GetDataTypeList option:selected").val() == 455 || $("#GetDataTypeList option:selected").val() == 24) {
+                Danwei0.innerHTML = "数值(m<sup>3</sup>/h)";
+                Danwei1.innerHTML = "数值(m<sup>3</sup>/h)";
+                Danwei2.innerHTML = "数值(m<sup>3</sup>/h)";
+                Danwei3.innerHTML = "数值(m<sup>3</sup>/h)";
+            } else if ($("#GetDataTypeList option:selected").val() == 2 || $("#GetDataTypeList option:selected").val() == 6 || $("#GetDataTypeList option:selected").val() == 105 || $("#GetDataTypeList option:selected").val() == 117 || $("#GetDataTypeList option:selected").val() == 203 || $("#GetDataTypeList option:selected").val() == 221 || $("#GetDataTypeList option:selected").val() == 223 || $("#GetDataTypeList option:selected").val() == 224 || $("#GetDataTypeList option:selected").val() == 225 || $("#GetDataTypeList option:selected").val() == 226 || $("#GetDataTypeList option:selected").val() == 522 || $("#GetDataTypeList option:selected").val() == 25) {
+                Danwei0.innerHTML = "数值(MPa)";
+                Danwei1.innerHTML = "数值(MPa)";
+                Danwei2.innerHTML = "数值(MPa)";
+                Danwei3.innerHTML = "数值(MPa)";
+            } else if ($("#GetDataTypeList option:selected").val() == 3 || $("#GetDataTypeList option:selected").val() == 11 || $("#GetDataTypeList option:selected").val() == 14 || $("#GetDataTypeList option:selected").val() == 15 || $("#GetDataTypeList option:selected").val() == 16 || $("#GetDataTypeList option:selected").val() == 17 || $("#GetDataTypeList option:selected").val() == 20 || $("#GetDataTypeList option:selected").val() == 21 || $("#GetDataTypeList option:selected").val() == 23 || $("#GetDataTypeList option:selected").val() == 40 || $("#GetDataTypeList option:selected").val() == 41 || $("#GetDataTypeList option:selected").val() == 44 || $("#GetDataTypeList option:selected").val() == 45 || $("#GetDataTypeList option:selected").val() == 46 || $("#GetDataTypeList option:selected").val() == 47 || $("#GetDataTypeList option:selected").val() == 50 || $("#GetDataTypeList option:selected").val() == 51 || $("#GetDataTypeList option:selected").val() == 53 || $("#GetDataTypeList option:selected").val() == 54 || $("#GetDataTypeList option:selected").val() == 55 || $("#GetDataTypeList option:selected").val() == 56 || $("#GetDataTypeList option:selected").val() == 57 || $("#GetDataTypeList option:selected").val() == 58 || $("#GetDataTypeList option:selected").val() == 59 || $("#GetDataTypeList option:selected").val() == 510 || $("#GetDataTypeList option:selected").val() == 506 || $("#GetDataTypeList option:selected").val() == 516 || $("#GetDataTypeList option:selected").val() == 517 || $("#GetDataTypeList option:selected").val() == 515 || $("#GetDataTypeList option:selected").val() == 501 || $("#GetDataTypeList option:selected").val() == 503 || $("#GetDataTypeList option:selected").val() == 505 || $("#GetDataTypeList option:selected").val() == 509 || $("#GetDataTypeList option:selected").val() == 514 || $("#GetDataTypeList option:selected").val() == 512 || $("#GetDataTypeList option:selected").val() == 513 || $("#GetDataTypeList option:selected").val() == 519 || $("#GetDataTypeList option:selected").val() == 520 || $("#GetDataTypeList option:selected").val() == 26 ) {
+                Danwei0.innerHTML = "数值(mg/L)";
+                Danwei1.innerHTML = "数值(mg/L)";
+                Danwei2.innerHTML = "数值(mg/L)";
+                Danwei3.innerHTML = "数值(mg/L)";
+            } else if ($("#GetDataTypeList option:selected").val() == 4 || $("#GetDataTypeList option:selected").val() == 12 || $("#GetDataTypeList option:selected").val() == 42 || $("#GetDataTypeList option:selected").val() == 511 || $("#GetDataTypeList option:selected").val() == 27) {
+                Danwei0.innerHTML = "数值(NTU)";
+                Danwei1.innerHTML = "数值(NTU)";
+                Danwei2.innerHTML = "数值(NTU)";
+                Danwei3.innerHTML = "数值(NTU)";
+            } else if ($("#GetDataTypeList option:selected").val() == 5 || $("#GetDataTypeList option:selected").val() == 13 || $("#GetDataTypeList option:selected").val() == 43 || $("#GetDataTypeList option:selected").val() == 108 || $("#GetDataTypeList option:selected").val() == 120 || $("#GetDataTypeList option:selected").val() == 201  || $("#GetDataTypeList option:selected").val() == 303 || $("#GetDataTypeList option:selected").val() == 320 || $("#GetDataTypeList option:selected").val() == 453 || $("#GetDataTypeList option:selected").val() == 500) {
+                Danwei0.innerHTML = "数值";
+                Danwei1.innerHTML = "数值";
+                Danwei2.innerHTML = "数值";
+                Danwei3.innerHTML = "数值";
+            } else if ($("#GetDataTypeList option:selected").val() == 18 || $("#GetDataTypeList option:selected").val() == 48 || $("#GetDataTypeList option:selected").val() == 502) {
+                Danwei0.innerHTML = "数值(μs/cm)";
+                Danwei1.innerHTML = "数值(μs/cm)";
+                Danwei2.innerHTML = "数值(μs/cm)";
+                Danwei3.innerHTML = "数值(μs/cm)";
+            } else if ($("#GetDataTypeList option:selected").val() == 19 || $("#GetDataTypeList option:selected").val() == 49 || $("#GetDataTypeList option:selected").val() == 507) {
+                Danwei0.innerHTML = "数值(℃)";
+                Danwei1.innerHTML = "数值(℃)";
+                Danwei2.innerHTML = "数值(℃)";
+                Danwei3.innerHTML = "数值(℃)";
+
+            } else if ($("#GetDataTypeList option:selected").val() == 22 || $("#GetDataTypeList option:selected").val() == 52) {
+                Danwei0.innerHTML = "数值(mV)";
+                Danwei1.innerHTML = "数值(mV)";
+                Danwei2.innerHTML = "数值(mV)";
+                Danwei3.innerHTML = "数值(mV)";
+            } else if ($("#GetDataTypeList option:selected").val() == 81 || $("#GetDataTypeList option:selected").val() == 91 || $("#GetDataTypeList option:selected").val() == 92 || $("#GetDataTypeList option:selected").val() == 93 || $("#GetDataTypeList option:selected").val() == 400 || $("#GetDataTypeList option:selected").val() == 401 || $("#GetDataTypeList option:selected").val() == 402 || $("#GetDataTypeList option:selected").val() == 403 || $("#GetDataTypeList option:selected").val() == 404 || $("#GetDataTypeList option:selected").val() == 405 || $("#GetDataTypeList option:selected").val() == 406 || $("#GetDataTypeList option:selected").val() == 407 || $("#GetDataTypeList option:selected").val() == 408 || $("#GetDataTypeList option:selected").val() == 409 || $("#GetDataTypeList option:selected").val() == 410 || $("#GetDataTypeList option:selected").val() == 411 || $("#GetDataTypeList option:selected").val() == 422 || $("#GetDataTypeList option:selected").val() == 211) {
+                Danwei0.innerHTML = "数值(m)";
+                Danwei1.innerHTML = "数值(m)";
+                Danwei2.innerHTML = "数值(m)";
+                Danwei3.innerHTML = "数值(m)";
+            } else if ($("#GetDataTypeList option:selected").val() == 82 || $("#GetDataTypeList option:selected").val() == 202) {
+                Danwei0.innerHTML = "数值(Hz)";
+                Danwei1.innerHTML = "数值(Hz)";
+                Danwei2.innerHTML = "数值(Hz)";
+                Danwei3.innerHTML = "数值(Hz)";
+            } else if ($("#GetDataTypeList option:selected").val() == 94  || $("#GetDataTypeList option:selected").val() == 112   || $("#GetDataTypeList option:selected").val() == 115 || $("#GetDataTypeList option:selected").val() == 116 || $("#GetDataTypeList option:selected").val() == 119 || $("#GetDataTypeList option:selected").val() == 132 || $("#GetDataTypeList option:selected").val() == 133 || $("#GetDataTypeList option:selected").val() == 134 || $("#GetDataTypeList option:selected").val() == 205) {
+                Danwei0.innerHTML = "数值(万m<sup>3</sup>)";
+                Danwei1.innerHTML = "数值(万m<sup>3</sup>)";
+                Danwei2.innerHTML = "数值(万m<sup>3</sup>)";
+                Danwei3.innerHTML = "数值(万m<sup>3</sup>)";
+            } else if ($("#GetDataTypeList option:selected").val() == 113 || $("#GetDataTypeList option:selected").val() == 114||$("#GetDataTypeList option:selected").val() == 135 || $("#GetDataTypeList option:selected").val() == 136 || $("#GetDataTypeList option:selected").val() == 524 || $("#GetDataTypeList option:selected").val() == 525 || $("#GetDataTypeList option:selected").val() == 528 || $("#GetDataTypeList option:selected").val() == 102 || $("#GetDataTypeList option:selected").val() == 526 || $("#GetDataTypeList option:selected").val() == 527 || $("#GetDataTypeList option:selected").val() == 521 || $("#GetDataTypeList option:selected").val() == 107 || $("#GetDataTypeList option:selected").val() == 104 || $("#GetDataTypeList option:selected").val() == 103 ) {
+                Danwei0.innerHTML = "数值(m<sup>3</sup>)";
+                Danwei1.innerHTML = "数值(m<sup>3</sup>)";
+                Danwei2.innerHTML = "数值(m<sup>3</sup>)";
+                Danwei3.innerHTML = "数值(m<sup>3</sup>)";
+            } else if ($("#GetDataTypeList option:selected").val() == 206 || $("#GetDataTypeList option:selected").val() == 222) {
+                Danwei0.innerHTML = "数值(度)";
+                Danwei1.innerHTML = "数值(度)";
+                Danwei2.innerHTML = "数值(度)";
+                Danwei3.innerHTML = "数值(度)";
+
+            } else if ($("#GetDataTypeList option:selected").val() == 212 || $("#GetDataTypeList option:selected").val() == 213 || $("#GetDataTypeList option:selected").val() == 214 || $("#GetDataTypeList option:selected").val() == 215 || $("#GetDataTypeList option:selected").val() == 216 || $("#GetDataTypeList option:selected").val() == 217) {
+                Danwei0.innerHTML = "数值(%)";
+                Danwei1.innerHTML = "数值(%)";
+                Danwei2.innerHTML = "数值(%)";
+                Danwei3.innerHTML = "数值(%)";
+            } else if ($("#GetDataTypeList option:selected").val() == 218) {
+                Danwei0.innerHTML = "数值(cm)";
+                Danwei1.innerHTML = "数值(cm)";
+                Danwei2.innerHTML = "数值(cm)";
+                Danwei3.innerHTML = "数值(cm)";
+            } else if ($("#GetDataTypeList option:selected").val() == 301) {
+                Danwei0.innerHTML = "数值(kw)";
+                Danwei1.innerHTML = "数值(kw)";
+                Danwei2.innerHTML = "数值(kw)";
+                Danwei3.innerHTML = "数值(kw)";
+            } else if ($("#GetDataTypeList option:selected").val() == 302) {
+                Danwei0.innerHTML = "数值(kvar)";
+                Danwei1.innerHTML = "数值(kvar)";
+                Danwei2.innerHTML = "数值(kvar)";
+                Danwei3.innerHTML = "数值(kvar)";
+            } else if ($("#GetDataTypeList option:selected").val() == 304 || $("#GetDataTypeList option:selected").val() == 305 || $("#GetDataTypeList option:selected").val() == 306 || $("#GetDataTypeList option:selected").val() == 308) {
+                Danwei0.innerHTML = "数值(A)";
+                Danwei1.innerHTML = "数值(A)";
+                Danwei2.innerHTML = "数值(A)";
+                Danwei3.innerHTML = "数值(A)";
+            } else if ($("#GetDataTypeList option:selected").val() == 307) {
+                Danwei0.innerHTML = "数值(V)";
+                Danwei1.innerHTML = "数值(V)";
+                Danwei2.innerHTML = "数值(V)";
+                Danwei3.innerHTML = "数值(V)";
+            } else if (  $("#GetDataTypeList option:selected").val() == 450 || $("#GetDataTypeList option:selected").val() == 452) {
+                Danwei0.innerHTML = "数值(km<sup>3</sup>/h)";
+                Danwei1.innerHTML = "数值(km<sup>3</sup>/h)";
+                Danwei2.innerHTML = "数值(km<sup>3</sup>/h)";
+                Danwei3.innerHTML = "数值(km<sup>3</sup>/h)";
+            } else if ($("#GetDataTypeList option:selected").val() == 504 ) {
+                Danwei0.innerHTML = "数值(cells/ml)";
+                Danwei1.innerHTML = "数值(cells/ml)";
+                Danwei2.innerHTML = "数值(cells/ml)";
+                Danwei3.innerHTML = "数值(cells/ml)";
+
+            } else if ($("#GetDataTypeList option:selected").val() == 508) {
+                Danwei0.innerHTML = "数值(μg/L)";
+                Danwei1.innerHTML = "数值(μg/L)";
+                Danwei2.innerHTML = "数值(μg/L)";
+                Danwei3.innerHTML = "数值(μg/L)";
+
+            } else if ($("#GetDataTypeList option:selected").val() == 518) {
+                Danwei0.innerHTML = "数值(个/ml)";
+                Danwei1.innerHTML = "数值(个/ml)";
+                Danwei2.innerHTML = "数值(个/ml)";
+                Danwei3.innerHTML = "数值(个/ml)";
+
+            } else if ($("#GetDataTypeList option:selected").val() == 530) {
+                Danwei0.innerHTML = "数值(m<sup>3</sup>/s)";
+                Danwei1.innerHTML = "数值(m<sup>3</sup>/s)";
+                Danwei2.innerHTML = "数值(m<sup>3</sup>/s)";
+                Danwei3.innerHTML = "数值(m<sup>3</sup>/s)";
+
+            }
+
+            //console.log(Danwei);
+            //if ($("#GetDataTypeList option:selected").val() == 1 || $("#GetDataTypeList option:selected").val() == 8 || $("#GetDataTypeList option:selected").val() == 9 || $("#GetDataTypeList option:selected").val() == 83 || $("#GetDataTypeList option:selected").val() == 101 || $("#GetDataTypeList option:selected").val() == 106 || $("#GetDataTypeList option:selected").val() == 111 || $("#GetDataTypeList option:selected").val() == 118 || $("#GetDataTypeList option:selected").val() == 131 || $("#GetDataTypeList option:selected").val() == 204 || $("#GetDataTypeList option:selected").val() == 451 || $("#GetDataTypeList option:selected").val() == 454 || $("#GetDataTypeList option:selected").val() == 455 || $("#GetDataTypeList option:selected").val() == 24) {
+            //    Danwei1.innerHTML = "数值(m<sup>3</sup>/h)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 2 || $("#GetDataTypeList option:selected").val() == 6 || $("#GetDataTypeList option:selected").val() == 105 || $("#GetDataTypeList option:selected").val() == 117 || $("#GetDataTypeList option:selected").val() == 203 || $("#GetDataTypeList option:selected").val() == 221 || $("#GetDataTypeList option:selected").val() == 223 || $("#GetDataTypeList option:selected").val() == 224 || $("#GetDataTypeList option:selected").val() == 225 || $("#GetDataTypeList option:selected").val() == 226) {
+            //    Danwei1.innerHTML = "数值(MPa)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 3 || $("#GetDataTypeList option:selected").val() == 11 || $("#GetDataTypeList option:selected").val() == 14 || $("#GetDataTypeList option:selected").val() == 15 || $("#GetDataTypeList option:selected").val() == 16 || $("#GetDataTypeList option:selected").val() == 17 || $("#GetDataTypeList option:selected").val() == 20 || $("#GetDataTypeList option:selected").val() == 21 || $("#GetDataTypeList option:selected").val() == 23 || $("#GetDataTypeList option:selected").val() == 40 || $("#GetDataTypeList option:selected").val() == 41 || $("#GetDataTypeList option:selected").val() == 44 || $("#GetDataTypeList option:selected").val() == 45 || $("#GetDataTypeList option:selected").val() == 46 || $("#GetDataTypeList option:selected").val() == 47 || $("#GetDataTypeList option:selected").val() == 50 || $("#GetDataTypeList option:selected").val() == 51 || $("#GetDataTypeList option:selected").val() == 53 || $("#GetDataTypeList option:selected").val() == 54 || $("#GetDataTypeList option:selected").val() == 55 || $("#GetDataTypeList option:selected").val() == 56 || $("#GetDataTypeList option:selected").val() == 57 || $("#GetDataTypeList option:selected").val() == 58 || $("#GetDataTypeList option:selected").val() == 59 || $("#GetDataTypeList option:selected").val() == 510) {
+            //    Danwei1.innerHTML = "数值(mg/L)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 4 || $("#GetDataTypeList option:selected").val() == 12 || $("#GetDataTypeList option:selected").val() == 42) {
+            //    Danwei1.innerHTML = "数值(NTU)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 5 || $("#GetDataTypeList option:selected").val() == 13 || $("#GetDataTypeList option:selected").val() == 43 || $("#GetDataTypeList option:selected").val() == 108 || $("#GetDataTypeList option:selected").val() == 120 || $("#GetDataTypeList option:selected").val() == 201 || $("#GetDataTypeList option:selected").val() == 211 || $("#GetDataTypeList option:selected").val() == 303 || $("#GetDataTypeList option:selected").val() == 320 || $("#GetDataTypeList option:selected").val() == 453) {
+            //    Danwei1.innerHTML = "数值";
+            //} else if ($("#GetDataTypeList option:selected").val() == 18 || $("#GetDataTypeList option:selected").val() == 48) {
+            //    Danwei1.innerHTML = "数值(μs/cm)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 19 || $("#GetDataTypeList option:selected").val() == 49 || $("#GetDataTypeList option:selected").val() == 507) {
+            //    Danwei1.innerHTML = "数值(℃)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 22 || $("#GetDataTypeList option:selected").val() == 52) {
+            //    Danwei1.innerHTML = "数值(mV)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 81 || $("#GetDataTypeList option:selected").val() == 91 || $("#GetDataTypeList option:selected").val() == 92 || $("#GetDataTypeList option:selected").val() == 93 || $("#GetDataTypeList option:selected").val() == 400 || $("#GetDataTypeList option:selected").val() == 401 || $("#GetDataTypeList option:selected").val() == 402 || $("#GetDataTypeList option:selected").val() == 403 || $("#GetDataTypeList option:selected").val() == 404 || $("#GetDataTypeList option:selected").val() == 405 || $("#GetDataTypeList option:selected").val() == 406 || $("#GetDataTypeList option:selected").val() == 407 || $("#GetDataTypeList option:selected").val() == 408 || $("#GetDataTypeList option:selected").val() == 409 || $("#GetDataTypeList option:selected").val() == 410 || $("#GetDataTypeList option:selected").val() == 411 || $("#GetDataTypeList option:selected").val() == 422) {
+            //    Danwei1.innerHTML = "数值(m)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 82 || $("#GetDataTypeList option:selected").val() == 202) {
+            //    Danwei1.innerHTML = "数值(Hz)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 94 || $("#GetDataTypeList option:selected").val() == 103 || $("#GetDataTypeList option:selected").val() == 104  || $("#GetDataTypeList option:selected").val() == 112 || $("#GetDataTypeList option:selected").val() == 113 || $("#GetDataTypeList option:selected").val() == 114 || $("#GetDataTypeList option:selected").val() == 115 || $("#GetDataTypeList option:selected").val() == 116 || $("#GetDataTypeList option:selected").val() == 119 || $("#GetDataTypeList option:selected").val() == 132 || $("#GetDataTypeList option:selected").val() == 133 || $("#GetDataTypeList option:selected").val() == 134 || $("#GetDataTypeList option:selected").val() == 205) {
+            //    Danwei1.innerHTML = "数值(万m<sup>3</sup>)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 135 || $("#GetDataTypeList option:selected").val() == 136 || $("#GetDataTypeList option:selected").val() == 524 || $("#GetDataTypeList option:selected").val() == 525 || $("#GetDataTypeList option:selected").val() == 528 || $("#GetDataTypeList option:selected").val() == 102 || $("#GetDataTypeList option:selected").val() == 526 || $("#GetDataTypeList option:selected").val() == 527 || $("#GetDataTypeList option:selected").val() == 521 || $("#GetDataTypeList option:selected").val() == 107) {
+            //    Danwei1.innerHTML = "数值(m<sup>3</sup>)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 206 || $("#GetDataTypeList option:selected").val() == 222) {
+            //    Danwei1.innerHTML = "数值(度)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 212 || $("#GetDataTypeList option:selected").val() == 213 || $("#GetDataTypeList option:selected").val() == 214 || $("#GetDataTypeList option:selected").val() == 215 || $("#GetDataTypeList option:selected").val() == 216 || $("#GetDataTypeList option:selected").val() == 217) {
+            //    Danwei1.innerHTML = "数值(%)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 218) {
+            //    Danwei1.innerHTML = "数值(cm)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 301) {
+            //    Danwei1.innerHTML = "数值(kw)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 302) {
+            //    Danwei1.innerHTML = "数值(kvar)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 304 || $("#GetDataTypeList option:selected").val() == 305 || $("#GetDataTypeList option:selected").val() == 306 || $("#GetDataTypeList option:selected").val() == 308) {
+            //    Danwei1.innerHTML = "数值(A)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 307) {
+            //    Danwei1.innerHTML = "数值(V)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 421 || $("#GetDataTypeList option:selected").val() == 450 || $("#GetDataTypeList option:selected").val() == 452) {
+            //    Danwei1.innerHTML = "数值(km<sup>3</sup>/h)";
+            //}
+
+            //if ($("#GetDataTypeList option:selected").val() == 1 || $("#GetDataTypeList option:selected").val() == 8 || $("#GetDataTypeList option:selected").val() == 9 || $("#GetDataTypeList option:selected").val() == 83 || $("#GetDataTypeList option:selected").val() == 101 || $("#GetDataTypeList option:selected").val() == 106 || $("#GetDataTypeList option:selected").val() == 111 || $("#GetDataTypeList option:selected").val() == 118 || $("#GetDataTypeList option:selected").val() == 131 || $("#GetDataTypeList option:selected").val() == 204 || $("#GetDataTypeList option:selected").val() == 451 || $("#GetDataTypeList option:selected").val() == 454 || $("#GetDataTypeList option:selected").val() == 455 || $("#GetDataTypeList option:selected").val() == 24) {
+            //    Danwei2.innerHTML = "数值(m<sup>3</sup>/h)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 2 || $("#GetDataTypeList option:selected").val() == 6 || $("#GetDataTypeList option:selected").val() == 105 || $("#GetDataTypeList option:selected").val() == 117 || $("#GetDataTypeList option:selected").val() == 203 || $("#GetDataTypeList option:selected").val() == 221 || $("#GetDataTypeList option:selected").val() == 223 || $("#GetDataTypeList option:selected").val() == 224 || $("#GetDataTypeList option:selected").val() == 225 || $("#GetDataTypeList option:selected").val() == 226) {
+            //    Danwei2.innerHTML = "数值(MPa)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 3 || $("#GetDataTypeList option:selected").val() == 11 || $("#GetDataTypeList option:selected").val() == 14 || $("#GetDataTypeList option:selected").val() == 15 || $("#GetDataTypeList option:selected").val() == 16 || $("#GetDataTypeList option:selected").val() == 17 || $("#GetDataTypeList option:selected").val() == 20 || $("#GetDataTypeList option:selected").val() == 21 || $("#GetDataTypeList option:selected").val() == 23 || $("#GetDataTypeList option:selected").val() == 40 || $("#GetDataTypeList option:selected").val() == 41 || $("#GetDataTypeList option:selected").val() == 44 || $("#GetDataTypeList option:selected").val() == 45 || $("#GetDataTypeList option:selected").val() == 46 || $("#GetDataTypeList option:selected").val() == 47 || $("#GetDataTypeList option:selected").val() == 50 || $("#GetDataTypeList option:selected").val() == 51 || $("#GetDataTypeList option:selected").val() == 53 || $("#GetDataTypeList option:selected").val() == 54 || $("#GetDataTypeList option:selected").val() == 55 || $("#GetDataTypeList option:selected").val() == 56 || $("#GetDataTypeList option:selected").val() == 57 || $("#GetDataTypeList option:selected").val() == 58 || $("#GetDataTypeList option:selected").val() == 59 || $("#GetDataTypeList option:selected").val() == 510) {
+            //    Danwei2.innerHTML = "数值(mg/L)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 4 || $("#GetDataTypeList option:selected").val() == 12 || $("#GetDataTypeList option:selected").val() == 42) {
+            //    Danwei2.innerHTML = "数值(NTU)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 5 || $("#GetDataTypeList option:selected").val() == 13 || $("#GetDataTypeList option:selected").val() == 43 || $("#GetDataTypeList option:selected").val() == 108 || $("#GetDataTypeList option:selected").val() == 120 || $("#GetDataTypeList option:selected").val() == 201 || $("#GetDataTypeList option:selected").val() == 211 || $("#GetDataTypeList option:selected").val() == 303 || $("#GetDataTypeList option:selected").val() == 320 || $("#GetDataTypeList option:selected").val() == 453) {
+            //    Danwei2.innerHTML = "数值";
+            //} else if ($("#GetDataTypeList option:selected").val() == 18 || $("#GetDataTypeList option:selected").val() == 48) {
+            //    Danwei2.innerHTML = "数值(μs/cm)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 19 || $("#GetDataTypeList option:selected").val() == 49 || $("#GetDataTypeList option:selected").val() == 507) {
+            //    Danwei2.innerHTML = "数值(℃)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 22 || $("#GetDataTypeList option:selected").val() == 52) {
+            //    Danwei2.innerHTML = "数值(mV)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 81 || $("#GetDataTypeList option:selected").val() == 91 || $("#GetDataTypeList option:selected").val() == 92 || $("#GetDataTypeList option:selected").val() == 93 || $("#GetDataTypeList option:selected").val() == 400 || $("#GetDataTypeList option:selected").val() == 401 || $("#GetDataTypeList option:selected").val() == 402 || $("#GetDataTypeList option:selected").val() == 403 || $("#GetDataTypeList option:selected").val() == 404 || $("#GetDataTypeList option:selected").val() == 405 || $("#GetDataTypeList option:selected").val() == 406 || $("#GetDataTypeList option:selected").val() == 407 || $("#GetDataTypeList option:selected").val() == 408 || $("#GetDataTypeList option:selected").val() == 409 || $("#GetDataTypeList option:selected").val() == 410 || $("#GetDataTypeList option:selected").val() == 411 || $("#GetDataTypeList option:selected").val() == 422) {
+            //    Danwei2.innerHTML = "数值(m)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 82 || $("#GetDataTypeList option:selected").val() == 202) {
+            //    Danwei2.innerHTML = "数值(Hz)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 94 || $("#GetDataTypeList option:selected").val() == 103 || $("#GetDataTypeList option:selected").val() == 104  || $("#GetDataTypeList option:selected").val() == 112 || $("#GetDataTypeList option:selected").val() == 113 || $("#GetDataTypeList option:selected").val() == 114 || $("#GetDataTypeList option:selected").val() == 115 || $("#GetDataTypeList option:selected").val() == 116 || $("#GetDataTypeList option:selected").val() == 119 || $("#GetDataTypeList option:selected").val() == 132 || $("#GetDataTypeList option:selected").val() == 133 || $("#GetDataTypeList option:selected").val() == 134 || $("#GetDataTypeList option:selected").val() == 205) {
+            //    Danwei2.innerHTML = "数值(万m<sup>3</sup>)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 135 || $("#GetDataTypeList option:selected").val() == 136 || $("#GetDataTypeList option:selected").val() == 524 || $("#GetDataTypeList option:selected").val() == 525 || $("#GetDataTypeList option:selected").val() == 528 || $("#GetDataTypeList option:selected").val() == 102 || $("#GetDataTypeList option:selected").val() == 526 || $("#GetDataTypeList option:selected").val() == 527 || $("#GetDataTypeList option:selected").val() == 521 || $("#GetDataTypeList option:selected").val() == 107) {
+            //    Danwei2.innerHTML = "数值(m<sup>3</sup>)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 206 || $("#GetDataTypeList option:selected").val() == 222) {
+            //    Danwei2.innerHTML = "数值(度)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 212 || $("#GetDataTypeList option:selected").val() == 213 || $("#GetDataTypeList option:selected").val() == 214 || $("#GetDataTypeList option:selected").val() == 215 || $("#GetDataTypeList option:selected").val() == 216 || $("#GetDataTypeList option:selected").val() == 217) {
+            //    Danwei2.innerHTML = "数值(%)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 218) {
+            //    Danwei2.innerHTML = "数值(cm)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 301) {
+            //    Danwei2.innerHTML = "数值(kw)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 302) {
+            //    Danwei2.innerHTML = "数值(kvar)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 304 || $("#GetDataTypeList option:selected").val() == 305 || $("#GetDataTypeList option:selected").val() == 306 || $("#GetDataTypeList option:selected").val() == 308) {
+            //    Danwei2.innerHTML = "数值(A)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 307) {
+            //    Danwei2.innerHTML = "数值(V)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 421 || $("#GetDataTypeList option:selected").val() == 450 || $("#GetDataTypeList option:selected").val() == 452) {
+            //    Danwei2.innerHTML = "数值(km<sup>3</sup>/h)";
+            //}
+
+
+            //console.log(Danwei);
+            //if ($("#GetDataTypeList option:selected").val() == 1 || $("#GetDataTypeList option:selected").val() == 8 || $("#GetDataTypeList option:selected").val() == 9 || $("#GetDataTypeList option:selected").val() == 83 || $("#GetDataTypeList option:selected").val() == 101 || $("#GetDataTypeList option:selected").val() == 106 || $("#GetDataTypeList option:selected").val() == 111 || $("#GetDataTypeList option:selected").val() == 118 || $("#GetDataTypeList option:selected").val() == 131 || $("#GetDataTypeList option:selected").val() == 204 || $("#GetDataTypeList option:selected").val() == 451 || $("#GetDataTypeList option:selected").val() == 454 || $("#GetDataTypeList option:selected").val() == 455 || $("#GetDataTypeList option:selected").val() == 24) {
+            //    Danwei3.innerHTML = "数值(m<sup>3</sup>/h)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 2 || $("#GetDataTypeList option:selected").val() == 6 || $("#GetDataTypeList option:selected").val() == 105 || $("#GetDataTypeList option:selected").val() == 117 || $("#GetDataTypeList option:selected").val() == 203 || $("#GetDataTypeList option:selected").val() == 221 || $("#GetDataTypeList option:selected").val() == 223 || $("#GetDataTypeList option:selected").val() == 224 || $("#GetDataTypeList option:selected").val() == 225 || $("#GetDataTypeList option:selected").val() == 226) {
+            //    Danwei3.innerHTML = "数值(MPa)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 3 || $("#GetDataTypeList option:selected").val() == 11 || $("#GetDataTypeList option:selected").val() == 14 || $("#GetDataTypeList option:selected").val() == 15 || $("#GetDataTypeList option:selected").val() == 16 || $("#GetDataTypeList option:selected").val() == 17 || $("#GetDataTypeList option:selected").val() == 20 || $("#GetDataTypeList option:selected").val() == 21 || $("#GetDataTypeList option:selected").val() == 23 || $("#GetDataTypeList option:selected").val() == 40 || $("#GetDataTypeList option:selected").val() == 41 || $("#GetDataTypeList option:selected").val() == 44 || $("#GetDataTypeList option:selected").val() == 45 || $("#GetDataTypeList option:selected").val() == 46 || $("#GetDataTypeList option:selected").val() == 47 || $("#GetDataTypeList option:selected").val() == 50 || $("#GetDataTypeList option:selected").val() == 51 || $("#GetDataTypeList option:selected").val() == 53 || $("#GetDataTypeList option:selected").val() == 54 || $("#GetDataTypeList option:selected").val() == 55 || $("#GetDataTypeList option:selected").val() == 56 || $("#GetDataTypeList option:selected").val() == 57 || $("#GetDataTypeList option:selected").val() == 58 || $("#GetDataTypeList option:selected").val() == 59 || $("#GetDataTypeList option:selected").val() == 510) {
+            //    Danwei3.innerHTML = "数值(mg/L)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 4 || $("#GetDataTypeList option:selected").val() == 12 || $("#GetDataTypeList option:selected").val() == 42) {
+            //    Danwei3.innerHTML = "数值(NTU)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 5 || $("#GetDataTypeList option:selected").val() == 13 || $("#GetDataTypeList option:selected").val() == 43 || $("#GetDataTypeList option:selected").val() == 108 || $("#GetDataTypeList option:selected").val() == 120 || $("#GetDataTypeList option:selected").val() == 201 || $("#GetDataTypeList option:selected").val() == 211 || $("#GetDataTypeList option:selected").val() == 303 || $("#GetDataTypeList option:selected").val() == 320 || $("#GetDataTypeList option:selected").val() == 453) {
+            //    Danwei3.innerHTML = "数值";
+            //} else if ($("#GetDataTypeList option:selected").val() == 18 || $("#GetDataTypeList option:selected").val() == 48) {
+            //    Danwei3.innerHTML = "数值(μs/cm)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 19 || $("#GetDataTypeList option:selected").val() == 49 || $("#GetDataTypeList option:selected").val() == 507) {
+            //    Danwei3.innerHTML = "数值(℃)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 22 || $("#GetDataTypeList option:selected").val() == 52) {
+            //    Danwei3.innerHTML = "数值(mV)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 81 || $("#GetDataTypeList option:selected").val() == 91 || $("#GetDataTypeList option:selected").val() == 92 || $("#GetDataTypeList option:selected").val() == 93 || $("#GetDataTypeList option:selected").val() == 400 || $("#GetDataTypeList option:selected").val() == 401 || $("#GetDataTypeList option:selected").val() == 402 || $("#GetDataTypeList option:selected").val() == 403 || $("#GetDataTypeList option:selected").val() == 404 || $("#GetDataTypeList option:selected").val() == 405 || $("#GetDataTypeList option:selected").val() == 406 || $("#GetDataTypeList option:selected").val() == 407 || $("#GetDataTypeList option:selected").val() == 408 || $("#GetDataTypeList option:selected").val() == 409 || $("#GetDataTypeList option:selected").val() == 410 || $("#GetDataTypeList option:selected").val() == 411 || $("#GetDataTypeList option:selected").val() == 422) {
+            //    Danwei3.innerHTML = "数值(m)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 82 || $("#GetDataTypeList option:selected").val() == 202) {
+            //    Danwei3.innerHTML = "数值(Hz)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 94 || $("#GetDataTypeList option:selected").val() == 103 || $("#GetDataTypeList option:selected").val() == 104 || $("#GetDataTypeList option:selected").val() == 112 || $("#GetDataTypeList option:selected").val() == 113 || $("#GetDataTypeList option:selected").val() == 114 || $("#GetDataTypeList option:selected").val() == 115 || $("#GetDataTypeList option:selected").val() == 116 || $("#GetDataTypeList option:selected").val() == 119 || $("#GetDataTypeList option:selected").val() == 132 || $("#GetDataTypeList option:selected").val() == 133 || $("#GetDataTypeList option:selected").val() == 134 || $("#GetDataTypeList option:selected").val() == 205) {
+            //    Danwei3.innerHTML = "数值(万m<sup>3</sup>)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 135 || $("#GetDataTypeList option:selected").val() == 136 || $("#GetDataTypeList option:selected").val() == 524 || $("#GetDataTypeList option:selected").val() == 525 || $("#GetDataTypeList option:selected").val() == 528 || $("#GetDataTypeList option:selected").val() == 102 || $("#GetDataTypeList option:selected").val() == 526 || $("#GetDataTypeList option:selected").val() == 527 || $("#GetDataTypeList option:selected").val() == 521 || $("#GetDataTypeList option:selected").val() == 107) {
+            //    Danwei3.innerHTML = "数值(m<sup>3</sup>)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 206 || $("#GetDataTypeList option:selected").val() == 222) {
+            //    Danwei3.innerHTML = "数值(度)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 212 || $("#GetDataTypeList option:selected").val() == 213 || $("#GetDataTypeList option:selected").val() == 214 || $("#GetDataTypeList option:selected").val() == 215 || $("#GetDataTypeList option:selected").val() == 216 || $("#GetDataTypeList option:selected").val() == 217) {
+            //    Danwei3.innerHTML = "数值(%)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 218) {
+            //    Danwei3.innerHTML = "数值(cm)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 301) {
+            //    Danwei3.innerHTML = "数值(kw)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 302) {
+            //    Danwei3.innerHTML = "数值(kvar)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 304 || $("#GetDataTypeList option:selected").val() == 305 || $("#GetDataTypeList option:selected").val() == 306 || $("#GetDataTypeList option:selected").val() == 308) {
+            //    Danwei3.innerHTML = "数值(A)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 307) {
+            //    Danwei3.innerHTML = "数值(V)";
+            //} else if ($("#GetDataTypeList option:selected").val() == 421 || $("#GetDataTypeList option:selected").val() == 450 || $("#GetDataTypeList option:selected").val() == 452) {
+            //    Danwei3.innerHTML = "数值(km<sup>3</sup>/h)";
+            //}
+        }
+        //console.log(url_2_4);
+
+    }
+
+    function jiekou2_1() {
+        var urlLink2_1 = '/SystemManage/SysDic/GetItemList?typeId=3';
+        var Button1 = document.getElementById("Button_1");
+        //console.log(L3);
+        $.ajax({
+            type: "GET",
+            url: urlLink2_1,
+            dataType: "JSON",
+            success: function (adata) {
+                console.log(adata);
+                B1length = adata.length;
+                for (let i = 0; i < B1length; i++) {
+                    let Button_ul_1 = document.getElementById("Button_ul_1");
+                    Button_ul_1.innerHTML += '<li ><a id="Button_ul_1_' + adata[i].ItemID + '" onclick="onclickButton_ul_1(this)" href="#">' + adata[i].ItemName + '</a></li>';
+                }
+            }
+        });
+    }
+
+    function jiekou2_2() {
+        var urlLink2_2 = '/DataSynthetical/CurrentData/GetFactoryList';
+        var Button1 = document.getElementById("Button_2");
+        //console.log(L3);
+        $.ajax({
+            type: "GET",
+            url: urlLink2_2,
+            dataType: "JSON",
+            success: function (adata) {
+                B2length = adata.length;
+                for (let i = 0; i < B2length; i++) {
+                    let Button_ul_2 = document.getElementById("Button_ul_2");
+                    Button_ul_2.innerHTML += '<li ><a id="Button_ul_2_' + i + '" value = "' + adata[i].Value + '" onclick="onclickButton_ul_2(this)" href="#">' + adata[i].Name + '</a></li>';
+                }
+            }
+        });
+    }
+
+    function jiekou2_3() {
+        var urlLink2_3 = '/DataSynthetical/CurrentData/GetDistrictList';
+        var Button3 = document.getElementById("Button_3");
+        //console.log(L3);
+        $.ajax({
+            type: "GET",
+            url: urlLink2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                B3length = adata.length;
+                for (let i = 0; i < B3length; i++) {
+                    let Button_ul_3 = document.getElementById("Button_ul_3");
+                    Button_ul_3.innerHTML += '<li ><a id="Button_ul_3_' + adata[i].Value + '" onclick="onclickButton_ul_3(this)" href="#">' + adata[i].Name + '</a></li>';
+                }
+            }
+        });
+    }
+
+    function jiekou2_4() {
+        if (jiekou2_2value == null && jiekou2_3value != null) {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetClData?' + 'district=' + jiekou2_3value;
+        } else if (jiekou2_2value != null && jiekou2_3value == null) {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetClData?' + 'factory=' + jiekou2_2value;
+        } else {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetClData?';
+        }
+
+        $.ajax({
+            type: "GET",
+            url: urlLink2_4,
+            dataType: "JSON",
+            success: function (adata) {
+                console.log(adata);
+                Data24length = adata.length;
+                console.log(Data24length);
+                let datadetail = document.getElementById("datadetail");
+                datadetail.innerHTML = '';
+                for (let i = 0; i < Data24length; i++) {
+                    if (i % 4 == 0) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 1) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 2) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 3) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:400px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '</tr>'
+                            + '</table>'
+                    }
+                }
+                console.log(datadetail);
+            }
+        });
+    }
+
+    function jiekou2_5() {
+        if (jiekou2_2value == null && jiekou2_3value != null) {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetTurbidityData?' + 'district=' + jiekou2_3value;
+        } else if (jiekou2_2value != null && jiekou2_3value == null) {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetTurbidityData?' + 'factory=' + jiekou2_2value;
+        } else {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetTurbidityData?';
+        }
+
+        $.ajax({
+            type: "GET",
+            url: urlLink2_4,
+            dataType: "JSON",
+            success: function (adata) {
+                console.log(adata);
+                Data25length = adata.length;
+                console.log(Data25length);
+                let datadetail = document.getElementById("datadetail");
+                datadetail.innerHTML = '';
+                for (let i = 0; i < Data25length; i++) {
+                    if (i % 4 == 0) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 1) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 2) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 3) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:400px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '</tr>'
+                            + '</table>'
+                    }
+                }
+                console.log(datadetail);
+            }
+        });
+    }
+
+    function jiekou2_6() {
+        if (jiekou2_2value == null && jiekou2_3value != null) {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetPressureData?' + 'district=' + jiekou2_3value;
+        } else if (jiekou2_2value != null && jiekou2_3value == null) {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetPressureData?' + 'factory=' + jiekou2_2value;
+        } else {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetPressureData?';
+        }
+
+        $.ajax({
+            type: "GET",
+            url: urlLink2_4,
+            dataType: "JSON",
+            success: function (adata) {
+                console.log(adata);
+                Data26length = adata.length;
+                console.log(Data26length);
+                let datadetail = document.getElementById("datadetail");
+                datadetail.innerHTML = '';
+                for (let i = 0; i < Data26length; i++) {
+                    if (i % 4 == 0) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 1) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 2) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 3) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:400px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '</tr>'
+                            + '</table>'
+                    }
+                }
+                console.log(datadetail);
+            }
+        });
+    }
+
+    function jiekou2_7() {
+        if (jiekou2_2value == null && jiekou2_3value != null) {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetMeterData?' + 'district=' + jiekou2_3value;
+        } else if (jiekou2_2value != null && jiekou2_3value == null) {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetMeterData?' + 'factory=' + jiekou2_2value;
+        } else {
+            var urlLink2_4 = '/DataSynthetical/CurrentData/GetMeterData?';
+        }
+
+        $.ajax({
+            type: "GET",
+            url: urlLink2_4,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                Data27length = adata.length;
+                //console.log(Data27length);
+                let datadetail = document.getElementById("datadetail");
+                datadetail.innerHTML = '';
+                for (let i = 0; i < Data27length; i++) {
+                    if (i % 4 == 0) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 1) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 2) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:425px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '<td style="width:25px;background-color: #edf2f6;">' + '</td>';
+                        + '</tr>'
+                            + '</table>'
+                    }
+                    else if (i % 4 == 3) {
+                        datadetail.innerHTML += '<table class="right212_data" style="height:40px; width:400px;">'
+                            + '<tr class="right2121">'
+                            + '<td class="right21211" style="width: 250px;">' + adata[i].Meter_Name + '</td>'
+                            + '<td class="right21211" style="width: 150px;">' + adata[i].Tag_value + '</td>'
+                            + '</tr>'
+                            + '</table>'
+                    }
+                }
+                //console.log(datadetail);
+            }
+        });
+    }
+
+    function onclickButton_ul_1(node) {
+        jiekou2_1id = parseInt(node.id.charAt(node.id.length - 1));
+        //console.log(jiekou2_1id);
+        let Button_1_c = document.getElementById("Button_1_c");
+        Button_1_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+
+    }
+
+    function onclickButton_ul_2(node) {
+        jiekou2_2id = parseInt(node.id.charAt(node.id.length - 1)) + 1;
+        jiekou2_2value = node.getAttribute("value");
+        let Button_2_c = document.getElementById("Button_2_c");
+        Button_2_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+        jiekou2_3value = null;
+        let Button_3_c = document.getElementById("Button_3_c");
+        Button_3_c.innerHTML = "请选择 <span class='caret'></span>";
+    }
+
+    function onclickButton_ul_3(node) {
+        jiekou2_3value = parseInt(node.id.charAt(node.id.length - 1)) + 1;
+        let Button_3_c = document.getElementById("Button_3_c");
+        Button_3_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+        jiekou2_2value = null;
+        let Button_2_c = document.getElementById("Button_2_c");
+        Button_2_c.innerHTML = "请选择 <span class='caret'></span>";
+    }
+
+    function onclicksearch(node) {
+        //console.log(jiekou2_1id);
+        let Danwei0 = document.getElementById("danwei0");
+        //console.log(Danwei);
+        if (jiekou2_1id == 1) {
+            Danwei0.innerHTML = "数值(m<sup>3</sup>)";
+        } else if (jiekou2_1id == 2) {
+            Danwei0.innerHTML = "数值(MPa)";
+        } else if (jiekou2_1id == 3) {
+            Danwei0.innerHTML = "数值(mg/L)";
+        } else if (jiekou2_1id == 4) {
+            Danwei0.innerHTML = "数值(NTU)";
+        }
+
+        let Danwei1 = document.getElementById("danwei1");
+        //console.log(Danwei);
+        if (jiekou2_1id == 1) {
+            Danwei1.innerHTML = "数值(m<sup>3</sup>)";
+        } else if (jiekou2_1id == 2) {
+            Danwei1.innerHTML = "数值(MPa)";
+        } else if (jiekou2_1id == 3) {
+            Danwei1.innerHTML = "数值(mg/L)";
+        } else if (jiekou2_1id == 4) {
+            Danwei1.innerHTML = "数值(NTU)";
+        }
+
+        let Danwei2 = document.getElementById("danwei2");
+        //console.log(Danwei);
+        if (jiekou2_1id == 1) {
+            Danwei2.innerHTML = "数值(m<sup>3</sup>)";
+        } else if (jiekou2_1id == 2) {
+            Danwei2.innerHTML = "数值(MPa)";
+        } else if (jiekou2_1id == 3) {
+            Danwei2.innerHTML = "数值(mg/L)";
+        } else if (jiekou2_1id == 4) {
+            Danwei2.innerHTML = "数值(NTU)";
+        }
+
+
+        let Danwei3 = document.getElementById("danwei3");
+        //console.log(Danwei);
+        if (jiekou2_1id == 1) {
+            Danwei3.innerHTML = "数值(m<sup>3</sup>)";
+        } else if (jiekou2_1id == 2) {
+            Danwei3.innerHTML = "数值(MPa)";
+        } else if (jiekou2_1id == 3) {
+            Danwei3.innerHTML = "数值(mg/L)";
+        } else if (jiekou2_1id == 4) {
+            Danwei3.innerHTML = "数值(NTU)";
+        }
+
+        if (jiekou2_1id == 1) {
+            jiekou2_7();
+        } else if (jiekou2_1id == 2) {
+            jiekou2_6();
+        } else if (jiekou2_1id == 3) {
+            jiekou2_4();
+        } else if (jiekou2_1id == 4) {
+            jiekou2_5();
+        } else {
+            alert("请先选择监测数据类型！");
+        }
+    }
+
+    window.onload = init();
+</script>

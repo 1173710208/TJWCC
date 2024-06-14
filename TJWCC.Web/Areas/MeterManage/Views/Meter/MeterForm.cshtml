@@ -1,0 +1,226 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<style>
+    .form .formTitle {
+        position: relative;
+        left: 0px;
+        text-align: right;
+        white-space: nowrap;
+        font-weight: normal;
+        width: 110px;
+        padding-right: 15px;
+    }
+</style>
+
+<script>
+    var keyValue = $.request("keyValue");
+    $(function () {
+        initControl();
+        //if (!!keyValue) {
+        //    $.ajax({
+        //        url: "/MeterManage/Meter/GetFormJson",
+        //        data: { makerID: keyValue },
+        //        dataType: "json",
+        //        async: false,
+        //        success: function (data) {
+        //            $("#form1").formSerialize(data);
+        //        }
+        //    });
+        //}
+    });
+
+    function initControl() {
+        //$("#GENDER").bindSelect()
+        //$("#ISADMINISTRATOR").bindSelect()
+        //$("#ENABLEDMARK").bindSelect()
+        //$("#ORGANIZEID").bindSelect({
+        //    url: "/SystemManage/Organize/GetTreeSelectJson"
+        //});
+        //$("#DEPARTMENTID").bindSelect({
+        //    url: "/SystemManage/Organize/GetTreeSelectJson",
+        //});
+        $("#COMPANYID").bindSelect({
+            url: "/SystemManage/Company/GetGridJson",
+            id: "COMPANYID",
+            text: "CNAME"
+        });
+        $("#TYPEID").bindSelect({
+            url: "/BaseData/MeterType/GetGridJson",
+            id: "TYPEID",
+            text: "TYPENAME"
+        });
+        $("#MAKERID").bindSelect({
+            url: "/BaseData/Maker/GetGridJson",
+            id: "MAKERID",
+            text: "MNAME"
+        });
+        $("#COMMID").bindSelect({
+            url: "/BaseData/Comm/GetGridJson",
+            id: "COMMID",
+            text: "COMMNAME"
+        });
+
+        //设置时间
+        var curdate = new Date();
+        $("input[name='INSTALLDATE']").val(curdate.toLocaleDateString());
+    }
+
+    function getBusiness() {
+        var obj = document.getElementById('COMPANYID');
+        var index = obj.selectedIndex; //序号，取当前选中选项的序号
+        var val = obj.options[index].value;
+        $("#BUSINESSID").bindSelect({
+            url: "/SystemManage/Business/GetGridJson?COMPANYID="+val,
+            id: "BUSINESSID",
+            text: "BNAME"
+        });
+    }
+
+    function getSubbusi() {
+        var obj = document.getElementById('BUSINESSID');
+        var index = obj.selectedIndex; //序号，取当前选中选项的序号
+        var val = obj.options[index].value;
+        $("#SUBBUSIID").bindSelect({
+            url: "/SystemManage/SubBusi/GetGridJson?BUSINESSID=" + val,
+            id: "SUBBUSIID",
+            text: "SNAME"
+        });
+    }
+
+    ///提交form；新增或修改
+    function submitForm() {
+        if (!$('#form1').formValid()) {
+            return false;
+        }
+        $.submitForm({
+            url: "/MeterManage/Meter/SubmitForm?keyValue=" + keyValue,
+            param: $("#form1").formSerialize(),
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+
+    //$(function () {
+    //    $("[role='presentation']").click(function () {
+    //        $("[role='presentation']").removeClass("active");
+    //        $(this).addClass("active");
+    //    });
+    //});
+
+    //function submitForm() {
+    //    if (!$('#form1').formValid()) {
+    //        return false;
+    //    }
+    //    $.submitForm({
+    //        url: "/MeterManage/Meter/RegisteredMeter",
+    //        param: $("#form1").formSerialize(),
+    //        success: function (data) {
+    //            alert(JSON.stringify(data).message);
+    //            $.currentWindow().$("#gridList").resetSelection();
+    //            $.currentWindow().$("#gridList").trigger("reloadGrid");
+    //        }, error: function (data) {
+    //            alert(data);
+    //        }
+    //    })
+    //}
+
+</script>
+
+<form id="form1">
+    <div style="margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#">水表信息</a></li>
+        </ul>
+        <div style="padding-top: 20px; margin-right: 30px;">
+            <table class="form">
+                <tr>
+                    <th class="formTitle">IMEI</th>
+                    <td class="formValue">
+                        <input id="IMEI" name="IMEI" type="text" class="form-control required" placeholder="请输入IMEI" />
+                    </td>
+                    <th class="formTitle">IMSI</th>
+                    <td class="formValue">
+                        <input id="IMSI" name="IMSI" type="text" class="form-control" placeholder="请输入IMSI" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">所属水务公司</th>
+                    <td class="formValue">
+                        <select id="COMPANYID" name="COMPANYID" class="form-control required" onchange="getBusiness()" >
+                            <option value="">==请选择==</option>
+                        </select>
+                        @*<input id="COMPANYID" name="COMPANYID" type="text" class="form-control" />*@
+                    </td>
+                    <th class="formTitle">所属营销公司</th>
+                    <td class="formValue">
+                        <select id="BUSINESSID" name="BUSINESSID" class="form-control required" onchange="getSubbusi()" >
+                            <option value="">==请选择==</option>
+                        </select>
+                        @*<input id="BUSINESSID" name="BUSINESSID" type="text" class="form-control" />*@
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">所属营销分公司</th>
+                    <td class="formValue">
+                        <select id="SUBBUSIID" name="SUBBUSIID" class="form-control">
+                            <option value="">==请选择==</option>
+                        </select>
+                        @*<input id="SUBBUSIID" name="SUBBUSIID" type="text" class="form-control" />*@
+                    </td>
+
+                    <th class="formTitle">通讯运营商</th>
+                    <td class="formValue">
+                        <select id="COMMID" name="COMMID" class="form-control required">
+                            <option value="">==请选择==</option>
+                        </select>
+                        @*<input id="COMMID" name="COMMID" type="text" class="form-control" />*@
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">水表型号</th>
+                    <td class="formValue">
+                        @*<input id="TYPEID" name="TYPEID" type="text" class="form-control" />*@
+                        <select id="TYPEID" name="TYPEID" class="form-control required">
+                            <option value="">==请选择==</option>
+                        </select>
+                    </td>
+
+                    <th class="formTitle">水表厂商</th>
+                    <td class="formValue">
+                        @*<input id="MAKERID" name="MAKERID" type="text" class="form-control" />*@
+                        <select id="MAKERID" name="MAKERID" class="form-control required">
+                            <option value="">==请选择==</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">安装日期</th>
+                    <td class="formValue">
+                        <input id="INSTALLDATE" name="INSTALLDATE" type="text" value="" class="form-control input-wdatepicker" onfocus="WdatePicker()" />
+                        @*<input id="BIRTHDAY" name="BIRTHDAY" type="text" class="form-control input-wdatepicker" onfocus="WdatePicker()" />*@
+                    </td>
+
+                    <th class="formTitle">初始水量</th>
+                    <td class="formValue">
+                        <input id="INICOUNT" name="INICOUNT" type="text" value="0"  class="form-control required" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">水表用户ID</th>
+                    <td class="formValue">
+                        <input id="USERID" name="USERID" type="text" value="" class="form-control required" />
+                    </td>
+
+                    <th class="formTitle" valign="top" style="padding-top: 5px;">备注</th>
+                    <td class="formValue">
+                        <textarea id="REMARK" name="REMARK" class="form-control" style="height: 36px;"></textarea>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+</form>

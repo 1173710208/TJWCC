@@ -1,0 +1,608 @@
+﻿.data_wrapper {
+    width: 1626px;
+    height: 680px;
+    margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+#crafData_list > li {
+    border: 1px solid #787878;
+    position: absolute;
+    cursor: default;
+    list-style: none;
+}
+
+    #crafData_list > li > img {
+        position: absolute;
+    }
+
+.crafData_tital {
+    font-size: 10px;
+    background: #2e5e75;
+    text-align: center;
+    padding: 5px 0;
+    color: #fff;
+    font-weight: bold;
+}
+
+.crafData_cont {
+    font-size: 8px;
+    background: transparent;
+    color: #000;
+    padding: 2px 0;
+}
+
+    .crafData_cont > div {
+        overflow: hidden;
+        padding: 1px 5px;
+    }
+
+        .crafData_cont > div > div {
+            float: left;
+        }
+
+            .crafData_cont > div > div:last-child {
+                float: right;
+                background: #000;
+                color: #05d5dd;
+                padding: 0 2px;
+                min-width: 40px;
+            }
+/* 灰色 */
+#crafData_list > li:nth-child(1) {
+    width: 90px;
+    left: 65px;
+    top: 160px;
+}
+
+#crafData_list > li:nth-child(2) {
+    width: 130px;
+    left: 240px;
+    top: 165px;
+}
+
+#crafData_list > li:nth-child(3) {
+    width: 123px;
+    left: 376px;
+    top: 135px;
+}
+
+#crafData_list > li:nth-child(4) {
+    width: 123px;
+    left: 370px;
+    top: 558px;
+}
+
+.inletWater {
+    width: 52px;
+}
+
+#crafData_list > li:nth-child(5) {
+    width: 120px;
+    left: 625px;
+    top: 325px;
+}
+
+#crafData_list > li:nth-child(6) {
+    width: 120px;
+    left: 640px;
+    top: 515px;
+}
+
+#crafData_list > li:nth-child(7) {
+    width: 120px;
+    left: 585px;
+    top: 120px;
+}
+
+#crafData_list > li:nth-child(8) {
+    left: 370px;
+    top: 630px;
+}
+
+#crafData_list > li:nth-child(9) {
+    width: 130px;
+    right: 680px;
+    top: 59px;
+}
+
+#crafData_list > li:nth-child(10) {
+    width: 140px;
+    right: 510px;
+    top: 470px;
+}
+/* 指向框
+ */
+.hide_hoverBtn {
+    position: absolute;
+    /* border: 1px solid red; */
+}
+
+.hide_content {
+    display: none;
+    border: 1px solid #787878;
+    position: relative;
+}
+
+.show_content {
+    display: block;
+    border: 1px solid #787878;
+    position: relative;
+}
+
+div.hide_hoverBtn:hover .hide_content {
+    display: block;
+}
+
+.hide_content > span:first-child {
+    font-size: 10px;
+    padding: 2px 10px;
+    background: #2e5e75;
+    color: #fff;
+    position: relative;
+    top: 2px;
+}
+
+.hide_content > span:last-child {
+    font-size: 8px;
+    display: inline-block;
+    background: #000;
+    color: #05d5dd;
+    padding: 0px 5px;
+    position: relative;
+    top: 2px;
+    width: 42px;
+}
+/***************** */
+#crafData_list > li:nth-child(7) .hide_content {
+    width: 227px;
+    height: 23px;
+    left: -25px;
+    top: -44px;
+    overflow: hidden;
+}
+
+#crafData_list > li:nth-child(7) .show_content {
+    width: 123px;
+    left: 0px;
+    top: -80px;
+}
+
+#crafData_list > li:nth-child(7) .hide_hoverBtn {
+    width: 150px;
+    height: 80px;
+    left: 50px;
+    top: 85px;
+}
+/* 灰色隐藏 */
+#crafData_list > li:nth-child(11) {
+    left: 470px;
+    top: 453px;
+    border: 0;
+}
+
+    #crafData_list > li:nth-child(11) .hide_content {
+        width: 120px;
+        left: 35px;
+        top: 125px;
+    }
+
+    #crafData_list > li:nth-child(11) .hide_hoverBtn {
+        width: 150px;
+        height: 85px;
+        left: -3px;
+    }
+/*************************** */
+#crafData_list > li:nth-child(12) {
+    left: 230px;
+    top: 490px;
+    border: 0;
+}
+
+    #crafData_list > li:nth-child(12) .hide_content {
+        width: 105px;
+        float: left;
+    }
+
+        #crafData_list > li:nth-child(12) .hide_content:nth-child(1) {
+            left: -105px;
+            top: 105px;
+            float: left;
+        }
+
+        #crafData_list > li:nth-child(12) .hide_content:nth-child(2) {
+            left: 5px;
+            top: -4px;
+            float: left;
+        }
+
+        #crafData_list > li:nth-child(12) .hide_content:nth-child(3) {
+            left: 115px;
+            top: -114px;
+            float: left;
+        }
+
+        #crafData_list > li:nth-child(12) .hide_content:nth-child(4) {
+            left: 225px;
+            top: -223px;
+            float: left;
+        }
+
+        #crafData_list > li:nth-child(12) .hide_content:nth-child(5) {
+            left: 520px;
+            top: -335px;
+            float: left;
+            width: 220px;
+        }
+
+    #crafData_list > li:nth-child(12) .hide_hoverBtn {
+        width: 200px;
+        height: 50px;
+        left: 5px;
+        top: 10px;
+    }
+/************************************ */
+#crafData_list > li:nth-child(13) {
+    left: 475px;
+    top: 355px;
+    border: 0;
+}
+
+    #crafData_list > li:nth-child(13) .hide_hoverBtn {
+        width: 138px;
+        height: 63px;
+    }
+
+    #crafData_list > li:nth-child(13) .hide_content {
+        width: 130px;
+        left: -135px;
+        top: 0px;
+    }
+/************************************ */
+#crafData_list > li:nth-child(14) {
+    left: 500px;
+    top: 165px;
+    border: 0;
+}
+
+    #crafData_list > li:nth-child(14) .hide_hoverBtn {
+        width: 60px;
+        height: 120px;
+    }
+
+    #crafData_list > li:nth-child(14) .hide_content {
+        width: 123px;
+        left: -130px;
+        top: -32px;
+    }
+/************************************ */
+#crafData_list > li:nth-child(15) {
+    left: 230px;
+    top: 320px;
+    border: 0;
+}
+
+    #crafData_list > li:nth-child(15) .hide_hoverBtn {
+        width: 90px;
+        height: 120px;
+    }
+
+    #crafData_list > li:nth-child(15) .hide_content {
+        width: 123px;
+        left: 5px;
+        top: -70px;
+    }
+/************************************ */
+#crafData_list > li:nth-child(16) {
+    left: 615px;
+    top: 210px;
+    border: 0;
+}
+
+    #crafData_list > li:nth-child(16) .hide_hoverBtn {
+        width: 145px;
+        height: 70px;
+    }
+
+    #crafData_list > li:nth-child(16) .hide_content {
+        width: 227px;
+        left: -45px;
+        top: -45px;
+        height: 20px;
+    }
+/* 绿色 */
+#crafWater_list > li {
+    color: #fff;
+    position: absolute;
+    overflow: hidden;
+    cursor: default;
+}
+
+    #crafWater_list > li > div {
+        float: left;
+    }
+
+        #crafWater_list > li > div:first-child {
+            background: #2f753f;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 12px;
+        }
+
+        #crafWater_list > li > div:last-child {
+            border: 1px solid #787878;
+            font-size: 10px;
+            padding: 2px;
+        }
+
+            #crafWater_list > li > div:last-child > div {
+                background: #000;
+                padding: 0 5px;
+                color: #d5b604;
+                position: relative;
+                top: .5px;
+            }
+
+    #crafWater_list > li:nth-child(1) {
+        left: 240px;
+        top: 130px;
+    }
+
+    #crafWater_list > li:nth-child(2) {
+        left: 85px;
+        top: 120px;
+    }
+
+    #crafWater_list > li:nth-child(3) {
+        left: 770px;
+        top: 180px;
+    }
+
+    #crafWater_list > li:nth-child(4) {
+        left: 770px;
+        top: 205px;
+    }
+
+    #crafWater_list > li:nth-child(5) {
+        left: 800px;
+        top: 375px;
+    }
+
+    #crafWater_list > li:nth-child(6) {
+        left: 990px;
+        top: 105px;
+    }
+
+    #crafWater_list > li:nth-child(7) {
+        left: 990px;
+        top: 130px;
+    }
+
+    #crafWater_list > li:nth-child(8) {
+        left: 990px;
+        top: 155px;
+    }
+
+    #crafWater_list > li:nth-child(9) {
+        left: 1055px;
+        top: 357px;
+    }
+
+    #crafWater_list > li:nth-child(10) {
+        left: 1055px;
+        top: 380px;
+    }
+
+    #crafWater_list > li:nth-child(11) {
+        left: 1055px;
+        top: 403px;
+    }
+/* 底图 */
+.craftImg_wrapper {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 30px);
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.craftImg {
+    height: 775px;
+    margin: 0 auto;
+    display: block;
+}
+/*add by 黄欣 加水点*/
+#addWater_list > li {
+    border: 1px solid #787878;
+    position: absolute;
+    cursor: default;
+    list-style: none;
+}
+
+    #addWater_list > li > img {
+        position: absolute;
+    }
+
+    #addWater_list > li:nth-child(1) {
+        width: 130px;
+        left: 260px;
+        top: 100px;
+    }
+
+    #addWater_list > li:nth-child(2) {
+        width: 130px;
+        left: 955px;
+        top: 115px;
+    }
+
+    #addWater_list > li:nth-child(3) {
+        width: 130px;
+        left: 260px;
+        top: 480px;
+    }
+
+    #addWater_list > li:nth-child(4) {
+        width: 130px;
+        left: 955px;
+        top: 490px;
+    }
+/*add by 黄欣 二供*/
+#GongBtn_box {
+    position: absolute;
+    color: #fff;
+    z-index: 100;
+    left: 5%;
+    font-size: 12px;
+    margin-top: 65px;
+    border: 1px solid #818a93;
+    padding: 0 5px;
+    width: 62px;
+}
+
+    #GongBtn_box > li.router-link-exact-active {
+        background: #415669;
+    }
+
+    #GongBtn_box > li {
+        text-align: center;
+        border: 1px solid #818a93;
+        margin: 5px 0;
+        width: 60px;
+        background: #2b3044;
+        cursor: pointer;
+        list-style: none;
+    }
+
+#gongWater_list > li {
+    border: 1px solid #787878;
+    position: absolute;
+    cursor: default;
+    list-style: none;
+}
+
+    #gongWater_list > li > img {
+        position: absolute;
+    }
+
+    #gongWater_list > li:nth-child(1) {
+        width: 200px;
+        left: 50px;
+        top: 400px;
+    }
+
+    #gongWater_list > li:nth-child(2) {
+        width: 130px;
+        left: 430px;
+        top: 350px;
+    }
+
+    #gongWater_list > li:nth-child(3) {
+        width: 130px;
+        left: 430px;
+        top: 420px;
+    }
+
+    #gongWater_list > li:nth-child(4) {
+        width: 130px;
+        left: 430px;
+        top: 490px;
+    }
+
+    #gongWater_list > li:nth-child(5) {
+        width: 130px;
+        left: 670px;
+        top: 490px;
+    }
+
+    #gongWater_list > li:nth-child(6) {
+        width: 130px;
+        left: 670px;
+        top: 560px;
+    }
+
+    #gongWater_list > li:nth-child(7) {
+        width: 130px;
+        left: 670px;
+        top: 630px;
+    }
+
+    #gongWater_list > li:nth-child(8) {
+        width: 130px;
+        left: 870px;
+        top: 490px;
+    }
+
+    #gongWater_list > li:nth-child(9) {
+        width: 130px;
+        left: 870px;
+        top: 560px;
+    }
+
+    #gongWater_list > li:nth-child(10) {
+        width: 130px;
+        left: 870px;
+        top: 630px;
+    }
+
+    #gongWater_list > li:nth-child(11) {
+        width: 130px;
+        left: 1070px;
+        top: 490px;
+    }
+
+    #gongWater_list > li:nth-child(12) {
+        width: 130px;
+        left: 1070px;
+        top: 560px;
+    }
+
+    #gongWater_list > li:nth-child(13) {
+        width: 130px;
+        left: 1070px;
+        top: 630px;
+    }
+
+.gongWater_tital {
+    font-size: 12px;
+    background: #2e5e75;
+    text-align: center;
+    padding: 5px 0;
+    color: #fff;
+    font-weight: bold;
+}
+
+.gongWater_cont {
+    font-size: 10px;
+    background: transparent;
+    color: #000;
+    padding: 2px 0;
+}
+
+    .gongWater_cont > div {
+        overflow: hidden;
+        padding: 1px 5px;
+    }
+
+        .gongWater_cont > div > div {
+            color: #fff;
+            float: left;
+        }
+
+            .gongWater_cont > div > div:nth-child(2) {
+                float: right;
+                background: #000;
+                color: #05d5dd;
+                padding: 0 2px;
+                min-width: 45px;
+            }
+
+            .gongWater_cont > div > div:last-child {
+                float: right;
+                background: #000;
+                color: #05d5dd;
+                padding: 0 2px;
+                min-width: 45px;
+            }

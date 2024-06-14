@@ -1,0 +1,591 @@
+﻿
+@{
+    ViewBag.Title = "水质监测点优化布置";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+
+@* arcgis  *@
+<link rel="stylesheet" type="text/css" href="@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISAPI/dijit/themes/tundra/tundra.css" />
+<link rel="stylesheet" type="text/css" href="@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISAPI/esri/css/esri.css" />
+<script src="@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISAPI/init.js"></script>
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/OptimalLayout.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/unite.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/map/indexMap.css" rel="stylesheet" />
+<script src="~/Areas/DataDisplay/Content/js/map/map2.js"></script>
+<script src="~/Content/js/HashTable.js"></script>
+<script type="text/javascript">
+    var ArcGISServer = "@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISServer";
+    var ArcGISAPI = "@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISAPI/";
+    var PressUnitConv = 100;//水压单位换算
+    var PressUnit = "MPa";//水压单位
+    var PressPlace = 3;//水压小数位
+    var mPressUnit = "mH₂O";//模拟水压单位
+    var mPressPlace = 2;//模拟水压小数位
+    var ClUnit = "mg/L";//余氯单位
+    var BgaUnit = "个/ml";//蓝绿藻单位
+    var TurbUnit = "NTU";//浊度单位
+    var FlowUnit = "m³/h";//流量单位
+    var FlowVUnit = "m/s";//流速单位
+    var PLengthUnit = "m";//管长单位
+    var PDiameterUnit = "mm";//管径单位
+    var JDepthUnit = "m";//埋深单位
+    var JElevationUnit = "m";//高程单位
+    var JAge = "小时";//水龄单位
+</script>
+<style>
+    html {
+        overflow-y: hidden !important;
+    }
+
+    body {
+        overflow-y: hidden !important;
+    }
+    .map_stss {
+        right: 20px;
+        bottom: 83px;
+        height: 32px;
+        width: 32px;
+        border: 1px solid rgb(0,0,0);
+        border-radius: 7px;
+        z-index: 10;
+        /*border-left: 0;*/
+        position: absolute;
+        text-align: center;
+        line-height: 34px;
+        font-size: 14px;
+        float: left;
+        color: black;
+        background-color: white;
+    }
+
+        .map_stss:hover {
+            cursor: pointer;
+            background-color: rgb(224,236,255);
+        }
+</style>
+
+<div class="main-container">
+    <div class="middle">
+        <div class="middle1">
+            <div class="middle11">现有水质监测点信息</div>
+            <div class="middle12">
+                <div id="gridPanel" class="gridPanel" style="height:785px;">
+                    <table id="gridList"></table>
+                    <div id="gridPager"></div>
+                </div>
+            </div>
+        </div>
+        <div class="middle2">
+            <div class="middle21">
+                <div class="middle211">新增水质监测点数量</div>
+                <input id="qualityCount" class="middle212">
+            </div>
+            <div class="middle21">
+                <button class="middle221" onclick="showPoint()">生成方案</button>
+                <button class="middle222" onclick="reset()">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="right">
+        <!-- 地图 -->
+        <div id="map" class="right1" style="display:block;position: relative;">
+            <div class="map_stss" id="fullExtent" onclick="fullExtentClick()">全图</div>
+        </div>
+        <!-- 地图 -->
+
+        <div class="right2">
+            <div class="right21">监测点优化布置方案</div>
+            @*<button class="right22" onclick="CreateQualityOrder()">下发明细</button>*@
+            <button class="right23" onclick="btn_download()">导出</button>
+        </div>
+
+        <div class="right3">
+            <div class="right31">
+                <table class="right31_title">
+                    <tr class="right311">
+                        @*<th class="right3111"><input type="checkbox"></th>*@
+                        <th class="right3112">编号</th>
+                        <th class="right3112">名称</th>
+                        <th class="right3112">地址</th>
+                        <th class="right3112">管径</th>
+                        <th class="right3112">所属公司</th>
+                        <th class="right3112">管材</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="right32">
+                <table id="newPoint" class="right32_data">
+                    @*<tr class='right321'>
+                        <td class='right3211'>
+                            <input type='checkbox'>
+                        </td>
+                        <td class='right3212'>
+                            1
+                        </td>
+                        <td class='right3212'>
+                            水质计一
+                        </td>
+                        <td class='right3212'>
+                            幺六桥
+                        </td>
+                        <td class='right3212'>
+                            DN200
+                        </td>
+                        <td class='right3212'>
+                            市北东丽营销
+                        </td>
+                        <td class='right3212'>
+                            铁管
+                        </td>
+                    </tr>*@
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var isFirstRun = true;
+    var FullExtent, graphicslayer, color1, color2, font1;
+    var tiled2, layerModelBaseMapMin, nodeMapLayer, SmallQualitySymbol;
+    var newPointList = "";
+    var districtClass = new HashTable();
+    var MaterialClass = new HashTable();
+    $(function () {
+        gridList();
+    })
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/Elaborate/QualityPoint/GetQualityPointList",
+            height: 620,
+            colModel: [
+                { label: '名称', name: 'Meter_Name', width: 100, align: 'center' },
+                { label: '地址', name: 'Physical_Address', width: 310, align: 'center' },
+                { label: '管径', name: 'Measure_Grade', width: 60, align: 'center' },
+                { label: '所属公司', name: 'Station_Unit', width: 100, align: 'center' },
+                { label: '高程(m)', name: 'Physical_Elevation', width: 60, align: 'center' },
+                { label: 'id', name: 'ElementID', hidden: true }
+            ],
+            sortname: 'Meter_Name asc',
+            viewrecords: true
+        });
+    }
+    require([
+        "esri/basemaps",
+        "esri/map",
+        "esri/Color",
+        "esri/dijit/Scalebar",
+        "esri/dijit/HomeButton",
+        "esri/dijit/OverviewMap",
+        "esri/layers/GraphicsLayer",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/layers/ArcGISDynamicMapServiceLayer",
+        "esri/symbols/Font",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/InfoTemplate",
+        "dojo/parser",
+        "dojo/domReady!"
+    ], function (
+        esriBasemaps,
+        Map,
+        Color,
+        Scalebar,
+        HomeButton,
+        OverviewMap,
+        GraphicsLayer,
+        ArcGISTiledMapServiceLayer,
+        ArcGISDynamicMapServiceLayer,
+        Font,
+        TextSymbol,
+        SimpleLineSymbol,
+        PictureMarkerSymbol,
+        InfoTemplate,
+        parser) {
+            //font1
+            font1 = new Font("13px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_BOLDER);
+            color1 = new Color([240, 138, 6]);
+            color2 = new Color([51, 192, 94]);
+            color3 = new Color([0, 105, 244]);
+            parser.parse();
+            var initExtent = new esri.geometry.Extent({ "xmin": 99192.63530892128, "ymin": 298825.92644339317, "xmax": 100742.03840772746, "ymax": 300589.11330310017, "spatialReference": map.spatialReference });
+            esriBasemaps.delorme = {
+                baseMapLayers: [
+                    //中国矢量地图服务
+                    {
+                        url: ArcGISServer + "BaseMap/MapServer",
+                        id: "底图",
+                        opacity: 0.5
+                    }
+                ],
+                //缩略图
+                thumbnailUrl: "Imgs/shiliang.jpg",
+                title: "矢量图"
+            };
+            //初始化地图
+            map = new Map("map", {
+                basemap: "delorme",
+                logo: false,
+                extent: initExtent,
+                fadeOnZoom: true,
+                showLabels: true,
+                isDoubleClickZoom: false//关闭双击放大
+            });
+
+            //禁用键盘缩放平移
+            map.disableKeyboardNavigation();
+            //卫星底图
+            //var toggle = new BasemapToggle({
+            //    map: map,
+            //    basemap: "satellite"
+            //}, "BasemapToggle");
+            //toggle.startup();
+            //返回主视图
+            var home = new HomeButton({
+                map: map
+            }, "HomeButton");
+            home.startup();
+            //定位
+            //geoLocate = new LocateButton({
+            //    map: map
+            //}, "LocateButton");
+            //geoLocate.startup();
+            //鹰眼
+            var overviewMapDijit = new OverviewMap({
+                map: map,
+                expandFactor: 100,
+                attachTo: "bottom-left",
+                visible: false
+            });
+            overviewMapDijit.startup();
+            //比例尺
+            var scalebar = new Scalebar({ map: map, attachTo: "bottom-left", scalebarUnit: "metric" });
+            //显示坐标点
+            //dojo.connect(map, "onLoad", function () {
+            //    dojo.connect(map, "onMouseMove", showCoordinates);
+            //    //dojo.connect(map, "onMouseDrag", showCoordinates);
+            //    initCLToolbar();//初始化测量工具
+            //});
+            //基础元素搜索图层
+            baseMapServerLayer = ArcGISServer + "ModelBaseMap/MapServer";
+            //水泵搜索图层
+            pumpMapLayer = ArcGISServer + "ModelBaseMap/MapServer/0";
+            //水池搜索图层
+            reservoirMapLayer = ArcGISServer + "ModelBaseMap/MapServer/1";
+            //消火栓搜索图层
+            hydrantMapLayer = ArcGISServer + "ModelBaseMap/MapServer/2";
+            //阀门搜索图层
+            valveMapLayer = ArcGISServer + "ModelBaseMap/MapServer/3";
+            //节点搜索图层
+            nodeMapLayer = ArcGISServer + "ModelBaseMap/MapServer/4";
+            //管道搜索图层
+            pipeMapLayer = ArcGISServer + "ModelBaseMap/MapServer/5";
+            //水表搜索图层
+            waterMeterMapLayer = ArcGISServer + "CheckMeterService/MapServer/0";
+            //管道模拟数据搜索图层
+            resultPipeMapLayer = ArcGISServer + "Result_Pipe_D/MapServer/0";
+            //源水管网节点搜索图层
+            sourceNodeMapLayer = ArcGISServer + "SourceWater_D/MapServer/2";
+
+            //1.定义面的边界线符号
+            outline = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 0]), 3);
+            //2.定义面符号
+            //BigPolygonSymbol = new SimpleMarkerSymbol().setSize(12).setColor(new dojo.Color([0, 0, 255]));
+            //RedBigPolygonSymbol = new SimpleMarkerSymbol().setSize(12).setColor(new dojo.Color([255, 0, 0]));
+            //YellowBigPolygonSymbol = new SimpleMarkerSymbol().setSize(12).setColor(new dojo.Color([239, 242, 132]));
+            //SmallPolygonSymbol = new SimpleMarkerSymbol().setSize(8).setColor(new dojo.Color([0, 0, 255]));
+            BigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/valve.png', 16, 16);
+            RedBigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/valves.png', 30, 34).setOffset(0, 17);
+            ReBigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/gif/阀.gif', 30, 34).setOffset(0, 17);
+            RedGlowPolygonSymbol = new PictureMarkerSymbol('Content/myImage/gif/Red_glow.gif', 45, 45);
+            WhiteBigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/gif/Purple_glow.gif', 45, 45);
+            YellowBigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/traffic-cone.png', 34, 36).setOffset(0, 5);
+            SmallPolygonSymbol = new PictureMarkerSymbol('/Areas/DataDisplay/Content/img/junction.png', 16, 16);
+            SmallPressSymbol = new PictureMarkerSymbol('/Areas/DataDisplay/Content/img/press.png', 16, 16).setOffset(0, 8);
+            SmallFlowSymbol = new PictureMarkerSymbol('/Areas/DataDisplay/Content/img/flow.png', 16, 16).setOffset(0, 8);
+            SmallQualitySymbol = new PictureMarkerSymbol('/Areas/DataDisplay/Content/img/quality.png', 16, 16).setOffset(0, 8);
+            WhiteSmallPolygonSymbol = new PictureMarkerSymbol('Content/myImage/gif/Blue_glow.gif', 45, 45);
+            ReserviorPolygonSymbol = new PictureMarkerSymbol('Content/myImage/reservior.png', 32, 32);
+            PumpPolygonSymbol = new PictureMarkerSymbol('Content/myImage/pump.png', 32, 32);
+            HydrantPolygonSymbol = new PictureMarkerSymbol('Content/myImage/hydrant.png', 32, 32);
+            pictureMarkerSymbol = new PictureMarkerSymbol('Content/myImage/gif/pipeBreak.gif', 35, 35).setOffset(0, 12);//爆管冒水动画图片
+            BlackinfoPictureMSymbol = new PictureMarkerSymbol("Content/myImage/blackinfowin.png", 150, 48).setOffset(0, 24);
+            BluePinPictureMSymbol = new PictureMarkerSymbol("Content/myImage/BluePin1LargeB.png", 64, 64).setOffset(0, 32);
+            GreenPinPictureMSymbol = new PictureMarkerSymbol("Content/myImage/GreenPin1LargeB.png", 64, 64).setOffset(0, 32);
+            BlueCPictureMSymbol = new PictureMarkerSymbol("Content/myImage/BluePin1LargeB.png", 32, 32).setOffset(0, 16);//聚合蓝色气泡标记
+            GreenCPictureMSymbol = new PictureMarkerSymbol("Content/myImage/GreenPin1LargeB.png", 64, 64).setOffset(0, 16);//聚合绿色气泡标记
+            RedCPictureMSymbol = new PictureMarkerSymbol("Content/myImage/RedPin1LargeB.png", 72, 72).setOffset(0, 16);//聚合红色气泡标记
+            PinTextSymbol = new TextSymbol('', new Font("13px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_BOLDER), new dojo.Color([0, 0, 0])).setOffset(0, 25);//显示文字
+            //overlay = new Echarts3Layer(map, echarts);
+            //chartsContainer = overlay.getEchartsContainer();
+            //myPipeFlowChart = overlay.initECharts(chartsContainer);
+            //管网图
+            var infoTemplatePoint = new InfoTemplate("元素信息", "${*}");
+
+            //geometryService = GeometryService("http://" + ArcGISServer.split('/')[2] + "/arcgis/rest/services/Utilities/Geometry/GeometryServer");//几何地图服务
+            //将图例图层添加到
+            layerModelBaseMap300 = new ArcGISDynamicMapServiceLayer(ArcGISServer + "ModelBaseMap300/MapServer", { id: "小于300管网图", visible: true });//小于300管网图
+            map.addLayer(layerModelBaseMap300);
+            tiled2 = new ArcGISTiledMapServiceLayer(ArcGISServer + "ModelBaseMap/MapServer", { id: "管网图", visible: true });//管网图层
+            //tiled2 = new ArcGISDynamicMapServiceLayer(ArcGISServer + "ModelBaseMap/MapServer", { id: "管网图", visible: true });//管网图层
+            map.addLayer(tiled2);
+            SourceWater = new ArcGISDynamicMapServiceLayer(ArcGISServer + "SourceWater_D/MapServer", { id: "原水管网图", visible: true });//原水管网图
+            //map.addLayer(SourceWater);
+            Meter = new ArcGISDynamicMapServiceLayer(ArcGISServer + "Meter_D/MapServer", { id: "地表分布图", visible: true });//地表分布图
+            map.addLayer(Meter);
+            layerModelBaseMapMin = new ArcGISTiledMapServiceLayer(ArcGISServer + "ModelBaseMapMin/MapServer", { id: "细管网图", visible: false });//细管网图层
+            map.addLayer(layerModelBaseMapMin);
+            //map.addLayer(layerPressureChange);
+            //layerGisPipe = new ArcGISTiledMapServiceLayer(ArcGISServer + "DetailPipeService/MapServer", { id: "管网详图", visible: false });//管网详图
+            //map.addLayer(layerGisPipe);
+            //计量分区搜索图层
+            DBSArea2Laye = ArcGISServer + "MeasureArea_Info/MapServer/0";
+            DBSArea1Laye = ArcGISServer + "MeasureArea_Info/MapServer/0";
+            DBSArea0Laye = ArcGISServer + "MeasureArea_Info/MapServer/0";
+            //图层按钮单击事件
+            setLayerVisibility = function (obj) {
+                obj.children[0].checked = !(obj.children[0].checked);
+                //用dojo.query获取class为listCss的元素数组
+                var inputs = dojo.query(".listCBCss");
+                var visible = [];
+                //对checkbox数组进行变量把选中的id添加到visible
+                for (var i = 0; i < inputs.length; i++) {
+                    if (inputs[i].checked) {
+                        visible.push(inputs[i].id);
+                    }
+                }
+                //设置可视图层
+                tiled2.setVisibleLayers(visible);
+            };
+            //graphicslayer
+            graphicslayer = new GraphicsLayer();//画图图层
+            map.addLayer(graphicslayer);
+            tbaGraphicslayer = new GraphicsLayer();//爆管画图图层
+            map.addLayer(tbaGraphicslayer);
+            map.on("update-start", showLoading);//add by huangxin 20180508地图加载时显示loading图标
+            map.on("update-end", hideLoading);//add by huangxin 20180508地图加载完隐藏loading图标
+            var identifyParams;//声明查询参数
+            function showLoading() {//地图加载时显示loading图标
+                $('#loadingImg').css('left', $("#map").width() / 2 - 42 + 'px');
+                $('#loadingImg').css('top', $("#map").height() / 2 - 40 + 'px');
+            }
+
+            function hideLoading() {//地图加载完成后隐藏loading图标
+                esri.hide(dojo.byId("loadingImg"));
+                if (isFirstRun || FullExtent == null) {
+                    isFirstRun = false;
+                    homeExtent = map.extent;
+                    FullExtent = tiled2.fullExtent;
+                    //FullExtent = new esri.geometry.Extent({ "xmin": 12983527, "ymin": 4606694, "xmax": 13023121, "ymax": 4639295, "spatialReference": map.spatialReference });//地图显示的新区域;
+                    //xmax: 13023121.408344664
+                    //xmin: 12983527.027692996
+                    //ymax: 4639295.278690283
+                    //ymin: 4606694.8861267
+                    //FullExtent.spatialReference = map.spatialReference;
+                    $(".ovwButton.ovwController.ovwShow").click(function () {//鹰眼显示单击事件
+                        var tmpdisplay = $(".ovwContainer").css("display");
+                        if (tmpdisplay == "none")
+                            $("#legendDivSoto").css("bottom", "70px");
+                        else
+                            $("#legendDivSoto").css("bottom", ($(".ovwContainer").height() + 3) + "px");
+                    });
+                    //updataTree();
+                }
+            }
+            map.infoWindow.resize(245, 125);
+        });
+    function showPoint() {//显示监测点
+        graphicslayer.clear();
+        //全图
+        map.setExtent(tiled2.fullExtent, false);
+        var jsonData = $("#gridList").jqGrid('getRowData');
+        var query = new esri.tasks.Query();
+        //数据读取
+        for (var i = 0; i < jsonData.length; i++) {
+            var queryTask = new esri.tasks.QueryTask(nodeMapLayer);
+            query.where = "ElementId = " + jsonData[i].ElementID;
+            query.outSpatialReference = map.spatialReference;
+            query.returnGeometry = true;
+            query.outFields = ["*"];
+            queryTask.execute(query, function (featureSet) {
+                if (featureSet.features.length == 0) {
+                    $.modalMsg("未找到该元素！", "warning");
+                    return;
+                }
+                var centerPoint = featureSet.features[0].geometry;
+                let name = featureSet.features[0].attributes.Label.replace("shuizhi_", "");
+                //开始画，画成能够在页面上显示数字的形式。
+                var point = new esri.geometry.Point(centerPoint.x, centerPoint.y, map.spatialReference);
+                // 定义自变量
+                let smsLength = (name.length * 14) + 5;//背景图片宽
+                let smsLevel = smsLength * 50 / 180;    //图片水平偏移
+                let textLevel = smsLength * 49 / 180;       //文字水平偏移
+                var textSymbol1 = new esri.symbol.TextSymbol(name, font1, color1).setOffset(textLevel, 15.5556);
+                var sms = new esri.symbol.PictureMarkerSymbol("/Areas/DataDisplay/Content/img/timg_blue.png", smsLength, 32).setOffset(smsLevel, 15);
+                var graphic = new esri.Graphic(point, SmallQualitySymbol);
+                var graphic1 = new esri.Graphic(point, textSymbol1);
+                var graphic3 = new esri.Graphic(point, sms);
+                //graphicslayer.add(graphic3);
+                //graphicslayer.add(graphic1);
+                graphicslayer.add(graphic);
+            });
+        }
+        showNewPoint();
+    }
+    function showNewPoint() {//显示监测点
+        //graphicslayer.clear();
+        //全图
+        map.setExtent(tiled2.fullExtent, false);
+        let pCount = parseInt($("#qualityCount").val());
+        console.log(pCount);
+        if (isNaN(pCount) || pCount < 1) {
+            $.modalAlert("系统提示", "请输入大于0的整数！", "error");
+            return;
+        }
+        $.loading(true, '计算中...');
+        $.ajax({
+            type: "GET",
+            url: "/Elaborate/QualityPoint/CreateNewQualityPoint?pCount=" + pCount,
+            success: function (adata) {
+                adata = adata.split(",");
+                console.log(adata)
+                let newPoint = document.getElementById("newPoint");
+                newPoint.innerHTML = "";
+                //var jsonData = JSON.parse(rowData);
+                var query = new esri.tasks.Query();
+                let index = 1;
+                newPointList = "";
+                //数据读取
+                for (var i = 0; i < adata.length; i++) {
+                    var queryTask = new esri.tasks.QueryTask(pipeMapLayer);
+                    query.where = "ElementId = " + adata[i];
+                    query.outSpatialReference = map.spatialReference;
+                    query.returnGeometry = true;
+                    query.outFields = ["*"];
+                    queryTask.execute(query, function (featureSet) {
+                        if (featureSet.features.length == 0) {
+                            $.modalMsg("未找到该元素！", "warning");
+                            return;
+                        }
+                        var centerPoint = featureSet.features[0].geometry.paths[0][0];
+                        let name = featureSet.features[0].attributes.Label;
+                        let pointdata = featureSet.features[0].attributes;
+                        newPoint.innerHTML += "<tr class='right321'><td class='right3212'>" + index + "</td><td class='right3212'>" + pointdata.Label +
+                            "</td><td class='right3212'>" + pointdata.Physical_Address + "</td><td class='right3212'>DN" + pointdata.Physical_PipeDiameter + "</td><td class='right3212'>" +
+                            districtClass.getValue(pointdata.Physical_DistrictID) + "</td><td class='right3212'>" + MaterialClass.getValue(pointdata.Physical_PipeMaterialID) + "</td></tr>";
+                        index = index + 1;
+                        newPointList = newPointList + pointdata.ElementId + ",";
+                        //开始画，画成能够在页面上显示数字的形式。
+                        var point = new esri.geometry.Point(centerPoint[0], centerPoint[1], map.spatialReference);
+                        // 定义自变量
+                        let smsLength = (name.length * 14) + 5;//背景图片宽
+                        let smsLevel = smsLength * 50 / 180;    //图片水平偏移
+                        let textLevel = smsLength * 49 / 180;       //文字水平偏移
+                        var textSymbol1 = new esri.symbol.TextSymbol(name, font1, color2).setOffset(textLevel, 15.5556);
+                        var sms = new esri.symbol.PictureMarkerSymbol("/Areas/DataDisplay/Content/img/timg_orange.png", smsLength, 32).setOffset(smsLevel, 15);
+                        var graphic = new esri.Graphic(point, SmallFlowSymbol);
+                        var graphic1 = new esri.Graphic(point, textSymbol1);
+                        var graphic3 = new esri.Graphic(point, sms);
+                        graphicslayer.add(graphic3);
+                        graphicslayer.add(graphic1);
+                        graphicslayer.add(graphic);
+                    });
+                    if (i == adata.length - 1) $.loading();
+                }
+            }
+        });
+    }
+    function CreateQualityOrder() {
+        $.ajax({
+            url: '/Elaborate/QualityPoint/CreateQualityOrder?ids=' + newPointList.substring(0, newPointList.length - 1),
+            type: 'post',
+            success: function (data, response, status) {
+                $.modalMsg("下发成功！", "success");
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.modalMsg('无数据或数据解析错误！', 'warning');
+                //TODO
+            }
+        });
+    }
+    function btn_download() {
+        $.loading(true);
+        $.ajax({
+            url: "/Elaborate/QualityPoint/GetDownloadJson?ids=" + newPointList.substring(0, newPointList.length - 1),
+            success: function (adata) {
+                let link = document.createElement('a');
+                link.href = adata;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                $.loading();
+                $.modalMsg("导出Excel成功！", "success");
+            }
+        })
+    }
+    function reset() {
+        graphicslayer.clear();
+        $("#qualityCount").val("");
+        document.getElementById("newPoint").innerHTML = "";
+    }
+    window.onresize = function () {
+        var mainH = $(window).height() - 10;
+        var mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        //$("#map").height(mainH - 50);
+        //$("#map").width(mainW - 440);
+    }
+    window.onload = function () {
+        var mainH = $(window).height() - 10;
+        var mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        //$("#map").height(mainH - 50);
+        //$("#map").width(mainW - 440);
+        let gradeNum = 3;
+        $.ajax({
+            url: '/Elaborate/ValueCheck/GetDMAList',
+            type: 'post',
+            success: function (data, response, status) {
+                if (data.length > 0) {
+                    var dist = data[1]; //营销公司
+                    if (gradeNum > 2) var dma = data[2];
+                    if (gradeNum > 3) var dmaa = data[3];
+                    for (var i = 0; i < dist.length; i++) {
+                        var tmp1 = dist[i];
+                        districtClass.add(tmp1[0], tmp1[1]);
+                    }
+                } else {
+                    //$.messager.alert('提示', '无数据！', 'warning');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.modalMsg('无数据或数据解析错误！', 'warning');
+                //TODO
+            }
+        });
+        $.ajax({
+            url: '/Elaborate/ValueCheck/GetPipeMaterialList',
+            type: 'post',
+            success: function (data, response, status) {
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var tmp1 = data[i];
+                        MaterialClass.add(tmp1[0], tmp1[1]);
+                    }
+                } else {
+                    //$.messager.alert('提示', '无数据！', 'warning');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.modalMsg('无数据或数据解析错误！', 'warning');
+                //TODO
+            }
+        });
+    }
+</script>

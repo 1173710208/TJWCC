@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<style>
+    .form .formTitle {
+        position: relative;
+        left: 0px;
+        text-align: right;
+        white-space: nowrap;
+        font-weight: normal;
+        width: 110px;
+        padding-right: 15px;
+    }
+</style>
+
+<script>
+    var keyValue = $.request("keyValue");
+    $(function () {
+        initControl();
+        if (!!keyValue) {
+            $.ajax({
+                url: "/MeterManage/Meter/GetFormJson",
+                data: { makerID: keyValue },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#form1").formSerialize(data);
+                }
+            });
+        }
+    });
+
+    function initControl() {
+        $("#COMPANYID").bindSelect({
+            url: "/SystemManage/Company/GetGridJson",
+            id: "COMPANYID",
+            text: "CNAME"
+        });
+        $("#TYPEID").bindSelect({
+            url: "/BaseData/MeterType/GetGridJson",
+            id: "TYPEID",
+            text: "TYPENAME"
+        });
+        $("#MAKERID").bindSelect({
+            url: "/BaseData/Maker/GetGridJson",
+            id: "MAKERID",
+            text: "MNAME"
+        });
+        $("#COMMID").bindSelect({
+            url: "/BaseData/Comm/GetGridJson",
+            id: "COMMID",
+            text: "COMMNAME"
+        });
+    }
+
+    function getBusiness() {
+        var obj = document.getElementById('COMPANYID');
+        var index = obj.selectedIndex; //序号，取当前选中选项的序号
+        var val = obj.options[index].value;
+        $("#BUSINESSID").bindSelect({
+            url: "/SystemManage/Business/GetGridJson?COMPANYID="+val,
+            id: "BUSINESSID",
+            text: "BNAME"
+        });
+    }
+
+    ///提交form；水表拆除
+    function submitForm() {
+        if (!$('#form1').formValid()) {
+            return false;
+        }
+        $.submitForm({
+            url: "/MeterManage/Meter/DeleteMeterSubmitForm?keyValue=" + keyValue,
+            param: $("#form1").formSerialize(),
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+
+</script>
+
+<form id="form1">
+    <div style="margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#">拆除水表的信息</a></li>
+        </ul>
+        <div style="padding-top: 20px; margin-right: 30px;">
+            <table class="form">
+                <tr>
+                    <th class="formTitle">拆除水表的IMEI</th>
+                    <td class="formValue">
+                        <input id="OLDIMEI" name="OLDIMEI" type="text" class="form-control  required" placeholder="请输入拆除水表的IMEI" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</form>

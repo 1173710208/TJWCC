@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script src="~/Content/js/jqgrid/jqgrid.min.js"></script>
+<link href="~/Content/js/jqgrid/jqgrid.css" rel="stylesheet" />
+<style>
+    .unwritten {
+        display: none;
+    }
+</style>
+<script>
+    var keyValue = $.request("keyValue");
+    var checkFormat = function (cellValue, options, rowObject) {
+        var htmlElement = '';
+
+        if (rowObject.PumpModel == '预留')
+            htmlElement = '<input type="checkbox" data-rowid="' + options.rowId + '" id="' + options.rowId + '" disabled class="checkChkBox" );"/>';
+        else {
+            if (cellValue == "1") {
+                htmlElement = '<input type="checkbox" data-rowid="' + options.rowId + '" id="' + options.rowId + '" checked = "true" class="checkChkBox" onchange="onchangeRiyoFlg(this,\'' + rowObject.PumpId + '\');"/>';
+            } else {
+                htmlElement = '<input type="checkbox" data-rowid="' + options.rowId + '" id="' + options.rowId + '" class="checkChkBox" onchange="onchangeRiyoFlg(this,\'' + rowObject.PumpId + '\');"/>';
+            }
+        }
+
+        return htmlElement;
+    };
+    function onchangeRiyoFlg(val, val1) {
+        $.ajax({
+            type: "GET",
+            url: "/Elaborate/Optimize/SetPumpActive?pumpId=" + val1 + "&isActive=" + val.checked,
+            dataType: "json",
+            success: function (adata) {
+                
+            }
+        })
+        
+    }
+    function gridList() {
+        var $gridList = $("#gridList");
+        $.ajax({
+            type: "GET",
+            url: "/Elaborate/Optimize/GetPumpInfo?psId=" + keyValue,
+            dataType: "json",
+            success: function (adata) {
+                $gridList.dataGrid({
+                    datatype: "local",
+                    height: 400,
+                    colModel: [
+                        {
+                            label: '可用状态', name: 'IsActive', width: 80, align: 'center',formatter:checkFormat,ditable: true,
+                        },
+                        { label: '名称', name: 'PumpName', width: 120, align: 'center' },
+                        {
+                            label: '规格型号', name: 'PumpType', width: 100, align: 'center',
+                        },
+                        {
+                            label: '额定压力(MPa)', name: 'BasePress', width: 100, align: 'center',
+                        },
+                        { label: '额定流量(m³.h﹣¹)', name: 'BaseFlow', width: 120, align: 'center' },
+                        { label: '额定功率/KW', name: 'BasePower', width: 100, align: 'center' },
+                        {
+                            label: '是否变频', name: 'PumpModel', width: 80, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue =='调速泵') {
+                                    return "是"
+                                } else {
+                                    return "否"
+                                }
+                            }
+                        },
+                    ],
+                    sortname: 'PumpName asc',
+                    viewrecords: true,
+
+                });
+                for (var i = 0; i < adata[0].length; i++) {
+                    $("#gridList").jqGrid('addRowData', i + 1, adata[0][i]);
+                }
+            }
+        });
+    }
+    $(function () {
+        gridList();
+    })
+</script>
+
+
+<div class="gridPanel">
+    <table id="gridList"></table>
+</div>
+

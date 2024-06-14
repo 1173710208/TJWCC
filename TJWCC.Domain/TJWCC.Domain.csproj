@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F4372C04-3611-48DA-96C6-CBC983737CEF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TJWCC.Domain</RootNamespace>
+    <AssemblyName>TJWCC.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.0\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="01 Infrastructure\ICreationAudited.cs" />
+    <Compile Include="01 Infrastructure\IDeleteAudited.cs" />
+    <Compile Include="01 Infrastructure\IEntity.cs" />
+    <Compile Include="01 Infrastructure\IModificationAudited.cs" />
+    <Compile Include="02 ViewModel\BsTagHisResult.cs" />
+    <Compile Include="02 ViewModel\PumpCurrent_Result.cs" />
+    <Compile Include="02 ViewModel\GetPoint_Result.cs" />
+    <Compile Include="02 ViewModel\GetDataType_Result.cs" />
+    <Compile Include="02 ViewModel\GetForecastFlow_Result.cs" />
+    <Compile Include="03 Entity\BaseData\OperatType_InfoEntity.cs" />
+    <Compile Include="03 Entity\BaseData\COMM_INFOEntity.cs" />
+    <Compile Include="03 Entity\BaseData\METERMAKER_INFOEntity.cs" />
+    <Compile Include="03 Entity\BaseData\METERTYPE_INFOEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSB_BranchPipesEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSO_PumpParamEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSO_PumpStationEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSO_Station_CurrentEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSO_Station_RecordsEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSOT_CalDefaultInfoEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSOT_DemandRecordEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSOT_SysInfoEntity.cs" />
+    <Compile Include="02 ViewModel\GetNewData_Result.cs" />
+    <Compile Include="03 Entity\BSSys\BSB_ValveAreaEntity.cs" />
+    <Compile Include="03 Entity\Public\MainStation.cs" />
+    <Compile Include="03 Entity\SystemManage\SYS_DICEntity.cs" />
+    <Compile Include="03 Entity\WCC\JUNCTION_VICEEntity.cs" />
+    <Compile Include="03 Entity\WCC\CC_FlowSortEntity.cs" />
+    <Compile Include="03 Entity\WCC\CC_CleanStatisticsEntity.cs" />
+    <Compile Include="03 Entity\WCC\CC_TheDateEntity.cs" />
+    <Compile Include="03 Entity\WCC\CC_PressTargetEntity.cs" />
+    <Compile Include="03 Entity\WCC\CC_DispatchPlanEntity.cs" />
+    <Compile Include="03 Entity\WCC\GY_TypeInfoEntity.cs" />
+    <Compile Include="03 Entity\WCC\GY_PumpStationInfoEntity.cs" />
+    <Compile Include="03 Entity\WCC\GY_StationRecordsEntity.cs" />
+    <Compile Include="03 Entity\WCC\CC_WetherRecordEntity.cs" />
+    <Compile Include="03 Entity\BSSys\DistrictClassEntity.cs" />
+    <Compile Include="03 Entity\BSSys\DMAAreaClassEntity.cs" />
+    <Compile Include="03 Entity\BSSys\DMAClassEntity.cs" />
+    <Compile Include="03 Entity\BSSys\PatternsEntity.cs" />
+    <Compile Include="03 Entity\BSSys\PIPEEntity.cs" />
+    <Compile Include="03 Entity\BSSys\RESERVOIREntity.cs" />
+    <Compile Include="03 Entity\BSSys\RESULT_JUNCTIONEntity.cs" />
+    <Compile Include="03 Entity\BSSys\RESULT_PIPEEntity.cs" />
+    <Compile Include="03 Entity\BSSys\RESULT_TCVEntity.cs" />
+    <Compile Include="03 Entity\BSSys\PUMPEntity.cs" />
+    <Compile Include="03 Entity\BSSys\TCVEntity.cs" />
+    <Compile Include="03 Entity\BSSys\RESULT_HYDRANTEntity.cs" />
+    <Compile Include="03 Entity\BSSys\ZoneClassEntity.cs" />
+    <Compile Include="03 Entity\BSSys\HYDRANTEntity.cs" />
+    <Compile Include="03 Entity\BSSys\JUNCTIONEntity.cs" />
+    <Compile Include="03 Entity\BSSys\MaterialClassEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BS_SCADA_TAG_CURRENTEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSB_MinFlowEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSM_Meter_InfoEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSM_MArea_Meter_InfoEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSM_WaterMeter_RecordEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSB_ForecastFlowEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BS_SCADA_TAG_INFOEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSB_LinkedTableEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSB_SourceData_ClEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSB_SupplyWayEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSB_Warn_RecordsEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BSO_PumpOptimal_RecordsEntity.cs" />
+    <Compile Include="03 Entity\BSSys\BS_SCADA_TAG_HISEntity.cs" />
+    <Compile Include="03 Entity\DataDisplay\DIS_ALARMEntity.cs" />
+    <Compile Include="03 Entity\DataDisplay\DIS_MAKERCLASSEntity.cs" />
+    <Compile Include="03 Entity\DataDisplay\DIS_OFFLINECLASSEntity.cs" />
+    <Compile Include="03 Entity\DataDisplay\DIS_SIGNALSTRENGTHEntity.cs" />
+    <Compile Include="03 Entity\DataDisplay\DIS_WATEREntity.cs" />
+    <Compile Include="03 Entity\DataDisplay\DIS_WATERCOMPANYCLASSEntity.cs" />
+    <Compile Include="03 Entity\DataDisplay\METER_INFOEntity.cs" />
+    <Compile Include="03 Entity\MeterManage\ALARM_RAW_RECORDEntity.cs" />
+    <Compile Include="03 Entity\MeterManage\METERDAY_RECORDEntity.cs" />
+    <Compile Include="03 Entity\MeterManage\METER_RECORDEntity.cs" />
+    <Compile Include="03 Entity\Public\DisFeeRecord.cs" />
+    <Compile Include="03 Entity\Public\DisMonthRecord.cs" />
+    <Compile Include="03 Entity\Public\UserFeeTemp.cs" />
+    <Compile Include="03 Entity\Public\AlarmTypeEntity.cs" />
+    <Compile Include="03 Entity\Public\ChartDataChildEntity.cs" />
+    <Compile Include="03 Entity\Public\ChartDataEntity.cs" />
+    <Compile Include="03 Entity\Public\OffLineDayEntity.cs" />
+    <Compile Include="03 Entity\Public\OnlineRateEntity.cs" />
+    <Compile Include="03 Entity\Public\RadarChartDataEntity.cs" />
+    <Compile Include="03 Entity\Public\SignalStrengthEntity.cs" />
+    <Compile Include="03 Entity\SystemManage\SubBusi_InfoEntity.cs" />
+    <Compile Include="03 Entity\SystemManage\Business_InfoEntity.cs" />
+    <Compile Include="03 Entity\SystemManage\Company_InfoEntity.cs" />
+    <Compile Include="03 Entity\SystemManage\AreaEntity.cs" />
+    <Compile Include="03 Entity\SystemManage\ModuleButtonEntity.cs" />
+    <Compile Include="03 Entity\SystemManage\ModuleEntity.cs" />
+    <Compile Include="03 Entity\SystemManage\RoleAuthorizeEntity.cs" />
+    <Compile Include="03 Entity\SystemManage\UserLogOnEntity.cs" />
+    <Compile Include="03 Entity\SystemManage\ItemsDetailEntity.cs" />
+    <Compile Include="03 Entity\SystemSecurity\LogEntity.cs" />
+    <Compile Include="02 ViewModel\AuthorizeActionModel.cs" />
+    <Compile Include="03 Entity\Test\TestEntity.cs" />
+    <Compile Include="04 IRepository\BaseData\IOperatType_InfoRespository.cs" />
+    <Compile Include="04 IRepository\BaseData\IComm_InfoRespository.cs" />
+    <Compile Include="04 IRepository\BaseData\IMeterMaker_InfoRespository.cs" />
+    <Compile Include="04 IRepository\BaseData\IMeterType_InfoRespository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSB_BranchPipesRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBS_SCADA_TAG_CURRENTRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBS_SCADA_TAG_INFORepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSB_ForecastFlowRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSB_LinkedTableRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSB_MinFlowRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSB_SourceData_ClRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSB_SupplyWayRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSB_Warn_RecordsRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSM_MArea_Meter_InfoRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSM_Meter_InfoRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSM_WaterMeter_RecordRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSO_PumpOptimal_RecordsRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSO_PumpParamRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSO_PumpStationRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSO_Station_CurrentRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSO_Station_RecordsRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSOT_CalDefaultInfoRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSOT_DemandRecordRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSOT_SysInfoRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBSB_ValveAreaRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IDistrictClassRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IDMAAreaClassRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IDMAClassRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IHYDRANTRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IJUNCTIONRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IMaterialClassRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IPatternsRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IPIPERepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IPUMPRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IRESERVOIRRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IRESULT_HYDRANTRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IRESULT_JUNCTIONRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IRESULT_PIPERepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IRESULT_TCVRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\ITCVRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IZoneClassRepository.cs" />
+    <Compile Include="04 IRepository\BSSys\IBS_SCADA_TAG_HISRepository.cs" />
+    <Compile Include="04 IRepository\DataDisplay\IDis_OffLineClassRepository.cs" />
+    <Compile Include="04 IRepository\DataDisplay\IDis_SignalStrengthRepository.cs" />
+    <Compile Include="04 IRepository\DataDisplay\IDis_AlarmRepository.cs" />
+    <Compile Include="04 IRepository\DataDisplay\IDis_MakerClassRepository.cs" />
+    <Compile Include="04 IRepository\DataDisplay\IDis_WaterCompanyClassRepository.cs" />
+    <Compile Include="04 IRepository\DataDisplay\IMeter_InfoRepository.cs" />
+    <Compile Include="04 IRepository\DataDisplay\IDis_WaterRepository.cs" />
+    <Compile Include="04 IRepository\MeterManage\IAlarm_RAW_RecordRespository.cs" />
+    <Compile Include="04 IRepository\MeterManage\IMeterDay_RecordRespository.cs" />
+    <Compile Include="04 IRepository\MeterManage\IMeter_InfoRespository.cs" />
+    <Compile Include="04 IRepository\MeterManage\IMeter_RecordRespository.cs" />
+    <Compile Include="04 IRepository\SystemManage\ISYS_DICRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\ISubBusi_InfoRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IBusiness_InfoRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\ICompany_InfoRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IAreaRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IItemsDetailRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IItemsRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IModuleButtonRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IModuleRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IOrganizeRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IRoleAuthorizeRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IRoleRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IUserLogOnRepository.cs" />
+    <Compile Include="04 IRepository\SystemManage\IUserRepository.cs" />
+    <Compile Include="04 IRepository\SystemSecurity\ILogRepository.cs" />
+    <Compile Include="04 IRepository\Test\ITestRepository.cs" />
+    <Compile Include="04 IRepository\WCC\IJUNCTION_VICERepository.cs" />
+    <Compile Include="04 IRepository\WCC\ICC_FlowSortRepository.cs" />
+    <Compile Include="04 IRepository\WCC\ICC_CleanStatisticsRepository.cs" />
+    <Compile Include="04 IRepository\WCC\ICC_TheDateRepository.cs" />
+    <Compile Include="04 IRepository\WCC\ICC_PressTargetRepository.cs" />
+    <Compile Include="04 IRepository\WCC\ICC_DispatchPlanRepository.cs" />
+    <Compile Include="04 IRepository\WCC\IGY_TypeInfoRepository.cs" />
+    <Compile Include="04 IRepository\WCC\IGY_PumpStationInfoRepository.cs" />
+    <Compile Include="04 IRepository\WCC\IGY_StationRecordsRepository.cs" />
+    <Compile Include="04 IRepository\WCC\ICC_WetherRecordRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="03 Entity\SystemManage\ItemsEntity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="03 Entity\SystemManage\OrganizeEntity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="03 Entity\SystemManage\RoleEntity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="03 Entity\SystemManage\UserEntity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TJWCC.Code\TJWCC.Code.csproj">
+      <Project>{db19ce03-c307-43fe-a209-08aa4ae10e21}</Project>
+      <Name>TJWCC.Code</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TJWCC.Data\TJWCC.Data.csproj">
+      <Project>{f71003e8-a836-48f4-9df6-df9095cebd18}</Project>
+      <Name>TJWCC.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

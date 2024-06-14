@@ -1,0 +1,558 @@
+﻿.map1 {
+    /*float: left;*/
+    min-height: 100%;
+    min-width: 80%;
+    margin-top: 10px;
+    border: 1px solid #95B8E7;
+}
+.map_top{
+    font-weight: 600;
+    position: absolute;
+    /*min-width: 1100px;*/
+    width: 100%;
+    margin-top: 10px;    
+    transition: margin-top 1s;
+    z-index: 1;
+}
+.map_elevation{
+    height: 25px;
+    position: relative;
+    width: 70px;
+    border: 1px solid rgb(149,184,231);
+    border-radius: 5px;
+    text-align: center;
+    line-height: 25px;
+    font-size: 14px;
+    float: left;
+    margin-left: 10px;
+    color: black;
+    background-color: white;
+    z-index:10;
+}
+.map_elevation:hover{
+    cursor: pointer;
+    background-color: rgb(224,236,255);
+}
+.listCss{
+    color: black;
+    background-color:white;
+    border:1px solid rgb(149,184,231);
+    /*border-bottom:1px solid rgb(149,184,231);
+    border-right:1px solid rgb(149,184,231);*/
+    border-radius:5px;
+    z-index:10;
+}
+.listCss:hover{
+    background-color: rgb(224,236,255);
+}
+.map_contourline{
+    /* 等高线*/
+    color: black;
+    background-color:white;
+    border:1px solid rgb(149,184,231);
+    /*border-bottom:1px solid rgb(149,184,231);
+    border-right:1px solid rgb(149,184,231);*/
+    border-radius:5px;
+}
+.map_contourline:hover{
+    background-color: rgb(224,236,255);
+}
+.map_contourplane{
+    /* 等高面*/
+    color: black;
+    background-color:white;
+    border:1px solid rgb(149,184,231);
+    border-radius:5px;
+}
+.map_contourplane:hover{
+    background-color: rgb(224,236,255);
+}
+.map_status{
+    height: 25px;
+    width: 70px;
+    border: 1px solid rgb(149,184,231);
+    border-radius:5px;
+    /*border-left: 0;*/
+    position: relative;
+    text-align: center;
+    line-height: 25px;
+    font-size: 14px;
+    float: left;
+    color: black;
+    background-color: white;
+    z-index:10;
+}
+.map_status:hover{
+    /* 运行状况*/
+    cursor: pointer;
+    background-color: rgb(224,236,255);
+}
+.map-others1{
+    margin-left: 12px;
+    height: 25px;
+    width: 70px;
+    border: 1px solid rgb(149,184,231);
+    border-radius:5px;
+    /*border-left: 0;*/
+    position: relative;
+    text-align: center;
+    line-height: 25px;
+    font-size: 14px;
+    float: left;
+    color: black;
+    background-color: white;
+    z-index:10;
+}
+.map-others1:hover{
+    cursor: pointer;
+    background-color: rgb(224,236,255);
+}
+.map_home {
+    height: 35px;
+    width: 130px;
+    /*margin-left: 60px;*/
+    border: 2px solid rgb(149,184,231);
+    border-radius: 10px;
+    /*border-left: 0;*/
+    position: relative;
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+    float: left;
+    color: #216fec;
+    background-color: rgba(255,255,255,0.7);
+}
+    .map_home:hover {
+        cursor: pointer;
+        background-color: rgb(224,236,255);
+    }
+    .map_home.active {
+        border: 2px solid #df7319;
+        color: #df7319;
+    }
+.map_clear {
+    height: 35px;
+    width: 130px;
+    border: 1px solid rgb(149,184,231);
+    border-radius: 10px;
+    /*border-left: 0;*/
+    position: relative;
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+    float: left;
+    color: #216fec;
+    background-color: rgba(255,255,255,0.7);
+}
+.map_clear:hover{
+    cursor: pointer;
+    background-color: rgb(224,236,255);
+}
+    .map_clear.active {
+        border: 2px solid #df7319;
+        color: #df7319;
+    }
+.map_slfx {
+    height: 35px;
+    width: 130px;
+    border: 1px solid rgb(149,184,231);
+    border-radius: 10px;
+    /*border-left: 0;*/
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+    float: left;
+    color: #216fec;
+    background-color: rgba(255,255,255,0.7);
+    z-index: 10;
+}
+.map_slfx:hover{
+    cursor: pointer;
+    background-color: rgb(224,236,255);
+}
+    .map_slfx.active {
+        border: 2px solid #df7319;
+        color: #df7319;
+    }
+.map_slfx_botton{
+    width: 120px;
+    margin-left: -15px;
+    text-align: left;
+    border: 1px solid rgb(149,184,231);
+    border-radius:5px;
+    /*height: 0px;*/
+    overflow: hidden;
+    transition: height 0.5s;
+    background-color: white;
+    display: none;
+    z-index:10;
+}
+.map_gc {
+    height: 35px;
+    width: 130px;
+    border: 1px solid rgb(149,184,231);
+    border-radius: 10px;
+    /*border-left: 0;*/
+    position: relative;
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+    float: left;
+    color: #216fec;
+    background-color: rgba(255,255,255,0.7);
+}
+.map_gc:hover{
+    cursor: pointer;
+    background-color: rgb(224,236,255);
+}
+    .map_gc.active {
+        border: 2px solid #df7319;
+        color: #df7319;
+    }
+.map_gdfh {
+    height: 35px;
+    width: 170px;
+    border: 1px solid rgb(149,184,231);
+    border-radius: 10px;
+    /*border-left: 0;*/
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+    float: left;
+    color: #216fec;
+    background-color: rgba(255,255,255,0.7);
+}
+.map_gdfh:hover{
+    cursor: pointer;
+    background-color: rgb(224,236,255);
+}
+/*地图左侧-查询框*/
+.map_left{
+    margin-top: 50px;
+    margin-left: 60px;
+    position: absolute;
+    display: table;
+    float: left;
+    z-index: 20;
+}
+.map_qc{
+    margin-top: 5px;
+    width: 70px;
+    height: 25px;
+    border: 1px solid rgb(149,184,231);
+    line-height: 25px;
+    font-size: 14px;
+    color: black;
+    background-color: white;
+}
+.map_qc:hover{
+    cursor: pointer;
+    background-color: rgb(224,236,255);
+}
+.map_search{
+    overflow: hidden;
+    width:74px;
+    /*height:0px;*/
+    background-size:10px 5px;
+    /*border:1px solid rgb(149,184,231);*/
+    border-radius:5px;
+    /*background-color:white;*/
+    /*transform:rotate(0deg);*/
+    transition: height 0.5s;
+    display: none;
+}
+.map_search:hover{
+    /*background-color:rgb(224,236,255);*/
+}
+.map_query{
+    height: 25px;
+    line-height: 25px;
+    width: 70px;
+    text-align: center;
+    float: left;
+    border-right:1px solid rgb(149,184,231);
+    border-top:1px solid rgb(149,184,231);
+    border-bottom:1px solid rgb(149,184,231);
+    color: black;
+    background-color:white;
+    border-radius:5px;
+    border-left:1px solid rgb(149,184,231);
+}
+.map_query:hover{
+    background-color: rgb(224,236,255);
+    cursor: pointer;
+}
+.map_query1{
+    height: 25px;
+    line-height: 25px;
+    width: 110px;
+    text-align: center;
+    float: left;
+    border-right:1px solid rgb(149,184,231);
+    border-top:1px solid rgb(149,184,231);
+    border-bottom:1px solid rgb(149,184,231);
+    color: black;
+    background-color:white;
+    border-radius:5px;
+    border-left:1px solid rgb(149,184,231);
+}
+.map_query1:hover{
+    background-color: rgb(224,236,255);
+    cursor: pointer;
+}
+.search-message-input{
+    border:1px solid rgb(255,168,168);
+    border-radius:5px;
+    float:left;
+    height:25px;
+}
+.criteria_query{
+    border-right:1px solid rgb(149,184,231);
+    border-top: 1px solid rgb(149,184,231);
+    border-bottom: 1px solid rgb(149,184,231);
+    border-radius:5px;
+    height: 25px;
+    line-height: 25px;
+    color: black;
+    background-color:white;
+    width: 30px;
+    text-align: center;
+    float: left;
+}
+.criteria_query:hover{
+    background-color: rgb(224,236,255);
+    cursor: pointer;
+}
+.criteria_query1{
+    border-right:1px solid rgb(149,184,231);
+    border-top: 1px solid rgb(149,184,231);
+    border-bottom: 1px solid rgb(149,184,231);
+    border-radius:5px;
+    height: 25px;
+    line-height: 25px;
+    color: black;
+    background-color:white;
+    width: 60px;
+    text-align: center;
+    float: left;
+}
+.criteria_query1:hover{
+    background-color: rgb(224,236,255);
+    cursor: pointer;
+}
+.pressure_data{
+    clear: both;
+    height: 25px;
+    line-height: 25px;
+    width: 110px;
+    float:left;
+    border-top: 1px solid rgb(149,184,231);
+    border-right: 1px solid rgb(149,184,231);
+}
+.pressure_data:hover{
+    cursor: pointer;
+    background-color: rgb(224,236,255);
+ }
+.criteria_query_page{
+    border-left:1px solid rgb(149,184,231);    
+    padding:10px;    
+    width:243px;
+    right:-270px;
+    z-index: 22;
+    transition: right 0.5s;
+    background-color: rgb(224,236,255);    
+    position:absolute;
+    overflow:auto;
+    height:100%;
+}
+.criteria_query_page_line1{
+    width: 100%;
+    margin:5px;
+    height: 30px;
+}
+.criteria_query_page_line1_1{
+    margin-top: 2px;    
+    display: table;    
+    float: left;
+    margin-top:5px;
+    margin-left:10px;
+}
+.criteria_query_page_line1_2{
+    margin-left: 30px;
+    float: left;
+}
+.criteria_query_page_line2{
+    margin-top:5px;    
+    border: 1px solid rgb(149,184,231);
+    margin-left:1px;
+    width: 210px;
+    height: 150px;
+    border-radius:5px;
+    overflow: auto;
+}
+.free_water{
+    color: black;
+    background-color: white;
+    border-bottom:1px solid rgb(149,184,231);
+    padding:5px;
+}
+.free_water:hover{
+    background-color:aliceblue;
+    cursor: pointer;
+}
+.free-selected{
+    text-align:center;
+    width: 100%;
+    margin-top: 10px;
+}
+.criteria_query_page_line3{
+    margin-left:3px;
+    width:200px;
+    float:left;
+    height: 105px;
+    margin-top: 10px;
+}
+.criteria_query_page_line3_left{
+    width: 59%;
+    float: left;
+}
+.criteria_query_page_line3_right{
+    border: 1px solid rgb(149,184,231);
+    margin-top:10px;
+    width: 210px;
+    border-radius:5px;
+    color: black;
+    background-color:white;
+    margin-left:1px;
+    height: 150px;
+    overflow:auto;
+}
+.equals{
+    width: 20px;
+    height: 15px;
+    border: 1px solid rgb(149,184,231);
+    text-align: center;
+    border-radius: 3px;
+    float: left;
+}
+.equals:hover{
+    cursor: pointer;
+    background-color:  rgb(224,236,255);
+}
+.like_k{
+    width: 45px;
+    height: 15px;
+    border: 1px solid rgb(149,184,231);
+    text-align: center;
+    border-radius: 3px;
+    float: left;
+    margin-left: 10px;
+}
+.like_k:hover{
+    cursor: pointer;
+    background-color:  rgb(224,236,255);
+}
+.not_t{
+    width: 45px;
+    height: 15px;
+    float: left;
+    border: 1px solid rgb(149,184,231);
+    border-radius: 3px;
+    text-align: center;
+}
+.not_t:hover{
+    cursor: pointer;
+    background-color:  rgb(224,236,255);
+}
+.is_i{
+    margin-left: 10px;
+    width: 45px;
+    height: 15px;
+    float: left;
+    border: 1px solid rgb(149,184,231);
+    border-radius: 3px;
+    text-align: center;
+}
+.is_i:hover{
+    cursor: pointer;
+    background-color:  rgb(224,236,255);
+}
+.onlyvalue-message{
+    width:50px;
+    margin-left:10px;
+    padding:5px;
+    float:left;
+}
+.onlyvalue-input{
+    margin-top:2px;
+    width:40px;
+    float:left;
+    margin-left:10px;
+}
+.criteria_query_page_line5{
+    width:200px;
+    float:left;
+    margin-top: 10px;
+}
+.inline5{
+    margin-left:5px;
+    float:left;
+}
+.message-show{
+    display:none;
+    width:90px;
+    float:left;
+    height:20px;
+}
+.getOnlyValue{
+    padding:5px;
+    border-bottom:1px solid rgb(149,184,231);
+}
+.getOnlyValue:hover{
+    background-color:aliceblue;
+    cursor:pointer;
+}
+.followMouseInfo{
+    /*width:90px;*/
+    height:20px;
+    display:none;
+    position: absolute;
+    border: 1px solid rgb(149,184,231);
+    border-radius:5px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    color: black;
+    background-color: white;
+}
+.followMouseInfoR{
+    /*width:90px;*/
+    height:20px;
+    display:none;
+    position: absolute;
+    border: 1px solid rgb(149,184,231);
+    border-radius:5px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    color: black;
+    background-color: white;
+}
+/* infoWindow样式 */
+.contentPane {
+    min-height: auto;
+    max-height: auto;
+    overflow: hidden;
+}
+.esriSimpleSliderTL {
+    bottom: 20px;
+    right: 20px;
+    top: auto;
+    left: auto;
+}
+.esriOverviewMap {
+    position: sticky;
+}
+.esriScalebar {
+    position: sticky;
+}

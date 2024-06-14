@@ -1,0 +1,1094 @@
+﻿@{
+    ViewBag.Title = "地图展示";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+
+@* arcgis  *@
+<link rel="stylesheet" type="text/css" href="@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISAPI/dijit/themes/tundra/tundra.css" />
+<link rel="stylesheet" type="text/css" href="@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISAPI/esri/css/esri.css" />
+<script src="@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISAPI/init.js"></script>
+<link href="~/Areas/DataSynthetical/Content/css/map/indexMap.css" rel="stylesheet" />
+<script src="~/Areas/DataSynthetical/Content/js/map/map2.js"></script>
+<script type="text/javascript">
+    var ArcGISServer = "@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISServer";
+    var ArcGISAPI = "@TJWCC.Code.OperatorProvider.Provider.GetCurrent().ArcGISAPI/";
+    var PressUnitConv = 100;//水压单位换算
+    var PressUnit = "MPa";//水压单位
+    var PressPlace = 3;//水压小数位
+    var mPressUnit = "mH₂O";//模拟水压单位
+    var mPressPlace = 2;//模拟水压小数位
+    var ClUnit = "mg/L";//余氯单位
+    var BgaUnit = "个/ml";//蓝绿藻单位
+    var TurbUnit = "NTU";//浊度单位
+    var FlowUnit = "m³/h";//流量单位
+    var FlowVUnit = "m/s";//流速单位
+    var PLengthUnit = "m";//管长单位
+    var PDiameterUnit = "mm";//管径单位
+    var JDepthUnit = "m";//埋深单位
+    var JElevationUnit = "m";//高程单位
+    var JAge = "小时";//水龄单位
+</script>
+<style>
+    .top1 {
+        padding-left: 10px;
+        float: left;
+    }
+
+    .top11 {
+        height: 26px;
+        width: 100px;
+        padding: 4px 15px;
+        font-size: 10px;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        background-color: #216fec;
+        border: none;
+        border-radius: 15px;
+    }
+
+    .top12 {
+        width: 100px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .font10 {
+        font-size: 10px;
+    }
+</style>
+<body class="tundra">
+    <div style="height:100%" class="easyui-layout">
+        @*------------------------------------- 搜索栏  开始------------------------------------------------*@
+        <div style="position: absolute;top: 10px;z-index:10">
+            <div class="btn-group font10 top1">
+                <button type="button" class="btn btn-default dropdown-toggle top11" id="info"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    压力 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu top12">
+                    <li><a href="#" onclick="getPressureData(this)">压力</a></li>
+                    <li><a href="#" onclick="getMeterData(this)">流量</a></li>
+                    <li><a href="#" onclick="getClData(this)">余氯</a></li>
+                    <li><a href="#" onclick="getNTUData(this)">浊度</a></li>
+                    <li><a href="#" onclick="getSourceData(this)">原水</a></li>
+                </ul>
+            </div>
+            <div class="input-group" style="width: 190px;">
+                <input id="txt_keyword" type="text" class="form-control" placeholder="" style="width: 150px;height:20px;border-radius: 15px;">
+                <span class="input-group-btn">
+                    <button id="btn_search" type="button" class="btn btn-primary" onclick="getQueryData()" style="border-radius: 10px;"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+        @*------------------------------------- 搜索栏  开始------------------------------------------------*@
+        @*------------------------------------- 网站工作区域  开始------------------------------------------------*@
+        <div id="mainPanle" data-options="region:'center'" style="background: #eee; overflow-y:hidden">
+            <div title="水力模型" style="overflow:hidden;position:relative;" id="home">
+                <div id="map" style="height:810px;position: relative;">
+
+                    <!--  返回初始化地图按钮-->
+                    <!--     @*<div id="HomeButton"></div>*@ -->
+                    <!--  Html5定位按钮-->
+                    <!--        <div id="LocateButton"></div> -->
+                    <!--  切换底图-->
+                    <!--   <div id="BasemapToggle"></div> -->
+                    <span id="info" style="position:absolute;right:15px;bottom:18px;color:#000;background-color:white;z-index:10;"></span>
+                    <img id="loadingImg" src="~/Areas/DataDisplay/Content/img/gif/5-121204193Q8.gif" style="position:absolute;z-index:10;display:none" />
+                    <div class="map_stss" id="fullExtent" onclick="fullExtentClick()">全图</div>
+                </div>
+                @* 图层 *@
+                <div id="layersDisplay" class="layers-display"></div>
+            </div>
+            <div id="tab-tools" style="border-top:0px;border-right:0px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'" onclick="changeHeight()"></a>
+            </div>
+        </div>
+        @*-------------------------------------网站工作区域  结束------------------------------------------------*@
+    </div>
+    <div id="followMouseInfo" class="followMouseInfo"></div>@*浮动显示信息*@
+    <div id="followMouseInfoR" class="followMouseInfoR"></div>@*浮动显示信息*@
+    <script>
+        function getQueryData() {
+            fullExtentClick();
+            if (dscFlag == 1)
+                toAjax('/DataDisplay/DataQuery/GetClData?keyword=' + $("#txt_keyword").val(), 2);
+            if (dszdFlag == 1)
+                toAjax('/DataDisplay/DataQuery/GetTurbidityData?keyword=' + $("#txt_keyword").val(), 3);
+            if (dsylFlag == 1)
+                toAjax('/DataDisplay/DataQuery/GetPressureData?keyword=' + $("#txt_keyword").val(), 1);
+            if (dsllFlag == 1)
+                toAjax('/DataDisplay/DataQuery/GetMeterData?keyword=' + $("#txt_keyword").val(), 4);
+            if (dsysFlag == 1)
+                toAjax('/DataDisplay/DataQuery/GetSourceData?keyword=' + $("#txt_keyword").val(), 41);
+        }
+        var map;
+        //信息显示窗口 dialog
+        var homeExtent;
+        var FullExtent
+        var dialog;
+        var CLToolbartb;//add by huangxin 20180312测量工具
+        var isFirstRun = true;
+        var isShowValve = false;
+        var isCLToolbartbL;//add by huangxin 20180427长度测量工具状态
+        var isCLToolbartbA;//add by huangxin 20180427面积测量工具状态
+        var geometryService;//add by huangxin 20180312几何地图服务
+        var measuregeometry;//add by huangxin 20180312测量时临时存放绘画图形
+        var setLayerVisibility;//add by huangxin 20180807地图图层显示设置
+        var featureLayer;
+        var myPipeFlowChart;
+        var overlay;
+        var chartsContainer;
+        var str;
+        var strXing;
+        var mapLegend;
+        var graphicslayer;
+        var clusterLayer;
+        var tbaGraphicslayer;//爆管画图图层
+        var layerKeyword;//当前彩色分析图标题
+        var maplayersClick;//add by huangxin 20180126图层按钮全局函数
+        var isTubeBurst;//add by huangxin 20171208是否爆管分析标识
+        var isSupplyWaterWay;//add by huangxin 20171208是否供水路径标识
+        var isMapQuery;//add by huangxin 20171222是否图上查询标识
+        var isMapLayers;//add by huangxin 20180201是否显示图层标识
+        var isArcgisSliderP;//add by huangxin 20180822 是否自动播放图层
+        var arcgisSliderPID = 0;//add by huangxin 20180822 自动播放计时器ID
+        var legendDisplay;
+        var updataTree;//add by huangxin 20181119更新图层树形结构全局函数
+        var layersChange;//add by huangxin 20171226切换地图图层全局函数
+        var addClusters;//add by huangxin 营业表查询结果聚合处理
+        var recoverAll;//add by huangxin 20171227清除按钮和显示状态全局函数
+        var reservoirInfo;//add by huangxin 20180612水厂信息全局函数
+        var rollingPointResult;//add by huangxin 20180109存储滚屏显示时单监测点信息
+        var isrollingPointResult = false;//add by huangxin 20180109是否显示滚屏显示时单监测点信息
+        var minFlowResult;//add by huangxin 20180111存储最小流量报警监测点信息
+        var minFlowIndex;//add by huangxin 20180209存储最小流量报警监测点信息当前编号
+        var isminFlowPointResult = false;//add by huangxin 20180111是否显示最小流量报警时单监测点信息
+        var isPressureStatisticsResult = false;//add by huangxin 20180410是否显示压力统计信息
+        var isXiangXiResult = false;//add by huangxin 20180604是否显示分区详细信息
+        var isPipeFlow = false;//add by huangxin 20180611是否显示水流方向
+        var xiangXiResult;//add by huangxin 20180604存储分区详细信息
+        var outline;//定义面的边界线符号
+        var BigPolygonSymbol;//定义面符号
+        var pictureMarkerSymbol;//爆管冒水动画图片
+        var BluePinPictureMSymbol;//蓝色气泡标记
+        var GreenPinPictureMSymbol;//绿色气泡标记
+        var BlueCPictureMSymbol;//聚合蓝色气泡标记
+        var GreenCPictureMSymbol;//聚合绿色气泡标记
+        var RedCPictureMSymbol;//聚合红色气泡标记
+        var BlackinfoPictureMSymbol;//气泡标记
+        var PinTextSymbol;//气泡标记
+        var RedBigPolygonSymbol;
+        var RedGlowPolygonSymbol;
+        var WhiteBigPolygonSymbol;
+        var YellowBigPolygonSymbol;
+        var SmallPolygonSymbol;
+        var WhiteSmallPolygonSymbol;
+        var ReserviorPolygonSymbol;
+        var PumpPolygonSymbol;
+        var HydrantPolygonSymbol;
+        var qt;
+        var pid;
+        var strss;
+        var strssxzq;
+        var districtFeatureL0;
+        var message;
+        var waterFeatureL;
+        var pmeterFeature;
+        var wmeterFeature;
+        //检测仪表窗口
+        var infoTemplateJCYB;
+        //dbs分区图层
+        var layerMeasureArea0;//二级分区
+        var layerMeasureArea1;//三级分区
+        var layerMeasureArea2;//四级分区
+        var layerMeasureArea_0;
+        var layerMeasureArea_1;
+        var layerMeasureArea_2;
+        //营销公司
+        var searchFinded;
+        //计量分区信息框
+        var infoTemplateDBS;
+        //营销公司信息框
+        var infoTemplateYXGS;
+        var tiled5;
+        //基础元素搜索图层
+        var baseMapServerLayer;
+        //水泵搜索图层
+        var pumpMapLayer;
+        //水池搜索图层
+        var reservoirMapLayer;
+        //消火栓搜索图层
+        var hydrantMapLayer;
+        //阀门搜索图层
+        var valveMapLayer;
+        //节点搜索图层
+        var nodeMapLayer;
+        //管道搜索图层
+        var pipeMapLayer;
+        //水表搜索图层
+        var waterMeterMapLayer;
+        //管道模拟数据搜索图层
+        var resultPipeMapLayer;
+        //计算分区图层
+        var fenquMapLayer;
+        //图层
+        var layerHGLArea;
+        var layerPressArea;
+        var layerAge0;
+        var layerCl0;
+        var layerElevationArea;
+        var layerLowPressArea;
+        var tiled2;
+        var layerModelBaseMapMin;
+        var layerPipeFlow;
+        var layerPipeVelocity;
+        var layerPipeLoad;
+        var layerPipeDiameter;
+        var layerPipeMaterial;
+        var layerPipeFlow0;
+        var layerHGLCountor;
+        var layerPressCountor;
+        var layerElevationCountor;
+        var layerInstallationYear;
+        var layerSourceArea;
+        var layerDemand;
+        var layerPipeHeadloss;
+        var layerHydraulicGradeChange;
+        var layerPressureChange;
+        //管网详图
+        var layerGisPipe;
+        var layerCheckMeter;
+        var font1;//这个是字体
+        var color1;//这个是颜色
+        var color2;//这个是颜色
+        var color3;//这个是颜色
+        var tickInterval = 0;
+        var tickPixelInterval = 100;
+        var ChartXCount1 = 9//图表显示X轴数据个数
+        var ChartXCount2 = 15//图表显示X轴数据个数
+        var ChartXCount3 = 2//图表显示X轴数据个数
+        var ChartXCount4 = 7//图表显示X轴数据个数
+        var graphicslayerR = [];
+        //引入部分dojo包
+        dojo.require("esri.map");
+        dojo.require("esri.toolbars.draw");
+        dojo.require("esri.tasks.query");
+        //引入基础类包，具体看官方API
+        require([
+            "esri/basemaps",
+            "esri/map",
+            "esri/Color",
+            "esri/dijit/Scalebar",
+            "esri/dijit/Legend",
+            "esri/dijit/HomeButton",
+            "esri/dijit/OverviewMap",
+            "esri/layers/GraphicsLayer",
+            "esri/layers/FeatureLayer",
+            "esri/layers/ArcGISTiledMapServiceLayer",
+            "esri/layers/ArcGISDynamicMapServiceLayer",
+            "esri/tasks/FindTask",
+            "esri/tasks/GeometryService",
+            "esri/tasks/QueryTask",
+            "esri/tasks/IdentifyTask",
+            "esri/tasks/FindParameters",
+            "esri/tasks/IdentifyParameters",
+            "esri/symbols/Font",
+            "esri/symbols/TextSymbol",
+            "esri/symbols/SimpleLineSymbol",
+            "esri/symbols/SimpleFillSymbol",
+            "esri/symbols/SimpleMarkerSymbol",
+            "esri/symbols/PictureMarkerSymbol",
+            "esri/renderers/ClassBreaksRenderer",
+            "esri/graphic",
+            "esri/InfoTemplate",
+            "esri/renderers/SimpleRenderer",
+            "extras/ClusterLayer",
+            "extras/Echarts3Layer",
+            "dojo/on",
+            "dojo/dom",
+            "dojo/dom-style",
+            "dojo/query",
+            "dojo/colors",
+            "dojo/_base/array",
+            "dojo/number",
+            "dojo/parser",
+            "dijit/TooltipDialog",
+            "dijit/popup",
+            "esri/tasks/LengthsParameters",
+            "esri/tasks/AreasAndLengthsParameters",
+            "dojo/domReady!"
+        ], function (
+        esriBasemaps,
+        Map,
+        Color,
+        Scalebar,
+        Legend,
+        HomeButton,
+        OverviewMap,
+        GraphicsLayer,
+        FeatureLayer,
+        ArcGISTiledMapServiceLayer,
+        ArcGISDynamicMapServiceLayer,
+        FindTask,
+        GeometryService,
+        QueryTask,
+        IdentifyTask,
+        FindParameters,
+        IdentifyParameters,
+        Font,
+        TextSymbol,
+        SimpleLineSymbol,
+        SimpleFillSymbol,
+        SimpleMarkerSymbol,
+        PictureMarkerSymbol,
+        ClassBreaksRenderer,
+        Graphic,
+        InfoTemplate,
+        SimpleRenderer,
+        ClusterLayer,
+        Echarts3Layer,
+        on,
+        dom,
+        domStyle,
+        Colors,
+        arrayUtils,
+        number,
+        parser,
+        TooltipDialog,
+        dijitPopup,
+        LengthsParameters,
+        AreasAndLengthsParameters) {
+            //font1
+            font1 = new Font("13px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_BOLDER);
+            color1 = new Color([0, 0, 0]);
+            color2 = new Color([0, 0, 0]);
+            color3 = new Color([0, 0, 0]);
+            parser.parse();
+            //var initExtent = new esri.geometry.Extent({ "xmin": 99192.63530892128, "ymin": 298825.92644339317, "xmax": 100742.03840772746, "ymax": 300589.11330310017, "spatialReference": map.spatialReference });
+            esriBasemaps.delorme = {
+                baseMapLayers: [
+                    //中国矢量地图服务
+                    {
+                        url: ArcGISServer + "BaseMap/MapServer",
+                        id: "底图",
+                        opacity: 0.5
+                    }
+                ],
+                //缩略图
+                thumbnailUrl: "Imgs/shiliang.jpg",
+                title: "矢量图"
+            };
+            //初始化地图
+            map = new Map("map", {
+                basemap: "delorme",
+                logo: false,
+                //extent: initExtent,
+                fadeOnZoom: true,
+                showLabels: true,
+                isDoubleClickZoom: false//关闭双击放大
+            });
+
+            //禁用键盘缩放平移
+            map.disableKeyboardNavigation();
+            //卫星底图
+            //var toggle = new BasemapToggle({
+            //    map: map,
+            //    basemap: "satellite"
+            //}, "BasemapToggle");
+            //toggle.startup();
+            //返回主视图
+            var home = new HomeButton({
+                map: map
+            }, "HomeButton");
+            home.startup();
+            //定位
+            //geoLocate = new LocateButton({
+            //    map: map
+            //}, "LocateButton");
+            //geoLocate.startup();
+            //鹰眼
+            var overviewMapDijit = new OverviewMap({
+                map: map,
+                expandFactor: 100,
+                attachTo: "bottom-left",
+                visible: false
+            });
+            overviewMapDijit.startup();
+            //比例尺
+            var scalebar = new Scalebar({ map: map, attachTo: "bottom-left", scalebarUnit: "metric" });
+            //显示坐标点
+            //dojo.connect(map, "onLoad", function () {
+            //    dojo.connect(map, "onMouseMove", showCoordinates);
+            //    //dojo.connect(map, "onMouseDrag", showCoordinates);
+            //    initCLToolbar();//初始化测量工具
+            //});
+            //添加 DBS计量分区 图层
+            infoTemplateYXGS = new InfoTemplate("${Name}", "<div class=\"display-div\"><div>分区名称：${Name}</div><div>分区等级：${MAreaGrade}</div></div>");
+            infoTemplateDBS = new InfoTemplate("${Name}", "<div class=\"display-div\"><div>分区名称：${Name}</div><div>分区等级：${MAreaGrade}</div></div>");
+            //基础元素搜索图层
+            baseMapServerLayer = ArcGISServer + "ModelBaseMap/MapServer";
+            //水泵搜索图层
+            pumpMapLayer = ArcGISServer + "ModelBaseMap/MapServer/0";
+            //水池搜索图层
+            reservoirMapLayer = ArcGISServer + "SourceWater_D/MapServer/0";
+            //消火栓搜索图层
+            hydrantMapLayer = ArcGISServer + "ModelBaseMap/MapServer/2";
+            //阀门搜索图层
+            valveMapLayer = ArcGISServer + "ModelBaseMap/MapServer/3";
+            //节点搜索图层
+            nodeMapLayer = ArcGISServer + "ModelBaseMap/MapServer/4";
+            //管道搜索图层
+            pipeMapLayer = ArcGISServer + "ModelBaseMap/MapServer/5";
+            //水表搜索图层
+            waterMeterMapLayer = ArcGISServer + "CheckMeterService/MapServer/0";
+            //管道模拟数据搜索图层
+            resultPipeMapLayer = ArcGISServer + "Result_Pipe_D/MapServer/0";
+            //源水管网节点搜索图层
+            sourceNodeMapLayer = ArcGISServer + "SourceWater_D/MapServer/2";
+
+            //1.定义面的边界线符号
+            outline = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 0]), 3);
+            //2.定义面符号
+            //BigPolygonSymbol = new SimpleMarkerSymbol().setSize(12).setColor(new dojo.Color([0, 0, 255]));
+            //RedBigPolygonSymbol = new SimpleMarkerSymbol().setSize(12).setColor(new dojo.Color([255, 0, 0]));
+            //YellowBigPolygonSymbol = new SimpleMarkerSymbol().setSize(12).setColor(new dojo.Color([239, 242, 132]));
+            //SmallPolygonSymbol = new SimpleMarkerSymbol().setSize(8).setColor(new dojo.Color([0, 0, 255]));
+            BigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/valve.png', 16, 16);
+            RedBigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/valves.png', 30, 34).setOffset(0, 17);
+            ReBigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/gif/阀.gif', 30, 34).setOffset(0, 17);
+            RedGlowPolygonSymbol = new PictureMarkerSymbol('Content/myImage/gif/Red_glow.gif', 45, 45);
+            WhiteBigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/gif/Purple_glow.gif', 45, 45);
+            YellowBigPolygonSymbol = new PictureMarkerSymbol('Content/myImage/traffic-cone.png', 34, 36).setOffset(0, 5);
+            SmallPolygonSymbol = new PictureMarkerSymbol('/Areas/DataDisplay/Content/img/junction.png', 16, 16);
+            SmallPressSymbol = new PictureMarkerSymbol('/Areas/DataDisplay/Content/img/press.png', 16, 16).setOffset(0, 8);
+            SmallFlowSymbol = new PictureMarkerSymbol('/Areas/DataDisplay/Content/img/flow.png', 16, 16).setOffset(0, 8);
+            SmallQualitySymbol = new PictureMarkerSymbol('/Areas/DataDisplay/Content/img/quality.png', 16, 16).setOffset(0, 8);
+            WhiteSmallPolygonSymbol = new PictureMarkerSymbol('Content/myImage/gif/Blue_glow.gif', 45, 45);
+            ReserviorPolygonSymbol = new PictureMarkerSymbol('/Content/img/reservior.png', 16, 16);
+            PumpPolygonSymbol = new PictureMarkerSymbol('Content/myImage/pump.png', 32, 32);
+            HydrantPolygonSymbol = new PictureMarkerSymbol('Content/myImage/hydrant.png', 32, 32);
+            pictureMarkerSymbol = new PictureMarkerSymbol('Content/myImage/gif/pipeBreak.gif', 35, 35).setOffset(0, 12);//爆管冒水动画图片
+            BlackinfoPictureMSymbol = new PictureMarkerSymbol("Content/myImage/blackinfowin.png", 150, 48).setOffset(0, 24);
+            BluePinPictureMSymbol = new PictureMarkerSymbol("Content/myImage/BluePin1LargeB.png", 64, 64).setOffset(0, 32);
+            GreenPinPictureMSymbol = new PictureMarkerSymbol("Content/myImage/GreenPin1LargeB.png", 64, 64).setOffset(0, 32);
+            BlueCPictureMSymbol = new PictureMarkerSymbol("Content/myImage/BluePin1LargeB.png", 32, 32).setOffset(0, 16);//聚合蓝色气泡标记
+            GreenCPictureMSymbol = new PictureMarkerSymbol("Content/myImage/GreenPin1LargeB.png", 64, 64).setOffset(0, 16);//聚合绿色气泡标记
+            RedCPictureMSymbol = new PictureMarkerSymbol("Content/myImage/RedPin1LargeB.png", 72, 72).setOffset(0, 16);//聚合红色气泡标记
+            PinTextSymbol = new TextSymbol('', new Font("13px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_BOLDER), new dojo.Color([0, 0, 0])).setOffset(0, 25);//显示文字
+            //overlay = new Echarts3Layer(map, echarts);
+            //chartsContainer = overlay.getEchartsContainer();
+            //myPipeFlowChart = overlay.initECharts(chartsContainer);
+            //管网图
+            var infoTemplatePoint = new InfoTemplate("元素信息", "${*}");
+
+            //geometryService = GeometryService("http://" + ArcGISServer.split('/')[2] + "/arcgis/rest/services/Utilities/Geometry/GeometryServer");//几何地图服务
+            //将图例图层添加到
+            layerModelBaseMap300 = new ArcGISDynamicMapServiceLayer(ArcGISServer + "ModelBaseMap300/MapServer", { id: "小于300管网图", visible: true });//小于300管网图
+            map.addLayer(layerModelBaseMap300);
+            tiled2 = new ArcGISTiledMapServiceLayer(ArcGISServer + "ModelBaseMap/MapServer", { id: "管网图", visible: true });//管网图层
+            //tiled2 = new ArcGISDynamicMapServiceLayer(ArcGISServer + "ModelBaseMap/MapServer", { id: "管网图", visible: true });//管网图层
+            map.addLayer(tiled2);
+            SourceWater = new ArcGISDynamicMapServiceLayer(ArcGISServer + "SourceWater_D/MapServer", { id: "原水管网图", visible: true });//原水管网图
+            map.addLayer(SourceWater);
+            SourceWater1 = new ArcGISDynamicMapServiceLayer("http://10.150.200.11:6080/arcgis/rest/services/%E5%A4%A9%E6%B4%A5_%E5%8E%9F%E6%B0%B4%E7%AE%A1%E7%BD%91/MapServer", { id: "原水管网图1", visible: true });//原水管网图
+            map.addLayer(SourceWater1);
+            Meter = new ArcGISDynamicMapServiceLayer(ArcGISServer + "Meter_D/MapServer", { id: "地表分布图", visible: true });//地表分布图
+            map.addLayer(Meter);
+            layerModelBaseMapMin = new ArcGISTiledMapServiceLayer(ArcGISServer + "ModelBaseMapMin/MapServer", { id: "细管网图", visible: false });//细管网图层
+            map.addLayer(layerModelBaseMapMin);
+            layerGisPipe = new ArcGISDynamicMapServiceLayer(ArcGISServer + "DetailPipeService/MapServer", { id: "管网详图", visible: false });//管网详图
+            map.addLayer(layerGisPipe);
+            //计量分区搜索图层
+            DBSArea2Laye = ArcGISServer + "MeasureArea_Info/MapServer/0";
+            DBSArea1Laye = ArcGISServer + "MeasureArea_Info/MapServer/0";
+            DBSArea0Laye = ArcGISServer + "MeasureArea_Info/MapServer/0";
+            //图层按钮单击事件
+            setLayerVisibility = function (obj) {
+                obj.children[0].checked = !(obj.children[0].checked);
+                //用dojo.query获取class为listCss的元素数组
+                var inputs = dojo.query(".listCBCss");
+                var visible = [];
+                //对checkbox数组进行变量把选中的id添加到visible
+                for (var i = 0; i < inputs.length; i++) {
+                    if (inputs[i].checked) {
+                        visible.push(inputs[i].id);
+                    }
+                }
+                //设置可视图层
+                tiled2.setVisibleLayers(visible);
+            };
+            maplayersClick = function () {
+                if (isMapLayers) {
+                    recoverAll();
+                    isMapLayers = false;
+                } else {
+                    recoverAll();
+                    $("#maplayers").css("background", "#4b77be");//改变图层按钮颜色
+                    var layersDisplay = document.getElementById("layersDisplay");
+                    layersDisplay.innerHTML = "";
+                    var layers = map.getLayersVisibleAtScale(map.getScale());
+                    //layersDisplay
+                    layersDisplay.style.display = "block";
+                    arrayUtils.forEach(layers, function (layer) {
+                        if (layer.id.indexOf("graphicsLayer") <= -1) {
+                            layersDisplay.innerHTML += "<div class='layers-display-line' onclick='layersChange(this, 0, false, \"\")'>" + layer.id + "</div>";
+                        }
+                    });
+                    layersDisplay.innerHTML += "<div class='layers-display-close' onclick='recoverAll()'>关闭</div>";
+                    isMapLayers = true;
+                }
+            }
+            //graphicslayer
+            graphicslayer = new GraphicsLayer();//画图图层
+            map.addLayer(graphicslayer);
+            tbaGraphicslayer = new GraphicsLayer();//爆管画图图层
+            map.addLayer(tbaGraphicslayer);
+            //添加流量计 featurelayer 图层
+            var infoTemplateWF = new InfoTemplate("流量计数据", "${*}");
+            waterFeatureL = new FeatureLayer(ArcGISServer + "WMeter_F/MapServer/0", {
+                mode: FeatureLayer.MODE_ONDEMAND,
+                id: "流量计",
+                outFields: ["*"],
+                infoTemplate: infoTemplateWF,
+                visible: false
+            });
+            map.addLayer(waterFeatureL);
+            infoTemplateJCYB = new InfoTemplate("计量表",
+                "<div class=\"display-div\"><div>标识：${Label}</div>" +
+                "<div>状态：${Is_Active}</div>" +
+                //"<div>ID：${ID}</div>" +
+                "<div>地址：${Physical_Address}</div>" +
+                //"<div>营销公司：${Physical_DistrictID}</div>" +
+                "<div>计量区：${Physical_DMAID}</div>" +
+                //"<div>行政区：${DistrictAr}</div>" +
+                "<div>出厂水厂：${Physical_DistrictID}</div>" +
+                //"<div>监测点类型：${Explain}</div></div>" +
+                "<div id='llj_infotemplate'></div>");
+            pmeterFeature = new FeatureLayer(ArcGISServer + "PMeter_F/MapServer/0", {
+                id: "水压监测点",
+                visible: false,
+                outFields: ["*"],
+                infoTemplate: infoTemplateJCYB
+            });
+            map.addLayer(pmeterFeature);
+            wmeterFeature = new FeatureLayer(ArcGISServer + "WMeter_F/MapServer/0", {
+                id: "流量监测点",
+                visible: false,
+                outFields: ["*"],
+                infoTemplate: infoTemplateJCYB
+            });
+            map.addLayer(wmeterFeature);
+            //graphicslayer
+            graphicslayer = new GraphicsLayer();//画图图层
+            map.addLayer(graphicslayer);
+            //dojo.connect(pmeterFeature, "onClick", jcybQueryTask);
+            //dojo.connect(pmeterFeature, "onClick", infoTemplateQT);
+            //dojo.connect(wmeterFeature, "onClick", infoTemplateQT);
+            //地图单击处理
+            //map.on("click", mapClick);
+            //地图双击处理
+            //map.on("dbl-click", mapDblClick);
+            map.on("update-start", showLoading);//add by huangxin 20180508地图加载时显示loading图标
+            map.on("update-end", hideLoading);//add by huangxin 20180508地图加载完隐藏loading图标
+            //map.on("pan-end", updataInfoWindow);//add by huangxin 20180108显示信息
+            //map.on("zoom-end", updataInfoWindow);//add by huangxin 20180531显示信息
+            var identifyParams;//声明查询参数
+            function showLoading() {//地图加载时显示loading图标
+                $('#loadingImg').css('left', $("#map").width() / 2 - 42 + 'px');
+                $('#loadingImg').css('top', $("#map").height() / 2 - 40 + 'px');
+                //if (!isArcgisSliderP && rtcdi == 0)
+                //    esri.show(dojo.byId("loadingImg"));   // 显示图片
+                //map.disableMapNavigation();   // 禁止所有的地图导航,除了滑块和平移箭头。
+                //map.hideZoomSlider();  // 隐藏地图的缩放滑块。
+            }
+
+            function hideLoading() {//地图加载完成后隐藏loading图标
+                esri.hide(dojo.byId("loadingImg"));
+                //map.enableMapNavigation();
+                //map.showZoomSlider();
+                if (isFirstRun) {
+                    isFirstRun = false;
+                    homeExtent = map.extent;
+                    FullExtent = SourceWater.fullExtent;
+                    //FullExtent = new esri.geometry.Extent({ "xmin": 12983527, "ymin": 4606694, "xmax": 13023121, "ymax": 4639295, "spatialReference": map.spatialReference });//地图显示的新区域;
+                    //xmax: 13023121.408344664
+                    //xmin: 12983527.027692996
+                    //ymax: 4639295.278690283
+                    //ymin: 4606694.8861267
+                    //FullExtent.spatialReference = map.spatialReference;
+                    //$(".ovwButton.ovwController.ovwShow").click(function () {//鹰眼显示单击事件
+                    //    var tmpdisplay = $(".ovwContainer").css("display");
+                    //    if (tmpdisplay == "none")
+                    //        $("#legendDivSoto").css("bottom", "70px");
+                    //    else
+                    //        $("#legendDivSoto").css("bottom", ($(".ovwContainer").height() + 3) + "px");
+                    //});
+                    //updataTree();
+                    getPressureData('<div>压力</div>');
+                }
+                if (layerKeyword == '管道流量') {
+                    setValueForDiv("legendDiv1", "<div id=\"legendDiv1_管道流量1\" class=\"esriLegendService\" style=\"display: block;\"><table width=\"95%\"><tbody><tr><td align=\"left\"><span class=\"esriLegendServiceLabel\">管道流量(m³/h)</span></td></tr></tbody></table><div id=\"legendDiv1_管道流量2\" style=\"display: block;\"><table width=\"95%\" class=\"esriLegendLayerLabel\"><tbody><tr><td align=\"left\">PipeFlow</td></tr></tbody></table><table cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" class=\"esriLegendLayer\"><tbody><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend1.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">&lt;= 15</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend2.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">15 - 50</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend3.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">50 - 200</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend4.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">200 - 500</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend5.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">500 - 900</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend6.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">&gt; 900</td></tr></tbody></table></td></tr></tbody></table></div></div><div id=\"legendDiv1_管道流量\" style=\"display:none\" class=\"esriLegendService\"></div><div id=\"legendDiv1_msg\" style=\"display:none\" class=\"esriLegendMsg\"></div>");
+                }
+            }
+            function cExecute() {//条件查询结果显示
+                //pid = document.getElementById("pid");
+
+                //pid = pid.options[pid.selectedIndex].value;
+                pid = $("#pid").combobox('getValue');
+                if (pid == "节点") {
+                    qt = nodeMapLayer;
+                } else if (pid == "管道") {
+                    qt = pipeMapLayer;
+                } else if (pid == "阀门") {
+                    qt = valveMapLayer;
+                } else if (pid == "水表") {
+                    qt = waterMeterMapLayer;
+                } else if (pid == "消火栓") {
+                    qt = hydrantMapLayer;
+                }
+                //document.getElementById("criteriapagelist").style.right = "0px";
+                //document.getElementById("criterialist").innerHTML = "";
+                //document.getElementById("allmessage").innerHTML = " 共 " + Math.ceil(strss.length / 20) + " 页" + strss.length + " 条数据";
+                //critePage(1);
+                criteriaQueryDraw();
+            }
+            function criteriaQueryDraw() {//条件查询结果地图标注
+                $("#fixed_list>li").removeAttr("id");
+                dojo.disconnect(graphicslayer, "onClick");
+                var query = new esri.tasks.Query();
+                var queryTask = new esri.tasks.QueryTask(qt);
+                query.where = str;
+                query.outSpatialReference = map.spatialReference;
+                query.returnGeometry = true;
+                query.outFields = ["*"];
+                if (pid == "节点") {
+                    message = "节点";
+                    queryTask.execute(query, addCityFeatureSetToMap);
+                } else if (pid == "管道") {
+                    message = "管道";
+                    queryTask.execute(query, addPipeFeatureSetToMap);
+                } else if (pid == "阀门") {
+                    message = "阀门";
+                    queryTask.execute(query, addCityFeatureSetToMap);
+                } else if (pid == "水表") {
+                    message = "水表";
+                    queryTask.execute(query, addCityFeatureSetToMap);
+                } else if (pid == "消火栓") {
+                    message = "消火栓";
+                    queryTask.execute(query, addCityFeatureSetToMap);
+                }
+            }
+            function addPipeFeatureSetToMap(featureSet) {
+                tiled2.hide();
+                layerModelBaseMapMin.show();
+                var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 0]), 3);
+                var infoTemplate = new esri.InfoTemplate("管道信息",
+                    "<div class=\"display-div\"><div>元素Id:${ElementId}</div>" +
+                    "<div>GIS编号:${GISID}</div>" +
+                    "<div>标识:${Label}</div>" +
+                    "<div>管径:${Physical_PipeDiameter}</div>" +
+                    "<div>管材:${Physical_PipeMaterialID}</div>" +
+                    "<div>海曾威廉系数:${Physical_HazenWilliamsC}</div>" +
+                    "<div>管长:${Physical_Length}</div>" +
+                    "<div>安装年代:${Physical_InstallationYear}</div>" +
+                    "<div>地址:${Physical_Address}</div>" +
+                    "<div>供水公司:${Physical_ZoneID}</div>" +
+                    "<div>营销公司:${Physical_DistrictID}</div></div>"
+                    //+"<div>计量分区:${Physical_DMAID}</div>"
+                );
+
+                dojo.forEach(featureSet.features, function (feature) {
+                    graphicslayer.add(feature.setSymbol(lineSymbol).setInfoTemplate(infoTemplate));
+                });
+                dojo.connect(graphicslayer, "onClick", function (evt) {
+                    if (evt.graphic.attributes != undefined) {
+                        evt.graphic.attributes["Physical_Length"] = Number(evt.graphic.attributes["Physical_Length"]).toFixed(2);
+                        var tmpIa = evt.graphic.attributes["Is_Active"] == 0 ? "停用" : "启用";
+                        if (tmpIa != null)
+                            evt.graphic.attributes["Is_Active"] = tmpIa;
+                        var tmpId = zoneClass.getValue(evt.graphic.attributes["Physical_ZoneID"]);
+                        if (tmpId != null)
+                            evt.graphic.attributes["Physical_ZoneID"] = tmpId;
+                        var tmpId = DMAClass.getValue(evt.graphic.attributes["Physical_DMAID"]);
+                        if (tmpId != null)
+                            evt.graphic.attributes["Physical_DMAID"] = tmpId;
+                        var tmpId = districtClass.getValue(evt.graphic.attributes["Physical_DistrictID"]);
+                        if (tmpId != null)
+                            evt.graphic.attributes["Physical_DistrictID"] = tmpId;
+                        var tmpId = MaterialClass.getValue(evt.graphic.attributes["Physical_PipeMaterialID"]);
+                        if (tmpId != null)
+                            evt.graphic.attributes["Physical_PipeMaterialID"] = tmpId;
+                        map.infoWindow.resize(260, 275);
+                    }
+                });
+                var feature = featureSet.features[0];//获取要素
+                //var sGeometry = feature.geometry;//获取图形
+                var centerPoint = feature.geometry.getExtent().getCenter();
+                var cPoint = new esri.geometry.Point();
+                cPoint.x = centerPoint.x;
+                cPoint.y = centerPoint.y;
+                cPoint.spatialReference = map.spatialReference;
+                $.messager.progress('close');
+                if (featureSet.features.length == 1)
+                    map.centerAndZoom(cPoint, 7);
+                else
+                    fullExtentClick();
+            }
+            function addCityFeatureSetToMap(featureSet) {
+                tiled2.hide();
+                layerModelBaseMapMin.show();
+                var symbol = new esri.symbol.SimpleMarkerSymbol();
+                symbol.setColor(new dojo.Color([0, 255, 255]));
+                //这里的监测点信息需要在没点击之前就已经显示在页面上了
+                var infoTemplate;
+                if (message == "水表") {
+                    infoTemplate = new esri.InfoTemplate(message + "信息",
+                        "<div class=\"display-div\"><div>OBJECTID:${OBJECTID}</div>" +
+                        "<div>SID:${SID}</div>" +
+                        "<div>SUBTYPE:${SUBTYPE}</div>" +
+                        "<div>MATERIAL:${MATERIAL}</div>" +
+                        "<div>地址:${ADDR}</div>" +
+                        "<div>表号:${WATREGID}</div>" +
+                        "<div>用户名:${USERNAME}</div>" +
+                        "<div>STATUS:${STATUS}</div>" +
+                        "<div>OWNERDEPT:${OWNERDEPT}</div>" +
+                        "<div>水类型:${WATERTYPE}</div>" +
+                        "<div>DISTNOA:${DISTNOA}</div>" +
+                        "<div>DISTNOB:${DISTNOB}</div>" +
+                        "<div>数据类型:${DATATYPE}</div>" +
+                        "<div>添加人:${WRITEPERSO}</div>" +
+                        "<div>编辑人:${EDITPERSON}</div>" +
+                        "<div>CHECKPASS:${CHECKPASS}</div>" +
+                        "<div>DRAWNO:${DRAWNO}</div>" +
+                        "<div>DRAWNAME:${DRAWNAME}</div>" +
+                        "<div>DRAWTYPE:${DRAWTYPE}</div>" +
+                        "<div>FINISHDATE:${FINISHDATE}</div>" +
+                        //"<div>FINISHDATE:" + timestampToTime(1403058804) + "</div>" +
+                        "<div>JGTATT:${JGTATT}</div></div>");
+                } else {
+                    infoTemplate = new esri.InfoTemplate(message + "信息",
+                        "<div class=\"display-div\"><div>元素Id : ${ElementId}</div>" +
+                        "<div>GIS编号:${GISID}</div>" +
+                        "<div>标识:${Label}</div>" +
+                        "<div>埋深:${Physical_Depth}</div>" +
+                        "<div>高程:${Physical_Elevation}</div>" +
+                        "<div>地址:${Physical_Address}</div>" +
+                        "<div>供水公司:${Physical_ZoneID}</div>" +
+                        "<div>营销公司:${Physical_DistrictID}</div></div>"
+                        //+"<div>计量分区:${Physical_DMAID}</div>"
+                    );
+                }
+                var cPoint = new esri.geometry.Point();
+                dojo.forEach(featureSet.features, function (feature) {
+                    graphicslayer.add(feature.setSymbol(symbol).setInfoTemplate(infoTemplate));
+                    var centerPoint = feature.geometry;
+                    cPoint.x = centerPoint.x;
+                    cPoint.y = centerPoint.y;
+                    cPoint.spatialReference = map.spatialReference;
+                    //map.centerAndZoom(cPoint, 2);
+                });
+                dojo.connect(graphicslayer, "onClick", function (evt) {
+                    if (message == "水表") {
+                        map.infoWindow.resize(220, 275);
+                    } else {
+                        if (evt.graphic.attributes != undefined) {
+                            evt.graphic.attributes["Physical_Depth"] = Number(evt.graphic.attributes["Physical_Depth"]).toFixed(0);
+                            evt.graphic.attributes["Physical_Elevation"] = Number(evt.graphic.attributes["Physical_Elevation"]).toFixed(2);
+                            var tmpIa = evt.graphic.attributes["Is_Active"] == 0 ? "停用" : "启用";
+                            if (tmpIa != null)
+                                evt.graphic.attributes["Is_Active"] = tmpIa;
+                            var tmpId = zoneClass.getValue(evt.graphic.attributes["Physical_ZoneID"]);
+                            if (tmpId != null)
+                                evt.graphic.attributes["Physical_ZoneID"] = tmpId;
+                            var tmpId = DMAClass.getValue(evt.graphic.attributes["Physical_DMAID"]);
+                            if (tmpId != null)
+                                evt.graphic.attributes["Physical_DMAID"] = tmpId;
+                            var tmpId = districtClass.getValue(evt.graphic.attributes["Physical_DistrictID"]);
+                            if (tmpId != null)
+                                evt.graphic.attributes["Physical_DistrictID"] = tmpId;
+                            map.infoWindow.resize(260, 275);
+                        }
+                    }
+                });
+                $.messager.progress('close');
+                if (featureSet.features.length == 1)
+                    map.centerAndZoom(cPoint, 7);
+                else
+                    fullExtentClick();
+                //将点的位置作为中心点
+                //map.setExtent(featureSet.features[0].geometry.getExtent());
+                //map.setExtent(featureSet.features[0].geometry.getExtent());
+            }
+            //首先，给graphicslayer设定点击事件，获取元素本身
+            //dojo.connect(graphicslayer, "onClick",warningClick);
+            var flag = 0;
+            var flag1 = 0;
+            reservoirInfo = function () {//鼠标悬停显示水库信息
+                //console.log('123');
+                var queryTask = new esri.tasks.QueryTask(reservoirMapLayer);
+                var query = new esri.tasks.Query();
+                query.outSpatialReference = map.spatialReference;
+                query.where = "ElementId > 1";
+                query.returnGeometry = true;
+                query.outFields = ["*"];
+                queryTask.execute(query, function (featureSet) {
+                    if (graphicslayerR.length > 0) var isRemove = true;
+                    else var isRemove = false;
+                    for (var i = 0; i < featureSet.features.length; i++) {
+                        if (isRemove) {
+                            map.removeLayer(graphicslayerR[i]);
+                            graphicslayerR[i] = null;
+                        }
+                        graphicslayerR[i] = new GraphicsLayer();
+                        var tmpGraphicR = new esri.Graphic(featureSet.features[i].geometry, ReserviorPolygonSymbol, featureSet.features[i].attributes);
+                        //鼠标悬停显示水厂信息
+                        dojo.connect(graphicslayerR[i], "onMouseMove", function (evt) {
+                            $('#followMouseInfoR').html(this.graphics[0].attributes.LABEL)
+                            $('#followMouseInfoR').show().css({
+                                "top": evt.pageY - 20,
+                                "left": evt.pageX + 10
+                            });
+                        });
+                        //鼠标离开隐藏水厂信息
+                        dojo.connect(graphicslayerR[i], "onMouseOut", function () {
+                            $('#followMouseInfoR').hide();
+                        });
+                        graphicslayerR[i].add(tmpGraphicR);
+                        map.addLayer(graphicslayerR[i]);
+                    }
+                });
+            }
+            //var graphicslayerGIF = new GraphicsLayer();
+            //map.addLayer(graphicslayerGIF);
+            //图例
+            //legendDisplay = function (objs, title) {
+            //    if (dijit.byId("legendDiv1")) {
+            //        setValueForDiv("legendDiv1", "");
+            //        dijit.byId("legendDiv1").destroyRecursive(true);
+            //    }
+            //    var legendLayers = [];
+            //    legendLayers.push({ layer: objs, title: title });
+            //    mapLegend = new Legend({
+            //        map: map,
+            //        autoUpdate: true,
+            //        arrangment: Legend.ALIGN_RIGHT,
+            //        layerInfos: legendLayers
+            //    }, "legendDiv1");
+            //    mapLegend.startup();
+            //    document.getElementById("legendDivSoto").style.display = "block";
+            //}
+            //layersChange = function (thisDIV, whereis, isContour, unit) {//地图图层切换
+            //    $(".auxiliary_null").html("")
+            //    $(".nav-title").removeAttr("id");
+            //    $("#fixed_list>li").removeAttr("id");
+            //    if (whereis != 2)//关阀模拟结果点入不清除页面
+            //        recoverAll();
+            //    //hideAndClear();
+            //    tiled2.hide();
+            //    if (whereis == 0)//判断是否为页面右键菜单调用
+            //        layerKeyword = thisDIV.innerText;
+            //    else
+            //        layerKeyword = thisDIV.innerHTML;
+            //    $(thisDIV).parents("div.nav-cont").siblings(".nav-title").find(".title_auxiliary").html(layerKeyword);
+            //    $(thisDIV).parents("div.nav-cont").siblings(".nav-title").attr("id", "check-nav");
+            //    setValueForDiv("mapCenterInfo", "<div id=\"arcgisSlider\" style=\"height:20px;width:200px;\"></div><div style=\"margin: 0px auto;width:225px;font-size: 12px\"><div style=\"float: left;\">历史</div><div style=\"margin-left: 80px;float: left;\"><div id=\"arcgisSliderBt\" class=\"arcgisSliderBtt\"><img src=\"Content/myImage/play.png\" /></div></div><div style=\"float: right;\">当前</div></div>");
+            //    $('#arcgisSlider').slider({
+            //        showTip: true,
+            //        rule: ['', ''],
+            //        reversed: true,
+            //        min: 0,
+            //        max: 24,
+            //        tipFormatter: function (value) {
+            //            var nowdt = new Date();
+            //            if (value == 0) {
+            //                value = nowdt.getHours() + ":" + Math.floor(nowdt.getMinutes() / 15) * 15;
+            //            } else if (value <= nowdt.getHours() + 1) {
+            //                value = (nowdt.getHours() - value + 1) + ":00";
+            //            } else {
+            //                value = (24 - value + 1 + nowdt.getHours()) + ":00";
+            //            }
+            //            return value;
+            //        },
+            //        onChange: function (value) {
+            //            var nowdt = new Date();
+            //            if (value == 0) {
+            //                value = 24;
+            //            } else if (value <= nowdt.getHours() + 1) {
+            //                value = nowdt.getHours() - value + 1;
+            //            } else {
+            //                value = 24 - value + 1 + nowdt.getHours();
+            //            }
+            //            //legendDivClose();//关闭图例显示
+            //            //用dojo.query获取class为listCss的元素数组
+            //            if (layerKeyword == '管道流量') {
+            //                var visible = [value * 3];
+            //            } else {
+            //                var visible = [value];
+            //                mapLegend.refresh();
+            //            }
+            //            //设置可视图层
+            //            layerHGLArea.setVisibleLayers(visible);//总水压面
+            //            layerPressArea.setVisibleLayers(visible);//自由水压面
+            //            layerAge0.setVisibleLayers(visible);//水龄
+            //            layerCl0.setVisibleLayers(visible);//余氯
+            //            //layerElevationArea.setVisibleLayers(visible);//等高面
+            //            layerLowPressArea.setVisibleLayers(visible);//低压区
+            //            layerPipeFlow.setVisibleLayers(visible);//流量
+            //            layerPipeVelocity.setVisibleLayers(visible);//流速
+            //            //layerPipeLoad.setVisibleLayers(visible);//管道负荷
+            //            //layerPipeDiameter.setVisibleLayers(visible);//管径分布
+            //            //layerPipeMaterial.setVisibleLayers(visible);//管材分类
+            //            layerPipeFlow0.setVisibleLayers(visible);//水流方向
+            //            layerHGLCountor.setVisibleLayers(visible);//总水压线
+            //            layerPressCountor.setVisibleLayers(visible);//自由水压线
+            //            //layerElevationCountor.setVisibleLayers(visible);//等高线
+            //            //layerInstallationYear.setVisibleLayers(visible);//竣工时间
+            //            layerSourceArea.setVisibleLayers(visible);//供水范围
+            //            layerDemand.setVisibleLayers(visible);//水量
+            //            layerPipeHeadloss.setVisibleLayers(visible);//水头损失
+            //            //setValueForDiv("legendDiv1", "<div id=\"legendDiv1_管道流量1\" class=\"esriLegendService\" style=\"display: block;\"><table width=\"95%\"><tbody><tr><td align=\"left\"><span class=\"esriLegendServiceLabel\">管道流量(m³/h)</span></td></tr></tbody></table><div id=\"legendDiv1_管道流量2\" style=\"display: block;\"><table width=\"95%\" class=\"esriLegendLayerLabel\"><tbody><tr><td align=\"left\">PipeFlow</td></tr></tbody></table><table cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" class=\"esriLegendLayer\"><tbody><tr><td width=\"35\" align=\"center\"><img src=\"~/Content/Legend/Legend1.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">&lt;= 15</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"~/Content/Legend/Legend2.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">15 - 50</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"~/Content/Legend/Legend3.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">50 - 200</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"~/Content/Legend/Legend4.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">200 - 500</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"~/Content/Legend/Legend5.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">500 - 900</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"~/Content/Legend/Legend6.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">&lt; 900</td></tr></tbody></table></td></tr></tbody></table></div></div>");
+            //        }
+            //    });
+            //    $('.slider').css("margin", "0 auto");
+            //    if (!isContour) layerModelBaseMapMin.show();//如果不是线状图层显示细管网图
+            //    var layers = map.getLayersVisibleAtScale(map.getScale());
+            //    for (var i = 0; i < layers.length; i++) {
+            //        if (layers[i].id == layerKeyword || (layerKeyword == "图例") || layers[i].id == "底图") {
+            //            layers[i].setVisibility(true);
+            //            if (layers[i].id == layerKeyword) {
+            //                //layers[i].visibleLayers = [24];
+            //                if (layers[i].id != "计算分区")
+            //                    legendDisplay(layers[i], layers[i].id + unit);
+            //                if (!(layers[i].id == "等高线" || layers[i].id == "等高面" || layers[i].id == "管道负荷" || layers[i].id == "管材分类" || layers[i].id == "管径分布" || layers[i].id == "竣工时间" || layers[i].id == "总水压压降" || layers[i].id == "自由水压压降" || layers[i].id == "计算分区")) {
+            //                    map.getLayer(layerKeyword).setVisibleLayers([24]);
+            //                    $("#mapCenterInfo").css("display", "block");
+            //                    if (isArcgisSliderP == undefined) {
+            //                        isArcgisSliderP = false;
+            //                        $("#mapCenterInfo").on("click", "#arcgisSliderBt", function () {
+            //                            if (isArcgisSliderP) {
+            //                                setValueForDiv("arcgisSliderBt", "<img src=\"Content/myImage/play.png\" />");
+            //                                isArcgisSliderP = false;
+            //                                clearInterval(arcgisSliderPID);
+            //                                arcgisSliderPID = 0;
+            //                            } else {
+            //                                setValueForDiv("arcgisSliderBt", "<img src=\"Content/myImage/pause.png\" />");
+            //                                isArcgisSliderP = true;
+            //                                if (arcgisSliderPID == 0)
+            //                                    arcgisSliderPID = setInterval("arcgisSliderPlay()", 1500);
+            //                            }
+            //                        });
+            //                    }
+            //                }
+            //            }
+            //        }
+            //        if (layerKeyword == '管道流量' && i == layers.length - 1) {
+            //            setValueForDiv("legendDiv1", "<div id=\"legendDiv1_管道流量1\" class=\"esriLegendService\" style=\"display: block;\"><table width=\"95%\"><tbody><tr><td align=\"left\"><span class=\"esriLegendServiceLabel\">管道流量(m³/h)</span></td></tr></tbody></table><div id=\"legendDiv1_管道流量2\" style=\"display: block;\"><table width=\"95%\" class=\"esriLegendLayerLabel\"><tbody><tr><td align=\"left\">PipeFlow</td></tr></tbody></table><table cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" class=\"esriLegendLayer\"><tbody><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend1.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">&lt;= 15</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend2.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">15 - 50</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend3.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">50 - 200</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend4.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">200 - 500</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend5.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">500 - 900</td></tr></tbody></table></td></tr><tr><td width=\"35\" align=\"center\"><img src=\"/Content/Legend/Legend6.png\" border=\"0\" style=\"opacity:1\"></td><td><table width=\"95%\" dir=\"ltr\"><tbody><tr><td align=\"left\">&lt; 900</td></tr></tbody></table></td></tr></tbody></table></div></div><div id=\"legendDiv1_管道流量\" style=\"display:none\" class=\"esriLegendService\"></div><div id=\"legendDiv1_msg\" style=\"display:none\" class=\"esriLegendMsg\"></div>");
+            //        }
+            //    }
+            //    updataTree();
+            //}
+            map.infoWindow.resize(245, 125);
+            //dialog = new TooltipDialog({
+            //    id: "tooltipDialog",
+            //    style: "position: absolute; width: 250px; font: normal normal normal 10pt Helvetica;z-index:100"
+            //});
+            //dialog.startup();
+            //graphicslayer.on("mouse-out", closeDialog);
+            //graphicslayer.on("mouse-over", function (evt) {
+            //    if (evt.graphic.attributes != undefined) {
+            //        var eleid = evt.graphic.attributes["ElementId"];
+            //        var eleval;
+            //        for (var i in result1) {
+            //            if (i == eleid) {
+            //                eleval = result1[i];
+            //            }
+            //        }
+            //        if (eleval == null) {
+            //            return;
+            //        }
+            //        var t = "<b>标识：${Label}</b><hr><b>余氯:" + eleval + "</b>";
+            //        var content = esriLang.substitute(evt.graphic.attributes, t);
+            //        dialog.setContent(content);
+            //        domStyle.set(dialog.domNode, "opacity", 0.8);
+            //        dijitPopup.open({
+            //            popup: dialog,
+            //            x: evt.x,
+            //            y: evt.y
+            //        });
+            //    }
+            //});
+            //function closeDialog() {
+            //    dijitPopup.close(dialog);
+            //}
+        });
+        //setInterval(function () {
+        //    $(".esriPopup .esriPopupWrapper").attr("class", "esriPopupWrapper panel-header");
+        //    $(".esriPopupWrapper>.content").attr("class", "sizer content panel-body");
+        //    textColor = $(".tabs li.tabs-selected a.tabs-inner").css("color");
+        //}, 3000);
+        // 监测数据（选中）
+        //$(".fixed_left>label>input").on("click", function () {
+        //    if ($(".fixed_left>label>input").prop("checked")) {
+        //        if ($(".fixed_left>select>option:selected").attr("value") == "1") {
+        //            getPressureData()
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "2") {
+        //            getMeterData()
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "3") {
+        //            // getQualityData()
+        //            getClData()
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "4") {
+        //            getrtQualityTData('', 'press', 'all')
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "5") {
+        //            getrtQualityTData('', 'flow', 'all')
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "6") {
+        //            getrtQualityTData('', 'quality', 'all')
+        //        }
+        //    } else {
+        //        clearClick();
+        //    }
+        //})
+        // 已关闭阀门（选中）
+        //$(".fixed_right>label>input").on("click", function () {
+        //    isShowValve = $(".fixed_right>label>input").prop("checked");
+        //    if (map.graphics.graphics.length > 0) map.graphics.clear();
+        //    reservoirInfo();
+        //})
+        // 监测数据切换
+        //$(".fixed_left>select").on("change", function () {
+        //    if ($(".fixed_left>label>input").prop("checked")) {
+        //        if ($(".fixed_left>select>option:selected").attr("value") == "1") {
+        //            getPressureData()
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "2") {
+        //            getMeterData()
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "3") {
+        //            // getQualityData()
+        //            getClData()
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "4") {
+        //            getrtQualityTData('', 'press', 'all')
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "5") {
+        //            getrtQualityTData('', 'flow', 'all')
+        //        } else if ($(".fixed_left>select>option:selected").attr("value") == "6") {
+        //            getrtQualityTData('', 'quality', 'all')
+        //        }
+        //    }
+        //})
+        window.onresize = function () {
+            var mainH = $(window).height() - 10;
+            var mainW = $(window).width();
+            $(".main-container").height(mainH);
+            $(".main-container").width(mainW);
+            $("#map").height(mainH - 1);
+            $("#map").width(mainW - 10);
+        }
+        window.onload = function () {
+            var mainH = $(window).height() - 10;
+            var mainW = $(window).width();
+            $(".main-container").height(mainH);
+            $(".main-container").width(mainW);
+            $("#map").height(mainH - 1);
+            $("#map").width(mainW - 10);
+            reservoirInfo();
+        }
+    </script>
+</body>

@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EC6F6B10-F1E7-473C-8E40-E0BD3CF7186B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TJWCC.Mapping</RootNamespace>
+    <AssemblyName>TJWCC.Mapping</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.0\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseData\OperatType_InfoMap.cs" />
+    <Compile Include="BaseData\COMM_INFOMap.cs" />
+    <Compile Include="BaseData\METERMAKER_INFOMap.cs" />
+    <Compile Include="BaseData\METERTYPE_INFOMap.cs" />
+    <Compile Include="BSSys\BSB_BranchPipesMap.cs" />
+    <Compile Include="BSSys\BS_SCADA_TAG_CURRENTMap.cs" />
+    <Compile Include="BSSys\BS_SCADA_TAG_INFOMap.cs" />
+    <Compile Include="BSSys\BSB_ForecastFlowMap.cs" />
+    <Compile Include="BSSys\BSB_LinkedTableMap.cs" />
+    <Compile Include="BSSys\BSB_MinFlowMap.cs" />
+    <Compile Include="BSSys\BSB_SourceData_ClMap.cs" />
+    <Compile Include="BSSys\BSB_SupplyWayMap.cs" />
+    <Compile Include="BSSys\BSB_Warn_RecordsMap.cs" />
+    <Compile Include="BSSys\BSM_MArea_Meter_InfoMap.cs" />
+    <Compile Include="BSSys\BSM_Meter_InfoMap.cs" />
+    <Compile Include="BSSys\BSM_WaterMeter_RecordMap.cs" />
+    <Compile Include="BSSys\BSO_PumpOptimal_RecordsMap.cs" />
+    <Compile Include="BSSys\BSO_PumpParamMap.cs" />
+    <Compile Include="BSSys\BSO_PumpStationMap.cs" />
+    <Compile Include="BSSys\BSO_Station_CurrentMap.cs" />
+    <Compile Include="BSSys\BSO_Station_RecordsMap.cs" />
+    <Compile Include="BSSys\BSOT_CalDefaultInfoMap.cs" />
+    <Compile Include="BSSys\BSOT_DemandRecordMap.cs" />
+    <Compile Include="BSSys\BSOT_SysInfoMap.cs" />
+    <Compile Include="BSSys\BSB_ValveAreaMap.cs" />
+    <Compile Include="BSSys\DistrictClassMap.cs" />
+    <Compile Include="BSSys\DMAAreaClassMap.cs" />
+    <Compile Include="BSSys\DMAClassMap.cs" />
+    <Compile Include="BSSys\HYDRANTMap.cs" />
+    <Compile Include="BSSys\JUNCTIONMap.cs" />
+    <Compile Include="BSSys\MaterialClassMap.cs" />
+    <Compile Include="BSSys\PatternsMap.cs" />
+    <Compile Include="BSSys\PIPEMap.cs" />
+    <Compile Include="BSSys\PUMPMap.cs" />
+    <Compile Include="BSSys\RESERVOIRMap.cs" />
+    <Compile Include="BSSys\RESULT_HYDRANTMap.cs" />
+    <Compile Include="BSSys\RESULT_JUNCTIONMap.cs" />
+    <Compile Include="BSSys\RESULT_PIPEMap.cs" />
+    <Compile Include="BSSys\RESULT_TCVMap.cs" />
+    <Compile Include="BSSys\TCVMap.cs" />
+    <Compile Include="BSSys\ZoneClassMap.cs" />
+    <Compile Include="BSSys\BS_SCADA_TAG_HISMap.cs" />
+    <Compile Include="DataDisplay\Dis_AlarmMap.cs" />
+    <Compile Include="DataDisplay\Dis_MakerClassMap.cs" />
+    <Compile Include="DataDisplay\Dis_OffLineClassMap.cs" />
+    <Compile Include="DataDisplay\Dis_SignalStrengthMap.cs" />
+    <Compile Include="DataDisplay\Dis_WaterCompanyClassMap.cs" />
+    <Compile Include="DataDisplay\Dis_WaterMap.cs" />
+    <Compile Include="DataDisplay\Meter_InfoMap.cs" />
+    <Compile Include="MeterManage\ALARM_RAW_RECORDMap.cs" />
+    <Compile Include="MeterManage\METERDAY_RECORDMap.cs" />
+    <Compile Include="MeterManage\METER_RECORDMap.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemManage\SYS_DICMap.cs" />
+    <Compile Include="SystemManage\SubBusi_InfoMap.cs" />
+    <Compile Include="SystemManage\Business_InfoMap.cs" />
+    <Compile Include="SystemManage\Company_InfoMap.cs" />
+    <Compile Include="SystemManage\AreaMap.cs" />
+    <Compile Include="SystemManage\ItemsDetailMap.cs" />
+    <Compile Include="SystemManage\ItemsMap.cs" />
+    <Compile Include="SystemManage\ModuleButtonMap.cs" />
+    <Compile Include="SystemManage\ModuleMap.cs" />
+    <Compile Include="SystemManage\OrganizeMap.cs" />
+    <Compile Include="SystemManage\RoleAuthorizeMap.cs" />
+    <Compile Include="SystemManage\RoleMap.cs" />
+    <Compile Include="SystemManage\UserLogOnMap.cs" />
+    <Compile Include="SystemManage\UserMap.cs" />
+    <Compile Include="SystemManage\SystemSecurity\LogMap.cs" />
+    <Compile Include="Test\TestMap.cs" />
+    <Compile Include="WCC\CC_FlowSortMap.cs" />
+    <Compile Include="WCC\CC_CleanStatisticsMap.cs" />
+    <Compile Include="WCC\JUNCTION_VICEMap.cs" />
+    <Compile Include="WCC\CC_TheDateMap.cs" />
+    <Compile Include="WCC\CC_PressTargetMap.cs" />
+    <Compile Include="WCC\CC_DispatchPlanMap.cs" />
+    <Compile Include="WCC\GY_TypeInfoMap.cs" />
+    <Compile Include="WCC\GY_PumpStationInfoMap.cs" />
+    <Compile Include="WCC\GY_StationRecordsMap.cs" />
+    <Compile Include="WCC\CC_WetherRecordMap.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TJWCC.Domain\TJWCC.Domain.csproj">
+      <Project>{7dc886cd-b8a0-44e8-aadd-57fcb0cfecb8}</Project>
+      <Name>TJWCC.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

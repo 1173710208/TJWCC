@@ -1,0 +1,26 @@
+﻿
+@using TJWCC.Application.DataDisplay;
+@using TJWCC.Domain.Entity.DataDisplay;
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @if (ViewData["entity"] != null)
+        {
+            var entity = (int)ViewData["entity"];
+            <span>@entity</span>
+            <span></span>
+        }
+    </div>
+</body>
+</html>

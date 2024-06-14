@@ -1,0 +1,458 @@
+﻿
+@{
+    ViewBag.Title = "报表管理";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<script src="~/Content/js/datepicker/WdatePicker.js"></script>
+<script src="~/Areas/DataDisplay/Content/js/main.js"></script>
+<style>
+    .font18 {
+        font-size: 13px;
+    }
+        table tr:nth-child(odd) {
+            background: #eef9fb;
+        }
+
+    .main-container {
+        width: 1675px;
+        height:100%;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        margin-top: 10px;
+        background-color: #edf2f6;
+       
+    }
+
+    .top-bar {
+        height: 36px;
+        width: 1665px;
+        display: flex;
+        align-items: center;
+        background-color: #edf2f6;
+    }
+
+    .top-bar1 {
+        height: 30px;
+        width: 90px;
+        margin-right: 0px;
+        display: flex;
+        align-items: center;
+    }
+
+    .topcontent1 {
+        width: 90px;
+        color: #216fec;
+        margin-left:15px;
+    }
+
+    .right11 {
+        height: 30px;
+        width: 100px;
+        border: 0;
+        border-radius: 10px;
+        margin-right: 20px;
+        color: #758ecc;
+    }
+
+    .right111 {
+        height: 30px;
+        width: 100px;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        background-color: #216fec;
+        border: none;
+        border-radius: 10px;
+    }
+
+    .right112 {
+        width: 100px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .data_structure {
+        width: 1655px;
+        height: 810px;
+        background-color: #ecf3f6;
+        align-items: center;
+    }
+
+
+    .right21 {
+        height: 30px;
+        width: 1660px;
+        align-items: center;
+    }
+
+    .right21_title {
+        height: 30px;
+        width: 1655px;
+        margin-left: 5px;
+        margin-right: 5px;
+        align-items: center;
+        /* font-size: 10px; */
+    }
+
+    .right211 {
+        width: 1655px;
+        border-top: 0;
+        margin-left: 5px;
+        background-color: #fff !important;
+    }
+
+    .right2111 {
+        font-size: 15px;
+        font-weight:bold;
+        text-align: center;
+    }
+
+    .right22 {
+        height: 790px;
+        width: 1670px;
+        align-items: center;
+        overflow-y: auto;
+    }
+
+    .right22_data {
+        height: 30px;
+        width: 1655px;
+        background-color: #ffffff;
+        margin-left: 5px;
+        align-items: center;
+        /* font-size: 10px; */
+    }
+
+    .right221 {
+
+        position: relative;
+        height: 30px;
+        margin-left: 5px;
+        padding: 5px;
+        text-align: center;
+        background-color: #fff;
+        border-top: 2px solid #f2f7fd;
+        /*-webkit-box-reflect: below 1px linear-gradient(transparent, #003);*/
+    }
+
+        .right221:hover {
+            -webkit-box-shadow: 0px 3px 20px #c8c8c8;
+            -moz-box-shadow: 0px 3px 20px #c8c8c8;
+            box-shadow: 0px 3px 20px #c8c8c8;
+        }
+
+    .right2211 {
+        font-size: 13px;
+    }
+
+    .right22111 {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        height: 30px;
+        width: 80px;
+        border: 0;
+        border-radius: 10px;
+        background-color: #32d16d;
+        color: #fff;
+    }
+
+    .right22112 {
+        color: #f97c08;
+       
+    }
+    .right1121 {
+        height: 27px;
+        width: 120px;
+        background-color: #216fed;
+        color: #fff;
+        border: 0;
+        border-radius: 10px;
+        margin-left: 5px;
+        margin-right: 10px
+    }
+
+    #ORGANIZEID > option {
+        background-color: #fff;
+        color: #000;
+    }
+
+    #AREATYPEO > option {
+        background-color: #fff;
+        color: #000;
+    }
+
+    #AREATYPET > option {
+        background-color: #fff;
+        color: #000;
+    }
+    html {
+        overflow-y: hidden !important;
+    }
+
+    body {
+        overflow-y: hidden !important;
+    }
+</style>
+
+<div class="main-container">
+    <div class="top-bar">
+        <div class="top-bar1">
+            <div class="font18 topcontent1" style="font-weight:bold; color:black;">数据来源:</div>
+        </div>
+        <div id="Button_1" class="dropdown right11">
+            <select id="ORGANIZEID" name="ORGANIZEID" class="form-control right1121 ">
+            </select>
+        </div>
+        <div class="top-bar1">
+            <div class="font18 topcontent1" style="font-weight:bold; color:black;">报表类型:</div>
+        </div>
+        <div id="Button_1" class="dropdown right11">
+            <select id="AREATYPEO" name="AREATYPEO" class="form-control right1121 ">
+            </select>
+        </div>
+        <div class="top-bar1">
+            <div class="font18 topcontent1" style="font-weight:bold; color:black;">统计方式:</div>
+        </div>
+        <div id="Button_1" class="dropdown right11">
+            <select id="AREATYPET" name="AREATYPET" class="form-control right1121 ">
+            </select>
+        </div>
+        <div id="show1" style="position:absolute;top:33px;left:600px;background-color:#fff;width:450px;height:25px;border:#000 solid 1px;text-align:center;z-index:1000;display:none ">提示:<span style="font-size:16px">[ </span>开始日期(年-月-日 00:00:00),结束日期(年-月-日 23:59:59)<span style="font-size:16px">] </span></div>
+        <div class="top-bar1">
+            <div class="font18 topcontent1" style="font-weight:bold; color:black;" onmouseover="controlShow1(this)" onmouseout="controlfide1(this)">时间范围:</div>
+        </div>
+        <input id="sDate1" type="text" class="form-control input-wdatepicker right1121" style="margin-right:5px; height:25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker()" />
+        <div class="top-bar1" id="top-bar2" style="width:30px;">
+            <div class="font18 topcontent1" style="width: 30px; font-weight: bold; color: black;">到</div>
+        </div>
+        <input id="eDate1" type="text" class="form-control input-wdatepicker right1121" style="margin-right: 5px; height: 25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker()" />
+        <div style="height: 26px; display: flex; align-items: center; border-radius: 8px; margin-left: 20px; margin-right: 95px;">
+            <div class="right152" style="width: 25px; text-align: center; font-size: 15px; background: transparent; color: #216fec;margin-left:5px">
+                <a id="TJ-add " class="btn btn-primary dropdown-text warnRecord" onclick="setReport(this)" style="border: 0px;"> 确认创建</a>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="data_structure">
+        <div class="right21">
+            <table class="right21_title">
+                <tr class="right211">
+                    <th class="right2111" style="width:220px;">数据来源</th>
+                    <th class="right2111" style="width:220px;">数据类型</th>
+                    <th class="right2111" style="width:220px;">统计方式</th>
+                    <th class="right2111" style="width:500px;">报表名称</th>
+                    <th class="right2111" style="width:495px;">操作</th>
+                </tr>
+            </table>
+        </div>
+        <div class="right22">
+            <table class="right22_data reports">
+                @*<tr class='right221'>
+                    <td class='right2211' style='width: 220px;'>水厂</td>
+                    <td class='right2211' style='width: 220px;'>水量统计</td>
+                    <td class='right2211' style='width: 220px;'>按日统计</td>
+                    <td class='right2211' style='width: 500px;'>昨天水量统计报表</td>
+                    <td class='right2211' style='width: 490px;'>
+                        <button style='background-color:#fb6d03; border:0px;' onclick='download(this,"http://188.188.188.96:80/file/report/日水量统计.xlsx")'>导出Excel</button>
+                    </td>
+                </tr>
+                <tr class='right221'>
+                    <td class='right2211' style='width: 220px;'>水厂</td>
+                    <td class='right2211' style='width: 220px;'>水量统计</td>
+                    <td class='right2211' style='width: 220px;'>按月统计</td>
+                    <td class='right2211' style='width: 500px;'>上月水量统计报表</td>
+                    <td class='right2211' style='width: 490px;'>
+                        <button style='background-color:#fb6d03; border:0px;' onclick='download(this,"http://188.188.188.96:80/file/report/月水量统计.xlsx")'>导出Excel</button>
+                    </td>
+                </tr>
+                <tr class='right221'>
+                    <td class='right2211' style='width: 220px;'>水厂</td>
+                    <td class='right2211' style='width: 220px;'>水量统计</td>
+                    <td class='right2211' style='width: 220px;'>按年统计</td>
+                    <td class='right2211' style='width: 500px;'>今年水量统计报表</td>
+                    <td class='right2211' style='width: 490px;'>
+                        <button style='background-color:#fb6d03; border:0px;' onclick='download(this,"http://188.188.188.96:80/file/report/2022水量统计.xlsx")'>导出Excel</button>
+                    </td>
+                </tr>
+                <tr class='right221'>
+                    <td class='right2211' style='width: 220px;'>水厂</td>
+                    <td class='right2211' style='width: 220px;'>水量分析</td>
+                    <td class='right2211' style='width: 220px;'>按日统计</td>
+                    <td class='right2211' style='width: 500px;'>昨天水量分析报表</td>
+                    <td class='right2211' style='width: 490px;'>
+                        <button style='background-color:#fb6d03; border:0px;' onclick='download(this,"http://188.188.188.96:80/file/report/日水量分析.xlsx")'>导出Excel</button>
+                    </td>
+                </tr>
+                <tr class='right221'>
+                    <td class='right2211' style='width: 220px;'>水厂</td>
+                    <td class='right2211' style='width: 220px;'>水量分析</td>
+                    <td class='right2211' style='width: 220px;'>按月统计</td>
+                    <td class='right2211' style='width: 500px;'>上月水量分析报表</td>
+                    <td class='right2211' style='width: 490px;'>
+                        <button style='background-color:#fb6d03; border:0px;' onclick='download(this,"http://188.188.188.96:80/file/report/月水量分析.xlsx")'>导出Excel</button>
+                    </td>
+                </tr>
+                <tr class='right221'>
+                    <td class='right2211' style='width: 220px;'>水厂</td>
+                    <td class='right2211' style='width: 220px;'>水量分析</td>
+                    <td class='right2211' style='width: 220px;'>按年统计</td>
+                    <td class='right2211' style='width: 500px;'>今年水量分析报表</td>
+                    <td class='right2211' style='width: 490px;'>
+                        <button style='background-color:#fb6d03; border:0px;' onclick='download(this,"http://188.188.188.96:80/file/report/2022水量分析.xlsx")'>导出Excel</button>
+                    </td>
+                </tr>*@
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#ORGANIZEID").bindSelect({
+            url: "/DataSynthetical/Report/GetReportList",
+            text: "Name",
+            id: "Value",
+        })
+        $("#AREATYPEO").bindSelect({
+            url: "/DataSynthetical/Report/GetReportTypeList",
+            text: "Name",
+            id: "Value",
+        })
+        $("#AREATYPET").bindSelect({
+            url: "/SystemManage/DataClean/GetCycleList",
+            text: "Name",
+            id: "Value",
+        })
+        //let reports = $(".reports")
+        //reports[0].innerHTML = ""
+    })
+    $("#AREATYPET").change(function () {
+        let ids = $("#AREATYPET").val()
+        console.log(ids)
+        switch (ids) {
+            case '1':
+                $("#eDate1").css("display", "block");
+                $("#top-bar2").css("display", "block");
+                document.querySelector("#sDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd' }) };
+                document.querySelector("#eDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd' }) };
+                break;
+            case '2':
+                $("#eDate1").css("display", "block");
+                $("#top-bar2").css("display", "block");
+                document.querySelector("#sDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM' }) };
+                document.querySelector("#eDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM' }) };
+                break;
+            case '3':
+                document.querySelector("#sDate1").onfocus = function () { WdatePicker({ dateFmt: 'yyyy' }) };
+                $("#eDate1").css("display", "none");
+                $("#top-bar2").css("display", "none");
+                break;
+        }
+    })
+    function setReport() {
+        let sDate = $("#sDate1").val();
+        let eDate = $("#eDate1").val();
+        let sr = $("#ORGANIZEID").val();
+        let type = $("#AREATYPEO").val();
+        let cycle = $("#AREATYPET").val();
+        
+        if (sDate) {
+            $.loading("创建中");
+            let link = "/DataSynthetical/Report/GetCreateReport?sr=";
+            let reports = $(".reports");
+            let dataesRource = $("#ORGANIZEID option:selected").text();
+            let dataesType = $("#AREATYPEO option:selected").text();
+            let dataesCount = $("#AREATYPET option:selected").text();
+            let date1 = dataFomate(sDate, eDate, cycle);
+            //let date2 = dataFomate(eDate, cycle);
+            if (cycle == '3') sDate = sDate + '-01';
+     
+            reports[0].innerHTML = ""
+            $.ajax({
+                type: "GET",
+                url: link + sr + "&type=" + type + "&cycle=" + cycle + "&sDate=" + sDate + "&eDate=" + eDate,
+                success: function (data) {
+                    reports[0].innerHTML += "<tr class='right221'>" +
+                        "<td class='right2211' style='width: 220px;'>" +
+                        dataesRource +
+                        "</td>" +
+                        "<td class='right2211' style='width: 220px;'>" +
+                        dataesType+
+                        "</td>" +
+                        "<td class='right2211' style='width: 220px;'>" +
+                        dataesCount +
+                        "</td>" +
+                        "<td class='right2211' style='width: 500px;'>" +
+                        date1 + dataesType+"报表" +
+                        "</td>" +
+                        "<td class='right2211' style='width: 490px;'>" +
+                        "<button style='background-color:#fb6d03; border:0px;'onclick='download(this,\"" + data + "\")'>导出Excel</button>" +
+                        "</td>" +
+                        "</tr>"
+                    $.loading();
+                    $.modalMsg("创建成功！", "success");
+                }
+            })
+        } else {
+            $.modalMsg("时间范围不能为空", "warning");
+        }
+
+     
+
+    }
+    function download(node, val) {
+        let link = document.createElement('a');
+        link.href = val;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    function dataFomate(sDate, eDate, cycle) {
+        var ss = ""
+        switch (cycle) {
+            case '1':
+                ss = sDate.substring(0, 4) + "年" + sDate.substring(5, 7) + "月" + sDate.substring(8, 10) + "日到" + eDate.substring(0, 4) + "年" + eDate.substring(5, 7) + "月" + eDate.substring(8, 10) + "日";
+                break;
+            case '2':
+                ss = sDate.substring(0, 4) + "年" + sDate.substring(5, 7) + "月到" + eDate.substring(0, 4) + "年" + eDate.substring(5, 7) + "月";
+                break;
+            case '3':
+                ss = sDate.substring(0, 4) + "年";
+                break;
+        }
+        return ss;
+    }
+    function controlShow1() {
+        $("#show1").css("display", "block")
+    }
+    function controlfide1() {
+        $("#show1").css("display", "none")
+    }
+    window.onresize = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height();
+        mainW = $(window).width();
+        $(".theme-blue-light").height(mainH);
+        $(".theme-blue-light").width(mainW);
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+    }
+    window.onload = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height()
+        mainW = $(window).width();
+        $(".theme-blue-light").height(mainH);
+        $(".theme-blue-light").width(mainW);
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+
+
+    }
+</script>

@@ -1,0 +1,279 @@
+﻿
+@{
+    ViewBag.Title = "调度指令";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/DailySchedule.css" rel="stylesheet" />
+<script src="~/Content/js/datepicker/WdatePicker.js"></script>
+<style>
+    html {
+        overflow-y: hidden !important;
+    }
+
+    body {
+        overflow-y: hidden !important;
+    }
+    .ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td {
+        vertical-align: middle;
+    }
+</style>
+<div class="main-container" style="height:860px;">
+    <!-- 头部 -->
+    <div class="right1" style="height:65px; padding-top:3px;">
+        <div class="right11" style="width:465px; margin:0px; display:block; top:0px;">
+            <div style="display:flex; margin-bottom:1px;">
+                <div class="font13 right111" style="width:95px; height:20px; line-height:20px;">下发日期时间：</div>
+                <input id="sdDate" name="sDate" type="text" class="form-control input-wdatepicker right1121" style="width:160px;height:20px; line-height:20px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                <div style="padding-left:3px;; height:20px; line-height:20px;">到</div>
+                <input id="edDate" name="sDate" type="text" class="form-control input-wdatepicker right1121" style="width:160px;height:20px; line-height:20px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+            </div>
+            <div style="display:flex;">
+                <div class="font13 right111" style="width:95px; height:20px; line-height:20px;">执行日期时间：</div>
+                <input id="seDate" name="sDate" type="text" class="form-control input-wdatepicker right1121" style="width: 160px;height:20px; line-height:20px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                <div style="padding-left:3px;; height:27px; line-height:20px;">到</div>
+                <input id="eeDate" name="sDate" type="text" class="form-control input-wdatepicker right1121" style="width: 160px;height:20px; line-height:20px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+            </div>
+        </div>
+        <div class="right13" style="width:200px">
+            <div class="font13 right131">调度类型：</div>
+            <select id="DispatchType" name="DispatchType" class="form-control right1121" style="width:130px">
+                <option value="">请选择</option>
+            </select>
+        </div>
+        <div class="right14" style="width:180px">
+            <div class="font13 right141">调令状态：</div>
+            <select id="GetStatusList" name="GetStatusList" class="form-control right1121" style="width:110px">
+                <option value="">请选择</option>
+            </select>
+        </div>
+        <div class="right14" style="width:180px">
+            <div class="font13 right141">是否添加：</div>
+            <select id="isPlan" name="isPlan" class="form-control right1121" style="width:110px">
+                <option value="">请选择</option>
+                <option value="1">已添加</option>
+                <option value="0">未添加</option>
+            </select>
+        </div>
+        <div class="right15" style="width: 30px; margin-top: 10px; margin-left: 10px; margin-right: 10px; background-color: #edf2f6;">
+            <div class="right152" style="background-color: #edf2f6;">
+                <span id="btn_search" class="glyphicon glyphicon-search right1421" aria-hidden="true"></span>
+            </div>
+        </div>
+        <button id="btn_download" class="right16" style="position: absolute; top: 13px; right: 8px;"><span class="glyphicon glyphicon-folder-close right161"></span>导出</button>
+
+    </div>
+    <!-- 头部 -->
+    <!-- 数据 -->
+    <div class="right2_record">
+        <div id="gridPanel" class="gridPanel">
+            <table id="gridList"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+
+    @*<div class="right2">
+            <div class="right21">
+                <table class="right21_title">
+                    <tr class="right211">
+                        <th class="right2111">序号</th>
+                        <th class="right2111">生成日期时间</th>
+                        <th class="right2111">调度类型</th>
+                        <th class="right2111">调度指令</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="right22">
+                <table class="right22_data">
+                    <script type="text/javascript">
+                        for (var i = 0; i < 40; i++) {
+                            document.write("<tr class='right221'>" +
+                                "<td class='right2211'>" +
+                                "0001" +
+                                "</td>" +
+                                "<td class='right2211'>" +
+                                "20210923 10:00" +
+                                "</td>" +
+                                "<td class='right2211'>" +
+                                "日常" +
+                                "</td>" +
+                                "<td class='right2211'>" +
+                                "凌庄水厂（供水压力：0.325Mpa，供水流量：2242.5m" + "<sup>" + "3" + "</sup>" + ";" +
+                                "</td>" +
+                                "</tr>")
+                        }
+                    </script>
+                </table>
+            </div>
+        </div>*@
+    <!-- 数据 -->
+    <!-- 翻页 -->
+    @* <div class="right3">
+            <button class="right31">第一页</button>
+            <a href="#" class="right32">1</a>
+            <a href="#" class="right32">2</a>
+            <a href="#" class="right32">3</a>
+            <a href="#" class="right32">4</a>
+            <button class="right31">下一页</button>
+        </div>*@
+    <!-- 翻页 -->
+</div>
+
+<script>
+    $(function () {
+        $("#DispatchType").bindSelect({
+            url: "/Scheduling/Log/GetDispatchTypeList",
+            id: "Value",
+            text: "Name"
+        });
+        $("#Operator").bindSelect({
+            url: "/Scheduling/Log/GetOperatorList",
+            id: "Value",
+            text: "Name"
+        });
+
+        $("#GetStatusList").bindSelect({
+            url: "/Scheduling/Log/GetStatusList",
+            id: "Value",
+            text: "Name"
+        });
+        gridList();
+    })
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/Scheduling/Order/GetDispatchPlan",
+            height: $(window).height() - 140,
+            colModel: [
+                @*{ label: '序号', name: 'ID', width: 75, align: 'center' },*@
+                { label: '下发日期时间', name: 'IssueDate', width: 140, align: 'center' },
+                { label: '执行日期时间', name: 'ExecDate', width: 140, align: 'center' },
+                {
+                    label: '调度类型', name: 'DispatchType', width: 80, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        let tmp = top.clients.dispatchType[cellvalue];
+                        return tmp == null ? "" : tmp;
+                    }
+                },
+                {
+                    label: '班次', name: 'Shift', width: 60, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        let tmp = top.clients.shiftItems[cellvalue];
+                        return tmp == null ? "" : tmp;
+                    }
+                },
+                { label: '操作人员', name: 'Operator', width: 100, align: 'center' },
+                { label: '调令状态', name: 'Status', width: 255, align: 'center'  },
+                {
+                    label: '调度指令', name: 'DispatchOrder', width: 750, align: 'left',
+                    formatter: function (cellvalue, options, rowObject) {
+                        var detail = "<div  style='width: 1200px; float:left;height:auto;word-break:break-all;'>" + cellvalue + "</div>";
+                        return detail;
+                        //let tmp = top.clients.DispatchOrder[cellvalue];
+                        //console.log(tmp);
+                        //return tmp == null ? "" : tmp;
+                    }
+                },
+                {
+                    label: '添加到方案库', name: 'IsPlanBase', width: 110, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 1) {
+                            var detail = "已添加";
+                            return detail;
+                        } else {
+                            var detail = "<button class='right22111' onclick='addPlanBase(" + rowObject.ID + ")' style='line-height: 20px;'>+</button>";
+                            return detail;
+                        }
+                    },
+                }
+            ],
+            pager: "#gridPager",
+            sortname: 'IssueDate desc',
+            viewrecords: true
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: {
+                    shift: $("#Shift").val(),
+                    dtype: $("#DispatchType").val(),
+                    status: $("#GetStatusList").val(),
+                    isPlan: $("#isPlan").val(),
+                    sdDate: $("#sdDate").val(),
+                    edDate: $("#edDate").val(),
+                    seDate: $("#seDate").val(),
+                    eeDate: $("#eeDate").val()
+                },
+            }).trigger('reloadGrid');
+        });
+        $("#btn_download").click(function () {
+            let shift = $("#Shift").val();
+            let dtype = $("#DispatchType").val();
+            let status = $("#GetStatusList").val();
+            let isPlan = $("#isPlan").val();
+            let sdDate = $("#sdDate").val();
+            let edDate = $("#edDate").val();
+            let seDate = $("#seDate").val();
+            let eeDate = $("#eeDate").val();
+            $.loading(true);
+            $.ajax({
+                type: "GET",
+                url: "/Scheduling/Order/GetDownloadJson?shift=" + shift + "&sdDate=" + sdDate + "&edDate=" + edDate + "&seDate=" + seDate + "&eeDate=" + eeDate + "&dtype=" + dtype + "&isPlan=" + isPlan + "&status=" + status,
+                success: function (adata) {
+                    let link = document.createElement('a');
+                    link.href = adata;
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    $.loading();
+                    //$.modalMsg("导出Excel成功！", "success");
+                }
+            });
+        });
+    }
+    function addPlanBase(id) {
+        var $gridList = $("#gridList");
+        $.ajax({
+            type: "GET",
+            url: "/Scheduling/Log/AddPlanBase?planId=" + id,
+            dataType: "JSON",
+            success: function (data) {
+                //console.log(data);
+                $gridList.jqGrid('setGridParam', {
+                    postData: {
+                        shift: $("#Shift").val(),
+                        dtype: $("#DispatchType").val(),
+                        isPlan: $("#isPlan").val(),
+                        status: $("#GetStatusList").val(),
+                        sdDate: $("#sdDate").val(),
+                        edDate: $("#edDate").val(),
+                        seDate: $("#seDate").val(),
+                        eeDate: $("#eeDate").val(),
+                    },
+                }).trigger('reloadGrid');
+            }
+        });
+    }
+    window.onload = function () {
+        var mainH = $(window).height() - 10;
+        var mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        $("#gridPanel").height(mainH - 125);
+        $("#gridPanel").width(mainW);
+        $("#gridList").setGridHeight(mainH- 140);
+
+    }
+    window.onresize = function () {
+        var mainH = $(window).height() - 10;
+        var mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        $("#gridPanel").height(mainH - 135);
+        $("#gridPanel").width(mainW);
+        $("#gridList").setGridHeight(mainH - 140);
+
+
+    }
+</script>

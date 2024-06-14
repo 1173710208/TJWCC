@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ED016598-2522-4EF2-AA9B-68037391C66E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TJWCC.Application</RootNamespace>
+    <AssemblyName>TJWCC.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.0\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="01 Infrastructure\DbLogType.cs" />
+    <Compile Include="BaseData\OperatType_InfoApp.cs" />
+    <Compile Include="BaseData\Comm_InfoApp.cs" />
+    <Compile Include="BaseData\MeterMaker_InfoApp.cs" />
+    <Compile Include="BaseData\MeterType_InfoApp.cs" />
+    <Compile Include="BSSys\BSB_Warn_RecordsApp.cs" />
+    <Compile Include="BSSys\BSB_BranchPipesApp.cs" />
+    <Compile Include="BSSys\BSB_ValveAreaApp.cs" />
+    <Compile Include="BSSys\PointCloseValveApp.cs" />
+    <Compile Include="BSSys\SupplyWaterAllWayApp.cs" />
+    <Compile Include="BSSys\SupplyWaterWayApp.cs" />
+    <Compile Include="BSSys\TubeBurstAnalysisApp.cs" />
+    <Compile Include="BSSys\ZoneClassApp.cs" />
+    <Compile Include="BSSys\TCVApp.cs" />
+    <Compile Include="BSSys\RESULT_TCVApp.cs" />
+    <Compile Include="BSSys\RESULT_PIPEApp.cs" />
+    <Compile Include="BSSys\RESULT_JUNCTIONApp.cs" />
+    <Compile Include="BSSys\RESULT_HYDRANTApp.cs" />
+    <Compile Include="BSSys\RESERVOIRApp.cs" />
+    <Compile Include="BSSys\PUMPApp.cs" />
+    <Compile Include="BSSys\PIPEApp.cs" />
+    <Compile Include="BSSys\PatternsApp.cs" />
+    <Compile Include="BSSys\MaterialClassApp.cs" />
+    <Compile Include="BSSys\JUNCTIONApp.cs" />
+    <Compile Include="BSSys\HYDRANTApp.cs" />
+    <Compile Include="BSSys\DMAClassApp.cs" />
+    <Compile Include="BSSys\DMAAreaClassApp.cs" />
+    <Compile Include="BSSys\DistrictClassApp.cs" />
+    <Compile Include="BSSys\BSOT_SysInfoApp.cs" />
+    <Compile Include="BSSys\BSOT_DemandRecordApp.cs" />
+    <Compile Include="BSSys\BSOT_CalDefaultInfoApp.cs" />
+    <Compile Include="BSSys\BSO_Station_RecordsApp.cs" />
+    <Compile Include="BSSys\BSO_Station_CurrentApp.cs" />
+    <Compile Include="BSSys\BSO_PumpStationApp.cs" />
+    <Compile Include="BSSys\BSO_PumpParamApp.cs" />
+    <Compile Include="BSSys\BSO_PumpOptimal_RecordsApp.cs" />
+    <Compile Include="BSSys\BSM_WaterMeter_RecordApp.cs" />
+    <Compile Include="BSSys\BSM_Meter_InfoApp.cs" />
+    <Compile Include="BSSys\BSM_MArea_Meter_InfoApp.cs" />
+    <Compile Include="BSSys\BSB_ForecastFlowApp.cs" />
+    <Compile Include="BSSys\BSB_LinkedTableApp.cs" />
+    <Compile Include="BSSys\BSB_MinFlowApp.cs" />
+    <Compile Include="BSSys\BSB_SourceData_ClApp.cs" />
+    <Compile Include="BSSys\BSB_SupplyWayApp.cs" />
+    <Compile Include="BSSys\BS_SCADA_TAG_INFOApp.cs" />
+    <Compile Include="BSSys\BS_SCADA_TAG_CURRENTApp.cs" />
+    <Compile Include="BSSys\BS_SCADA_TAG_HISApp.cs" />
+    <Compile Include="DataDisplay\Dis_AlarmApp.cs" />
+    <Compile Include="DataDisplay\Dis_MakerClassApp.cs" />
+    <Compile Include="DataDisplay\Dis_OffLineClassApp.cs" />
+    <Compile Include="DataDisplay\Dis_SignalStrengthApp.cs" />
+    <Compile Include="DataDisplay\Dis_WaterApp.cs" />
+    <Compile Include="DataDisplay\Dis_WaterCompanyClassApp.cs" />
+    <Compile Include="DataDisplay\Meter_InfoApp.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="MeterManage\Alarm_RAW_RecordApp.cs" />
+    <Compile Include="MeterManage\MeterDay_RecordApp.cs" />
+    <Compile Include="MeterManage\Meter_InfoApp.cs" />
+    <Compile Include="MeterManage\Meter_RecordApp.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemManage\SYS_DICApp.cs" />
+    <Compile Include="SystemManage\SubBusi_InfoApp.cs" />
+    <Compile Include="SystemManage\Company_InfoApp.cs" />
+    <Compile Include="SystemManage\Business_InfoApp.cs" />
+    <Compile Include="SystemManage\ItemsApp.cs" />
+    <Compile Include="SystemManage\ItemsDetailApp.cs" />
+    <Compile Include="SystemManage\ModuleApp.cs" />
+    <Compile Include="SystemManage\ModuleButtonApp.cs" />
+    <Compile Include="SystemManage\AreaApp.cs" />
+    <Compile Include="SystemManage\OrganizeApp.cs" />
+    <Compile Include="SystemManage\RoleApp.cs" />
+    <Compile Include="SystemManage\UserApp.cs" />
+    <Compile Include="SystemManage\UserLogOnApp.cs" />
+    <Compile Include="SystemManage\DutyApp.cs" />
+    <Compile Include="SystemManage\RoleAuthorizeApp.cs" />
+    <Compile Include="SystemSecurity\LogApp.cs" />
+    <Compile Include="Test\TestApp.cs" />
+    <Compile Include="WCC\CC_FlowSortApp.cs" />
+    <Compile Include="WCC\CC_CleanStatisticsApp.cs" />
+    <Compile Include="WCC\JUNCTION_VICEApp.cs" />
+    <Compile Include="WCC\CC_TheDateApp.cs" />
+    <Compile Include="WCC\CC_PressTargetApp.cs" />
+    <Compile Include="WCC\CC_DispatchPlanApp.cs" />
+    <Compile Include="WCC\GY_TypeInfoApp.cs" />
+    <Compile Include="WCC\GY_PumpStationInfoApp.cs" />
+    <Compile Include="WCC\GY_StationRecordsApp.cs" />
+    <Compile Include="WCC\CC_WetherRecordApp.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TJWCC.Code\TJWCC.Code.csproj">
+      <Project>{db19ce03-c307-43fe-a209-08aa4ae10e21}</Project>
+      <Name>TJWCC.Code</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TJWCC.Data\TJWCC.Data.csproj">
+      <Project>{f71003e8-a836-48f4-9df6-df9095cebd18}</Project>
+      <Name>TJWCC.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TJWCC.Domain\TJWCC.Domain.csproj">
+      <Project>{7dc886cd-b8a0-44e8-aadd-57fcb0cfecb8}</Project>
+      <Name>TJWCC.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TJWCC.Repository\TJWCC.Repository.csproj">
+      <Project>{875233bf-ea15-49e0-9a9c-77884a897ff6}</Project>
+      <Name>TJWCC.Repository</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

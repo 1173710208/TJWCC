@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "日水量";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script>
+    $(function () {
+        gridList();
+    })
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({ 
+            url: "/MeterManage/Meter/GetMeterDayRecordJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: "编号", name: "ID", hidden: true, key: true },
+                { label: 'IMEI', name: 'IMEI',  align: 'left' },
+                { label: '信号强度', name: 'RSRP',  align: 'left' },
+                { label: '信噪比', name: 'SNR', align: 'left' },
+                { label: '覆盖等级', name: 'COVLEVEL',  align: 'left' },
+                { label: '小区ID', name: 'CELLID', align: 'left' },
+                { label: '累计流量采集时间', name: 'TFTIME', align: 'left' },
+                { label: '累计流量', name: 'TFLOW',  align: 'left' },
+                { label: '日结累计正流量', name: 'DFTFLOW',  align: 'left' },
+                { label: '日结累计逆流量', name: 'DOTFLOW',  align: 'left' },
+                { label: '采集时间', name: 'DTFTIME', align: 'left' }, 
+                { label: '日最高流量', name: 'DAYTOPFLOW',  align: 'left' },
+                { label: '日最高流量采集时间', name: 'DTFTIME', align: 'left' }, 
+                { label: '电池电压', name: 'VOLTAGE',  align: 'left' },
+                { label: '累计发送成功次数', name: 'SUCCCOUNT',  align: 'left' },
+                { label: '累计发送失败次数', name: 'FAILCOUNT',  align: 'left' },
+                { label: '阀门状态标志', name: 'VALVESTATE',  align: 'left' },
+                { label: '日用水量', name: 'NETCOUNT', align: 'left' },
+                { label: '记录保存时间', name: 'SAVEDATE', align: 'left' },
+                { label: '备注', name: 'REMARK', align: 'left' } 
+            ],
+            pager: "#gridPager",
+            sortname: 'IMEI asc',
+            viewrecords: true
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: { imei: $("#txt_keyword").val() },
+            }).trigger('reloadGrid');
+        });
+    }
+</script>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+        </div>
+        
+    </div>
+    <div class="search">
+        <table>
+            <tr>
+                <td>
+                    <div class="input-group">
+                        <input id="txt_keyword" type="text" class="form-control" placeholder="请输入IMEI号" style="width: 200px;">
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="gridPanel">
+    <table id="gridList"></table>
+    <div id="gridPager"></div>
+</div>

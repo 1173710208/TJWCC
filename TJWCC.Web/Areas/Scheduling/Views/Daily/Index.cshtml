@@ -1,0 +1,743 @@
+﻿
+@{
+    ViewBag.Title = "日常调度方案";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script src="~/Content/js/datepicker/WdatePicker.js"></script>
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/DailySchedule.css" rel="stylesheet" />
+<!-- 实时监测数据 -->
+<style>
+    html {
+        overflow-y: hidden !important;
+    }
+
+    body {
+        overflow-y: hidden !important;
+    }
+</style>
+<!-- 方案和调令 -->
+<div class="right5" style="margin-left: 0px; margin-top: 0px; padding-top: 0px; width: 1675px; height: 300px; ">
+    <div class="right5_bg" style="width: 1655px; height: 96%;">
+        <!-- 方案 -->
+        <div class="right51">
+            <div style="display:flex;">
+                <div style="font-size:14px; font-weight:bold;">调度依据</div>
+                <button class="right17" style="height: 26px; width: 26px; border: 0; border-radius: 8px; background-color: #fe8721;position:absolute;left:80px;top:5px" onclick='clickrefresh(this)'>
+                    <span class="glyphicon glyphicon-refresh right171"></span>
+                </button>
+                <div style="font-size:14px; font-weight:bold; margin-left:365px;">调度方案</div>
+            </div>
+            <div class="right512" style="margin-top:5px;">
+                <div class="right5121" style="width:420px;">
+                    <div class="right51211" style="display:flex; padding-top:0px;">
+                        @*<div style="height:40px; line-height:40px; margin-right:10px;">
+                                调度依据
+                            </div>*@
+                        <div id="xzsl_time" style="height: 40px; width: 110px; margin-right: 1px;  text-align: center; border: #216fed 1px solid; background-color: #ffffff; color: #000; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                            <div id="xzsl_time_content" style="height:20px; line-height:20px;">
+                                @*2022/3/16 14:00*@
+                            </div>
+                            <div style="height:20px; line-height:20px;">现状水量（m<sup>3</sup>/h）</div>
+                        </div>
+                        <div id="xzsl" style="margin-right:5px; height: 40px; width: 60px; line-height: 40px; text-align: center; background-color: #216fed; color: #fff; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                            @*18956*@
+                        </div>
+                        <div id="ycsl_time" style="height: 40px; width: 110px; margin-right: 1px; text-align: center; border: #216fed 1px solid; background-color: #ffffff; color: #000; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                            <div id="ycsl_time_content" style="height:20px; line-height:20px;">
+                                @*2022/3/16 14:00*@
+                            </div>
+                            <div style="height:20px; line-height:20px;">预测水量（m<sup>3</sup>/h）</div>
+                        </div>
+                        <div id="ycsl" style="height: 40px; width: 60px; line-height: 40px; text-align: center; background-color: #216fed; color: #fff; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                            @*18956*@
+                        </div>
+                    </div>
+                    <div class="right51212">
+                        <div class="right512121">
+                            <table class="right512121_title">
+                                <tr class="right5121211">
+                                    <th class="right51212111">压力监测点</th>
+                                    <th class="right51212111">当前压力（MPa）</th>
+                                    <th class="right51212111">方案压力（MPa）</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="right512122">
+                            <table id="down1" class="right512122_data">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="right5122" style="width:495px;">
+                    <div class="right51211" style="padding-top:7px; display:flex;">
+                        <button class="right511" id="scfaBut" style="margin-left:0px; width:75px;" onclick='clickscfa(this)'>生成方案</button>
+                        <div id="scfa_time" style="border-radius:10px; font-size: 10px; height:30px; width:210px; margin-left:5px; padding-left:7px; line-height: 30px; background-color: #ff8723; color:white; display:none;">
+                            @*生成方案时间：2022-3-16 14:10 星期一*@
+                        </div>
+                    </div>
+                    <div class="right51222" style="width: 495px;">
+                        <div class="right512221" style="width:495px;">
+                            <table class="right512221_title" style="width:495px;">
+                                <tr class="right5122211" style="width:495px;">
+                                    <th class="right51222111">水厂</th>
+                                    <th class="right51222111">当前供水压力（MPa)</th>
+                                    <th class="right51222111">当前供水流量（m<sup>3</sup>/h)</th>
+                                    <th class="right51222111">方案供水压力（MPa)</th>
+                                    <th class="right51222111">方案供水流量（m<sup>3</sup>/h)</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="right512222" style="width: 495px; ">
+                            <table id="down2" class="right512222_data" style="width:495px;">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 方案 -->
+        <!-- 下发调令 -->
+        <div class="right52">
+            <div style="display:flex;">
+                <div style="font-size:14px; font-weight:bold;">调度指令</div>
+                <div style="font-size: 14px; font-weight: bold; margin-left: 245px">执行效果</div>
+
+            </div>
+            <div class="right522">
+                <div class="right5221234" style="width: 300px;  margin-top: 10px;">
+                    <div style="width: 295px; height: 45px; display: flex;">
+                        <button class="right511" id="xfdlBut" style="margin-left: 0px; width: 75px; background:#ccc;border:#ccc" disabled  onclick='clickxfddzl(this)'>下发调令</button>
+                        <div id="xfddzl_time" style="border-radius:10px; font-size: 10px; height:30px; width:210px; margin-left:3px; padding-left:7px; line-height: 30px; background-color: #ff8723; color:white; display:none;">
+                            @*生成方案时间：2022-3-16 14:10 星期一*@
+                        </div>
+                    </div>
+                    <div class="right52212" style="width:290px;">
+                        <div class="right522121" style="width:290px;">
+                            <table class="right522121_title" style="width:290px;">
+                                <tr class="right5221211" style="width: 290px;">
+                                    <th class="right52212111">水厂</th>
+                                    <th class="right52212111">当前供水压力（MPa）</th>
+                                    <th class="right52212111">方案供水压力（MPa）</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="right522122" style="width:290px; ">
+                            <table id="down3" class="right522122_data" style="width: 290px;">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="right5222" style="width: 410px;  margin-top: 10px;">
+                    <div class="right52221" style="width:410px; height:45px;display:flex; padding-top:0px;">
+
+                        <div style="height: 40px; line-height: 40px; width: 110px; margin-top: 0px; margin-right: 1px; text-align: center; border: #216fed 1px solid; background-color: #ffffff; color: #000; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                            平均偏差率（%）
+                        </div>
+                        <div id="pjpcl" style="margin-right: 5px; height: 40px; width: 60px; line-height: 40px; margin-top: 0px; text-align: center; background-color: #216fed; color: #fff; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                            @*18956*@
+                        </div>
+                    </div>
+                    <div class="right52222" style="width: 410px;">
+                        <div class="right522221" style="width: 410px;">
+                            <table class="right522221_title" style="width: 410px;">
+                                <tr class="right5222211" style="width: 410px;">
+                                    <th class="right52222111">压力监测点</th>
+                                    <th class="right52222111">方案压力（MPa）</th>
+                                    <th class="right52222111">实际压力（MPa）</th>
+                                    <th class="right52222111">偏差率（%）</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="right522222" style="width: 410px; ">
+                            <table id="down4" class="right522222_data" style="width: 410px; ">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 下发调令 -->
+    </div>
+</div>
+<!-- 方案和调令 -->
+<div class="right4" style="margin-left: 0px; width:1675px; margin-right:0px;height:40%">
+    <div class="right41" style="display:flex;">
+        <div style="font-size:14px; line-height:25px; font-weight:bold;">实时监测数据</div>
+
+    </div>
+    <div class="right42">
+        <!-- 实时压力 -->
+        <div class="right421" style="width:450px;">
+            <div class="right4211" style="font-weight: bold;">实时压力（MPa）</div>
+            <div class="right4212">
+                <div id="yali" class='right42121'>
+                </div>
+            </div>
+        </div>
+        <!-- 实时流量 -->
+        <div class="right421">
+            <div class="right4211" style="font-weight: bold;">实时流量（m<sup>3</sup>/h）</div>
+            <div class="right4212">
+                <div id="liuliang" class='right42121'>
+                </div>
+            </div>
+        </div>
+        <!-- 实时水质 -->
+        <div class="right422">
+            <div class="right4211" style="font-weight: bold;">实时水质（NTU , mg/L）</div>
+            <div class="right4212">
+                <div id="shuizhi" class='right42122'>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 实时监测数据 -->
+
+
+<script>
+    function init() {
+        jiekou3_6_1();
+        jiekou3_6();
+    }
+    var isRefresh = false;
+    var yali_data = [];
+    var yali_list = "";
+    var liuliang_data = [];
+    var shuizhi_data = [];
+    var down1_time = [];
+    var down2 = [];
+    var down3 = [];
+    var scfadata = [];
+    var zldata = []
+    var yali_length = 0;
+    var liuliang_length = 0;
+    var shuizhi_length = 0;
+    var down1_length = 0;
+    var down2_length = 0;
+    var down3_length = 0;
+    var planId;
+    var flagId = [];
+    var firstId = [];
+    var scfaTime = '';
+    //var computeType = 0;
+    //查询水力模型是否正在被使用
+    function computeTypes() {
+        $.ajax({
+            type: "GET",
+            url: '/Scheduling/Daily/GetCalStatus',
+            dataType: "JSON",
+            success: function (adata) {
+                if (adata == 0) {
+                    $("[name='LastName']").each(item => {
+                        $("[name='LastName']").eq(item).attr("readonly", "readonly")
+                        $("[name='LastName']").eq(item).css("background-color", "#ccc")
+                    })
+                    $("#scfaBut").attr('disabled', true).css('background', '#ccc').css('border', '#ccc')
+                    $("#xfdlBut").css('background', '#236eed')
+                    $("#xfdlBut").css('border', '#236eed')
+                    $("#xfdlBut").attr('disabled', false)
+                    var scfa_content = [];
+                    var Checkbox2 = document.getElementsByClassName("down1_1");
+                    var Checkbox2_realvalue = document.getElementsByClassName("down1_2");
+                    var Checkbox2_tagvalue = document.getElementsByClassName("down1_3");
+                    var Checkbox2_length = Checkbox2.length;
+
+                    for (i = 0; i < Checkbox2_length; i++) {
+                        if (Checkbox2[i].checked == true) {
+                            let object = [Checkbox2[i].id, Checkbox2[i].parentElement.innerText, Checkbox2_realvalue[i].innerText, Checkbox2_tagvalue[i].value];
+                            scfa_content.push(object);
+                        }
+                    }
+                    //console.log(scfa_content);
+                    var urlLink3_7 = '/Scheduling/Daily/CreateDailyPlan?dataDate=' + scfaTime + "&" + "pressList=";
+                    for (i = 0; i < scfa_content.length; i++) {
+                        if (i < scfa_content.length - 1) {
+                            urlLink3_7 += scfa_content[i][0] + "," + scfa_content[i][1] + ',' + scfa_content[i][2] + "," + scfa_content[i][3] + ";";
+                        } else {
+                            urlLink3_7 += scfa_content[i][0] + "," + scfa_content[i][1] + ',' + scfa_content[i][2] + "," + scfa_content[i][3];
+                        }
+                    }
+                    $.loading(true, '生成方案计算中...');
+                    //console.log(urlLink3_7);
+                    $.ajax({
+                        type: "GET",
+                        url: urlLink3_7 + '&isCal=false',
+                        dataType: "JSON",
+                        success: function (adata) {
+                            //console.log(adata)
+                            down3 = adata[2];
+                            scfadata = adata[1];
+                            planId = adata[4]
+                            document.getElementById("scfa_time").innerHTML = "生成方案时间：" + adata[5];
+                            document.getElementById("scfa_time").style.display = "block";
+                            for (let i = 0; i < down3_length; i++) {
+                                let Down2 = document.getElementById("down2");
+                                Down2.innerHTML += "<tr class='right5122221' style='height:37.5px;'>" +
+                                    "<td class='right51222211'>" +
+                                    down3[i][0] +
+                                    "</td>" +
+                                    "<td class='right51222211'>" +
+                                    down3[i][2] +
+                                    "</td>" +
+                                    "<td class='right51222211'>" +
+                                    down3[i][3] +
+                                    "</td>" +
+                                    "<td class='right51222211'>" +
+                                    down3[i][4] +
+                                    "</td>" +
+                                    "<td class='right51222211'>" +
+                                    down3[i][5] + "</td>" +
+                                    "</tr>";
+                            }
+                            for (let i = 0; i < scfadata.length; i++) {
+                                let Down4 = document.getElementById("down4");
+                                Down4.innerHTML += "<tr style='height:38.5px;' class='right5222221'>" +
+                                    "<td class='right52222211'>" +
+                                    scfadata[i][1] +
+                                    "</td>" +
+                                    "<td class='right52222211'>" +
+                                    scfadata[i][3] +
+                                    "</td>" +
+                                    "<td class='right52222211'>" +
+                                    scfadata[i][4] +
+                                    "</td>" +
+                                    "<td class='right52222211'>" +
+                                    scfadata[i][5] +
+                                    "</td>" +
+                                    "</tr>";
+                            }
+                            zldata = adata[2]
+                            for (let i = 0; i < zldata.length; i++) {
+
+                                let Down3 = document.getElementById("down3");
+                                Down3.innerHTML += "<tr class='right5221221'style='height:37.5px;' >" +
+                                    "<td class='right52212211 down3_1'  id='" + zldata[i][1] + "'>" +
+                                    zldata[i][0] +
+                                    "</td>" +
+                                    "<td class='down3_2 right52212211'>" +
+                                    zldata[i][2] +
+                                    "</td>" +
+                                    "<td class='right52212211'>" +
+                                    "<input class='down3_3' type='text'  name='fayli' style='background-color:#eef9fb;width:90px;text-align:center;' value='" + zldata[i][4] + "'/>" +
+                                    "</td>" +
+                                    "</tr>"
+                            }
+                            $.loading();
+                            $.modalMsg("生成方案成功！", "success");
+                        }
+                    })
+                } else {
+                    $.modalMsg("水力模型计算正在被其他用户使用中.....", "warning");
+                }
+            }
+        })
+    }
+    //接口3.6
+    function jiekou3_6() {
+        var urlLink3_6 = '/Scheduling/Daily/GetRealtimeData';
+        yali_list = "";
+        $.ajax({
+            type: "GET",
+            url: urlLink3_6,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata)
+                yali_data = adata[0];
+                liuliang_data = adata[1];
+                shuizhi_data = adata[2];
+                down1_time = adata[3];
+                down2 = adata[4];
+                down3 = adata[5];
+                scfaTime = adata[3][0][0];
+                yali_length = adata[0].length;
+                liuliang_length = adata[1].length;
+                shuizhi_length = adata[2].length;
+                let yali = document.getElementById("yali");
+                //console.log(yali_data, liuliang_data, shuizhi_data)
+                for (let i = 0; i < yali_length; i++) {
+                    yali_data[i].Tag_value = yali_data[i].Tag_value == 0 ? 0 : yali_data[i].Tag_value == null ? "-" : yali_data[i].Tag_value
+                    if (yali_data[i].Measure_Grade == '1' && isRefresh) {
+
+                        yali.innerHTML += "<table class='right421211'>" +
+                            "<tr class='right4212111'>" +
+                            "<th class='right42121111' style='vertical-align: middle;'>" +
+                            "<input type='checkbox' checked='checked' id='" + yali_data[i].WMeter_ID + "' onclick='clickCheckbox(this)' style='width:15px;'/>" +
+                            yali_data[i].Meter_Name +
+                            "</th>" +
+                            "<td class='right42121112'>" +
+                            yali_data[i].Tag_value +
+                            "</td>" +
+                            "</tr>" +
+                            "</table>";
+                        yali_list += "<tr class='right5121221' style='height:38.5px;' id='down_" + yali_data[i].WMeter_ID + "'>" +
+                            "<td class='right51212211' style='float:left; padding-top:7px;text-align:center;width:136px;display:inline-block'>" +
+                            "<input class='down1_1' type='checkbox' checked='checked' id='" + yali_data[i].WMeter_ID + "' onclick='clickCheckbox2(this)' style='width:15px; margin-left:10px; margin-top:7px;display:inline-block'/>" +
+                            yali_data[i].Meter_Name +
+                            "</td>" +
+                            "<td class='down1_2 right51212211'>" +
+                            yali_data[i].Tag_value +
+                            "</td>" +
+                            "<td class='right51212211'>" +
+                            "<input class='down1_3' type='text' name='LastName' style='background-color:#eef9fb;width:90px;text-align:center;' value='" + parseFloat(yali_data[i].Remark).toFixed(3) + "'/>" +
+                            "</td>" +
+                            "</tr>";
+                    } else {
+                        if (flagId.indexOf(yali_data[i].WMeter_ID) != -1 && !isRefresh) {
+
+                            yali.innerHTML += "<table class='right421211'>" +
+                                "<tr class='right4212111'>" +
+                                "<th class='right42121111' style='vertical-align: middle;'>" +
+                                "<input type='checkbox' checked='checked' id='" + yali_data[i].WMeter_ID + "' onclick='clickCheckbox(this)' style='width:15px;'/>" +
+                                yali_data[i].Meter_Name +
+                                "</th>" +
+                                "<td class='right42121112'>" +
+                                yali_data[i].Tag_value +
+                                "</td>" +
+                                "</tr>" +
+                                "</table>";
+                        } else {
+                            yali.innerHTML += "<table class='right421211'>" +
+                                "<tr class='right4212111'>" +
+                                "<th class='right42121111' style='vertical-align: middle;'>" +
+                                "<input type='checkbox' id='" + yali_data[i].WMeter_ID + "' onclick='clickCheckbox(this)' style='width:15px;'/>" +
+                                yali_data[i].Meter_Name +
+                                "</th>" +
+                                "<td class='right42121112'>" +
+                                yali_data[i].Tag_value +
+                                "</td>" +
+                                "</tr>" +
+                                "</table>";
+                        }
+                    }
+                    if (i == yali_length - 1 && isRefresh) {
+                        isRefresh = false;
+                        document.getElementById("down1").innerHTML = yali_list;
+                        let xzsl_time_content = document.getElementById("xzsl_time_content");
+                        let xzsl = document.getElementById("xzsl");
+                        let ycsl_time_content = document.getElementById("ycsl_time_content");
+                        let ycsl = document.getElementById("ycsl");
+                        //console.log(down1_time[0][1]);
+                        xzsl_time_content.innerText = down1_time[0][0].substring(0, 16);
+                        xzsl.innerText = down1_time[0][1] == null ? "" : down1_time[0][1].toFixed(2);
+                        ycsl_time_content.innerText = down1_time[1][0].substring(0, 16);
+                        ycsl.innerText = down1_time[1][1] == null ? "" : down1_time[1][1].toFixed(2);
+                    }
+                }
+                for (let i = 0; i < liuliang_length; i++) {
+                    liuliang_data[i].Tag_value  = liuliang_data[i].Tag_value == 0 ? 0 : liuliang_data[i].Tag_value == null ? "-" : liuliang_data[i].Tag_value
+                    let liuliang = document.getElementById("liuliang");
+                    liuliang.innerHTML += "<table class='right421211'>" +
+                        "<tr class='right4212111'>" +
+                        "<th class='right42121111'>" +
+                        liuliang_data[i].Meter_Name + "</th>" +
+                        "<td class='right42121112'>" +
+                        liuliang_data[i].Tag_value + "</td>" +
+                        "</tr>" +
+                        "</table>";
+                }
+                for (let i = 0; i < shuizhi_length; i++) {
+                    shuizhi_data[i].Tag_value[1]= shuizhi_data[i].Tag_value[1] == 0 ? 0 : shuizhi_data[i].Tag_value[1] == null ? "-" : shuizhi_data[i].Tag_value[1]
+                    shuizhi_data[i].Tag_value[0]= shuizhi_data[i].Tag_value[0] == 0 ? 0 : shuizhi_data[i].Tag_value[0] == null ? "-" : shuizhi_data[i].Tag_value[0]
+    
+                    let shuizhi = document.getElementById("shuizhi");
+                    shuizhi.innerHTML += "<table class='right421212'>" +
+                        "<tr class='right4212111'>" +
+                        "<th class='right42121111'>" +
+                        shuizhi_data[i].Meter_Name + "</th>" +
+                        "<td class='right42121112'>" +
+                        "浊度：" + shuizhi_data[i].Tag_value[0] + "<br>" + "余氯：" + shuizhi_data[i].Tag_value[1] + "</td>" +
+                        "</tr>" +
+                        "</table>";
+
+                }
+                //console.log(down1_time[0][1]);
+            }
+        });
+    }
+    //接口3.6
+    function jiekou3_6_1() {
+        var urlLink3_6_1 = '/Scheduling/Daily/GetData';
+
+        $.ajax({
+            type: "GET",
+            url: urlLink3_6_1,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                down1_time = adata[0];
+                down2 = adata[1];
+                down3 = adata[2];
+                down2_length = adata[1].length;
+                down3_length = adata[2].length;
+                scfaTime = adata[3];
+                planId = adata[4];
+                adata[5] ? $("#scfaBut").attr('disabled', true).css('background', '#ccc').css('border', '#ccc') : $("#scfaBut").attr('disabled', false).css('background', '#236eed').css('border', '#236eed')
+                adata[6] ? $("#xfdlBut").attr('disabled', true).css('background', '#ccc').css('border', '#ccc') : $("#xfdlBut").attr('disabled', false).css('background', '#236eed').css('border', '#236eed')
+                for (let i = 0; i < down3_length; i++) {
+                    let Down2 = document.getElementById("down2");
+                    Down2.innerHTML += "<tr class='right5122221' style='height:37.3px;'>" +
+                        "<td class='right51222211'>" +
+                        down3[i][0] +
+                        "</td>" +
+                        "<td class='right51222211'>" +
+                        down3[i][2] +
+                        "</td>" +
+                        "<td class='right51222211'>" +
+                        down3[i][3] +
+                        "</td>" +
+                        "<td class='right51222211'>" +
+                        down3[i][4] +
+                        "</td>" +
+                        "<td class='right51222211'>" +
+                        down3[i][5] + "</td>" +
+                        "</tr>";
+                }
+                for (let i = 0; i < down3_length; i++) {
+                    //console.log(down3[i])
+                    let Down3 = document.getElementById("down3");
+                    Down3.innerHTML += "<tr class='right5221221' style='height:37.3px;'>" +
+                        "<td class='right52212211 down3_1' id='" + down3[i][1]+ "'>" +
+                        down3[i][0] +
+                        "</td>" +
+                        "<td class='down3_2 right52212211'>" +
+                        down3[i][2] +
+                        "</td>" +
+                        "<td class='right52212211'>" +
+                        "<input class='down3_3' type='text' name='fayli'  style='background-color:#eef9fb;width:90px;text-align:center;' value='" + down3[i][4] + "'/>" +
+                        "</td>" +
+                        "</tr>"
+                }
+                $("input[name*='fayli']").each(item => {
+                    $("input[name*='fayli']").eq(item).attr("readonly", "readonly")
+                    $("input[name*='fayli']").eq(item).css("background-color", "#ccc")
+                })
+                for (let i = 0; i < down2_length; i++) {
+                    let Down4 = document.getElementById("down4");
+                    Down4.innerHTML += "<tr style='height:38.5px;' class='right5222221'>" +
+                        "<td class='right52222211'>" +
+                        down2[i][1] +
+                        "</td>" +
+                        "<td class='right52222211'>" +
+                        down2[i][3] +
+                        "</td>" +
+                        "<td class='right52222211'>" +
+                        down2[i][4] +
+                        "</td>" +
+                        "<td class='right52222211'>" +
+                        down2[i][5] +
+                        "</td>" +
+                        "</tr>";
+                    //console.log(yali_data);
+                    //down1_data.push(yali_data[i]);
+                    flagId.push(down2[i][0])
+                    let down1 = document.getElementById("down1");
+                    down1.innerHTML += "<tr class='right5121221' style='height:38.5px;' id='down_" + down2[i][0] + "'>" +
+                        "<td class='right51212211' style='float:left; padding-top:7px;text-align:center;width:136px;display:inline-block'>" +
+                        "<input class='down1_1' type='checkbox' checked='checked' id='" + down2[i][0] + "' onclick='clickCheckbox2(this)' style='width:15px; margin-left:10px; margin-top:7px;;display:inline-block'/>" +
+                        down2[i][1] +
+                        "</td>" +
+                        "<td class='down1_2 right51212211'>" +
+                        down2[i][2] +
+                        "</td>" +
+                        "<td class='right51212211'>" +
+                        "<input class='down1_3' type='text' name='LastName' style='background-color:#eef9fb;width:90px;text-align:center;' value='" + parseFloat(down2[i][3]).toFixed(3) + "'/>" +
+                        "</td>" +
+                        "</tr>";
+                }
+                if (adata[5] != "") {
+                    document.getElementById("scfa_time").innerHTML = "生成方案时间：" + adata[5];
+                    document.getElementById("scfa_time").style.display = "block";
+                }
+                if (adata[6] != "") {
+                    document.getElementById("xfddzl_time").innerHTML = "下发调令时间：" + adata[6];
+                    document.getElementById("xfddzl_time").style.display = "block";
+                }
+                let xzsl_time_content = document.getElementById("xzsl_time_content");
+                let xzsl = document.getElementById("xzsl");
+                let ycsl_time_content = document.getElementById("ycsl_time_content");
+                let ycsl = document.getElementById("ycsl");
+                let pjpcl = document.getElementById("pjpcl");
+                //console.log(down1_time[0][1]);
+                xzsl_time_content.innerText = down1_time[0][0].substring(0, 16);
+                xzsl.innerText = down1_time[0][1] == null ? "" : down1_time[0][1].toFixed(2);
+                ycsl_time_content.innerText = down1_time[1][0].substring(0, 16);
+                ycsl.innerText = down1_time[1][1] == null ? "" : down1_time[1][1].toFixed(2);
+                pjpcl.innerText = adata[8];
+
+            }
+        });
+    }
+    var down1_data = [];
+    //点击上方复选框 选择观测点
+    function clickCheckbox(node) {
+        //console.log(yali_length);
+        //console.log(node.id);
+        if (node.checked == true) {
+            for (i = 0; i < yali_length; i++) {
+                if (node.id == yali_data[i].WMeter_ID) {
+                    //console.log(yali_data);
+                    down1_data.push(yali_data[i]);
+                    //console.log(yali_data[i])
+                    //console.log(down1_data);
+                    let down1 = document.getElementById("down1");
+                    down1.innerHTML += "<tr class='right5121221' style='height:38.5px;' id='down_" + yali_data[i].WMeter_ID + "'>" +
+                        "<td class='right51212211 down1_1fa' style='float:left; padding-top:7px;text-align:center;width:136px;display:inline-block'>" +
+                        "<input class='down1_1'  type='checkbox' checked='checked' id='" + yali_data[i].WMeter_ID + "' onclick='clickCheckbox2(this)' style='width:15px; margin-left:10px; margin-top:7px;display:inline-block'/>" +
+                        yali_data[i].Meter_Name +
+                        "</td>" +
+                        "<td class='down1_2 right51212211'>" +
+                        yali_data[i].Tag_value +
+                        "</td>" +
+                        "<td class='right51212211'>" +
+                        "<input class='down1_3' type='text' name='LastName' style='background-color:#eef9fb;width:90px;text-align:center;' value='" + parseFloat(yali_data[i].Remark).toFixed(3) + "'/>" +
+                        "</td>" +
+                        "</tr>";
+                }
+            }
+        }
+        else if (node.checked == false) {
+            let Removetarget = document.getElementById('down_' + node.id);
+            Removetarget.parentElement.removeChild(Removetarget);
+            for (i = 0; i < down1_data.length; i++) {
+                if (node.id == down1_data[i].WMeter_ID) {
+                    down1_data.splice(i, 1);
+                    //console.log(down1_data);
+                }
+            }
+
+        }
+
+    }
+    //点击下方复选框
+    function clickCheckbox2(node) {
+        //console.log(node.id)
+        if (node.checked == false) {
+            let Removetarget = document.getElementById('down_' + node.id);
+            Removetarget.parentElement.removeChild(Removetarget);
+            document.getElementById(node.id).checked = false
+
+        }
+    }
+    //scfa
+    function clickscfa(node) {
+        computeTypes();
+        
+
+    }
+    function clickxfddzl(node) {
+        var text_content = "";
+        var xfdl_content = [];
+        var Checkbox3 = document.getElementsByClassName("down3_1");
+        var Checkbox3_realvalue = document.getElementsByClassName("down3_2");
+        var Checkbox3_tagvalue = document.getElementsByClassName("down3_3");
+       
+        for (i = 0; i < Checkbox3.length; i++) {
+            if (Number(Checkbox3_realvalue[i].innerText) != Number(Checkbox3_tagvalue[i].value)) {
+                let object = [Checkbox3[i].id, Checkbox3[i].innerText, Checkbox3_realvalue[i].innerText, Checkbox3_tagvalue[i].value];
+                xfdl_content.push(object);
+
+            }
+
+         
+        }
+        //console.log(xfdl_content)
+        var urlLink3_8 = '/Scheduling/Daily/CreateDailyOrder?planId=' + planId + "&" + "scList=";
+        
+        for (i = 0; i < xfdl_content.length; i++) {
+            if (i < xfdl_content.length - 1) {
+                urlLink3_8 += xfdl_content[i][0] + "," + xfdl_content[i][1] + ',' + xfdl_content[i][2] + "," + xfdl_content[i][3] + ";";
+                
+            } else {
+                urlLink3_8 += xfdl_content[i][0] + "," + xfdl_content[i][1] + ',' + xfdl_content[i][2] + "," + xfdl_content[i][3];
+            }
+            text_content += "<strong style='width:80px; display:inline-block'>" + xfdl_content[i][1] + "：</strong><strong style='width:160px; display:inline-block;text-align:right'>" + "当前水厂压力：" + xfdl_content[i][2] + "MPa" + "</strong><strong style='width:240px; display:inline-block;text-align:right'>方案供水压力：" + xfdl_content[i][3] + "MPa</strong><br/><br/>"
+        }
+        if (Checkbox3.length > 0) {
+            if (text_content) {
+                $.modalConfirm(text_content, function (e) {
+                    if (e) {
+                        $.loading(true, '下发调令计算中...');
+                        $("#xfdlBut").attr('disabled', true).css('background', '#ccc').css('border', '#ccc')
+
+
+                        //console.log(urlLink3_8);
+                        $("input[name*='fayli']").each(item => {
+                            $("input[name*='fayli']").eq(item).attr("readonly", "readonly")
+                            $("input[name*='fayli']").eq(item).css("background-color", "#ccc")
+                        })
+                        $.ajax({
+                            type: "GET",
+                            url: urlLink3_8,
+                            dataType: "JSON",
+                            success: function (adata) {
+                                document.getElementById("xfddzl_time").innerHTML = "下发调令时间：" + adata[6];
+                                document.getElementById("xfddzl_time").style.display = "block";
+                                $.loading();
+                                $.modalMsg("下发调令成功！", "success");
+                            }
+                        })
+                    } else {
+                        $.modalMsg("已取消下发！", "success");
+                    }
+
+
+
+                })
+            } else {
+                $.modalMsg("当前所有水厂无变化供水压力！", "warning");
+            }
+
+        }
+        
+
+    }
+    function clickrefresh() {
+        $("#xfdlBut").attr('disabled', true).css('background', '#ccc').css('border', '#ccc')
+        document.getElementById("scfa_time").style.display = "none";
+        document.getElementById("xfddzl_time").style.display = "none";
+        $("#scfaBut").css('background', '#236eed')
+        $("#scfaBut").css('border', '#236eed')
+        $("#scfaBut").attr('disabled', false)
+
+        document.getElementById("down1").innerHTML = "";
+        document.getElementById("down2").innerHTML = "";
+        document.getElementById("down3").innerHTML = "";
+        document.getElementById("down4").innerHTML = "";
+        document.getElementById("pjpcl").innerText = "";
+        document.getElementById("yali").innerText = "";
+        document.getElementById("liuliang").innerText = "";
+        document.getElementById("shuizhi").innerText = "";
+        isRefresh = true;
+        jiekou3_6();
+
+    }
+    window.onload = init();
+    window.onresize = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height();
+        mainW = $(window).width();
+        if (mainH >= 980) {
+            $(".right4212").height(610);
+        } else {
+            $(".right4212").height(470);
+        }
+        
+
+
+    }
+    window.onload = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height()
+        mainW = $(window).width();
+        //$(".right5").height(mainH * 0.44);
+        if (mainH >= 980) {
+            $(".right4212").height(610);
+        } else {
+            $(".right4212").height(470);
+        }
+    }
+</script>

@@ -1,0 +1,134 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TJWCC.Domain.Entity.BSSys
+{
+    public class BSOT_DemandRecordEntity : IEntity<BSOT_DemandRecordEntity>
+    {
+        public long NodeID { get; set; }
+        public Nullable<decimal> D0 { get; set; }
+        public Nullable<decimal> D1 { get; set; }
+        public Nullable<decimal> D2 { get; set; }
+        public Nullable<decimal> D3 { get; set; }
+        public Nullable<decimal> D4 { get; set; }
+        public Nullable<decimal> D5 { get; set; }
+        public Nullable<decimal> D6 { get; set; }
+        public Nullable<decimal> D7 { get; set; }
+        public Nullable<decimal> D8 { get; set; }
+        public Nullable<decimal> D9 { get; set; }
+        public Nullable<decimal> D10 { get; set; }
+        public Nullable<decimal> D11 { get; set; }
+        public Nullable<decimal> D12 { get; set; }
+        public Nullable<decimal> D13 { get; set; }
+        public Nullable<decimal> D14 { get; set; }
+        public Nullable<decimal> D15 { get; set; }
+        public Nullable<decimal> D16 { get; set; }
+        public Nullable<decimal> D17 { get; set; }
+        public Nullable<decimal> D18 { get; set; }
+        public Nullable<decimal> D19 { get; set; }
+        public Nullable<decimal> D20 { get; set; }
+        public Nullable<decimal> D21 { get; set; }
+        public Nullable<decimal> D22 { get; set; }
+        public Nullable<decimal> D23 { get; set; }
+        public Nullable<decimal> D24 { get; set; }
+        public Nullable<decimal> D25 { get; set; }
+        public Nullable<decimal> D26 { get; set; }
+        public Nullable<decimal> D27 { get; set; }
+        public Nullable<decimal> D28 { get; set; }
+        public Nullable<decimal> D29 { get; set; }
+        public Nullable<decimal> D30 { get; set; }
+        public Nullable<decimal> D31 { get; set; }
+        public Nullable<decimal> D32 { get; set; }
+        public Nullable<decimal> D33 { get; set; }
+        public Nullable<decimal> D34 { get; set; }
+        public Nullable<decimal> D35 { get; set; }
+        public Nullable<decimal> D36 { get; set; }
+        public Nullable<decimal> D37 { get; set; }
+        public Nullable<decimal> D38 { get; set; }
+        public Nullable<decimal> D39 { get; set; }
+        public Nullable<decimal> D40 { get; set; }
+        public Nullable<decimal> D41 { get; set; }
+        public Nullable<decimal> D42 { get; set; }
+        public Nullable<decimal> D43 { get; set; }
+        public Nullable<decimal> D44 { get; set; }
+        public Nullable<decimal> D45 { get; set; }
+        public Nullable<decimal> D46 { get; set; }
+        public Nullable<decimal> D47 { get; set; }
+        public Nullable<decimal> D48 { get; set; }
+        public Nullable<decimal> D49 { get; set; }
+        public Nullable<decimal> D50 { get; set; }
+        public Nullable<decimal> D51 { get; set; }
+        public Nullable<decimal> D52 { get; set; }
+        public Nullable<decimal> D53 { get; set; }
+        public Nullable<decimal> D54 { get; set; }
+        public Nullable<decimal> D55 { get; set; }
+        public Nullable<decimal> D56 { get; set; }
+        public Nullable<decimal> D57 { get; set; }
+        public Nullable<decimal> D58 { get; set; }
+        public Nullable<decimal> D59 { get; set; }
+        public Nullable<decimal> D60 { get; set; }
+        public Nullable<decimal> D61 { get; set; }
+        public Nullable<decimal> D62 { get; set; }
+        public Nullable<decimal> D63 { get; set; }
+        public Nullable<decimal> D64 { get; set; }
+        public Nullable<decimal> D65 { get; set; }
+        public Nullable<decimal> D66 { get; set; }
+        public Nullable<decimal> D67 { get; set; }
+        public Nullable<decimal> D68 { get; set; }
+        public Nullable<decimal> D69 { get; set; }
+        public Nullable<decimal> D70 { get; set; }
+        public Nullable<decimal> D71 { get; set; }
+        public Nullable<decimal> D72 { get; set; }
+        public Nullable<decimal> D73 { get; set; }
+        public Nullable<decimal> D74 { get; set; }
+        public Nullable<decimal> D75 { get; set; }
+        public Nullable<decimal> D76 { get; set; }
+        public Nullable<decimal> D77 { get; set; }
+        public Nullable<decimal> D78 { get; set; }
+        public Nullable<decimal> D79 { get; set; }
+        public Nullable<decimal> D80 { get; set; }
+        public Nullable<decimal> D81 { get; set; }
+        public Nullable<decimal> D82 { get; set; }
+        public Nullable<decimal> D83 { get; set; }
+        public Nullable<decimal> D84 { get; set; }
+        public Nullable<decimal> D85 { get; set; }
+        public Nullable<decimal> D86 { get; set; }
+        public Nullable<decimal> D87 { get; set; }
+        public Nullable<decimal> D88 { get; set; }
+        public Nullable<decimal> D89 { get; set; }
+        public Nullable<decimal> D90 { get; set; }
+        public Nullable<decimal> D91 { get; set; }
+        public Nullable<decimal> D92 { get; set; }
+        public Nullable<decimal> D93 { get; set; }
+        public Nullable<decimal> D94 { get; set; }
+        public Nullable<decimal> D95 { get; set; }
+        public Nullable<decimal> D96 { get; set; }
+        public Nullable<decimal> D97 { get; set; }
+        public Nullable<decimal> D98 { get; set; }
+        public Nullable<decimal> D99 { get; set; }
+        public Nullable<decimal> D100 { get; set; }
+        public Nullable<decimal> D101 { get; set; }
+        public Nullable<decimal> D102 { get; set; }
+        public Nullable<decimal> D103 { get; set; }
+        public Nullable<decimal> D104 { get; set; }
+        public Nullable<decimal> D105 { get; set; }
+        public Nullable<decimal> D106 { get; set; }
+        public Nullable<decimal> D107 { get; set; }
+        public Nullable<decimal> D108 { get; set; }
+        public Nullable<decimal> D109 { get; set; }
+        public Nullable<decimal> D110 { get; set; }
+        public Nullable<decimal> D111 { get; set; }
+        public Nullable<decimal> D112 { get; set; }
+        public Nullable<decimal> D113 { get; set; }
+        public Nullable<decimal> D114 { get; set; }
+        public Nullable<decimal> D115 { get; set; }
+        public Nullable<decimal> D116 { get; set; }
+        public Nullable<decimal> D117 { get; set; }
+        public Nullable<decimal> D118 { get; set; }
+        public Nullable<decimal> D119 { get; set; }
+        public string Remark { get; set; }
+    }
+}

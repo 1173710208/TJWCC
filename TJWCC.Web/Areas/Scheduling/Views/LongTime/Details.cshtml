@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script>
+    $(function () {
+        var keyValue = $.request("keyValue").split(",");
+        document.querySelector("#yearData").innerHTML = new Date().getFullYear()-1
+        document.querySelector("#ENCODE").value = keyValue[0]
+        document.querySelector("#SORTCODE").value = keyValue[1]
+    })
+
+   
+    function getDemandPYear() {
+        var ENCODE = document.querySelector("#ENCODE").value;
+        var SORTCODE = document.querySelector("#SORTCODE").value;
+        var urlLink = '/Scheduling/LongTime/DemandPYear?people=';
+        
+        $.ajax({
+            type: "GET",
+            url: urlLink + ENCODE + '&gdp=' + SORTCODE,
+            dataType: "JSON",
+            async: false,
+            success: function (adata) {
+            }
+        });
+    }
+
+    function submitForm() {
+        getDemandPYear()
+        $.modalClose()
+    }
+</script>
+
+<form id="form1">
+    <div style="margin-left:50px;"><strong style="font-size:15px" id="yearData"></strong><strong style="font-size:15px">年数据</strong></div>
+    <div style="padding-top: 10px; margin-right: 20px;">
+
+        <table class="form">
+            <tr>
+                <th class="formTitle">人口(万人)</th>
+                <td class="formValue">
+                    <input id="ENCODE" name="ENCODE" type="text" class="form-control" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">GDP(亿元)</th>
+                <td class="formValue">
+                    <input id="SORTCODE" name="SORTCODE" type="text" class="form-control" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

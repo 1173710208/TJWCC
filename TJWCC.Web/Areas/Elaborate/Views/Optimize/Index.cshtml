@@ -1,0 +1,1535 @@
+﻿
+@{
+    ViewBag.Title = "泵站优化调度";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/OptimalOperation.css" rel="stylesheet" />
+<style>
+    html {
+        overflow-y: hidden !important;
+    }
+
+    body {
+        overflow-y: hidden !important;
+    }
+    .SelectBG {
+        color: #FF0000;
+    }
+    .SelectBG1 {
+        background-color: black;
+    }
+    .unwritten {
+        display: none;
+    }
+</style>
+<div class="main-container">
+    <div class="middle" style="width: 1670px; height: 855px;">
+        <div class="middle1" style="position:relative; width:1655px; height:845px;">
+            <div class="dropdown middle11" style="position: absolute; top: 1%; left: 0.5%; margin: 0px; z-index: 100;">
+                <select id="ORGANIZEID" name="ORGANIZEID" class="form-control right1121 " style="display:inline;width:160px" onchange="organizeidSelect(this)"></select>
+            </div>
+            @*芥园水厂送水泵站*@
+            <div class="gyt" style=" padding:5px;width:100%;height:100%;" id="pid3">
+                <img style="position: absolute; width: 1660px;height:845px; top:-130px" src="~/Areas/DataDisplay/Content/img/index/工艺图/jieNew.png">
+                <div id="body2" style="position:relative; width:100%;height:100%; overflow:hidden;">
+                    <div style="width: 80px; height: 20px; position: absolute; top: 530px; left: 340px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">一干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 530px; left: 840px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">二干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 530px; left: 1255px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">三干</div>
+
+
+                    <div style="width: 100px; height: 50px; position: absolute; top: 95px; left: 280px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="jyyewei1" style="color: black; width: 40px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top: 95px; left: 850px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="jyyewei2" style="color: black; width: 40px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top: 95px; left: 1300px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="jyyewei3" style="color: black; width: 40px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:400px; left: 150px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 75px;">压力：</div>
+                            <div id="jysggwyl1" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 50px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 75px;">瞬时流量：</div>
+                            <div id="jysgssll1" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 75px;">累计流量：</div>
+                            <div id="jysgljll1" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:400px; left: 650px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 75px;">压力：</div>
+                            <div id="jysggwyl2" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 50px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 75px;">瞬时流量：</div>
+                            <div id="jysgssll2" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 75px;">累计流量：</div>
+                            <div id="jysgljll2" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:400px; left: 1060px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 75px;">压力：</div>
+                            <div id="jysggwyl3" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 50px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 75px;">瞬时流量：</div>
+                            <div id="jysgssll3" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 75px;">累计流量：</div>
+                            <div id="jysgljll3" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    @* 第一个预留 *@
+                    @*<img id="wwz_201_1" class=" jybimg1" style="position: absolute; width: 70px; top: 305px; left: 100px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                        <div class="jybtitle1" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 120px; color: #fff; height:25px; line-height:25px;">
+
+                        </div>*@
+                    <div class="" style="color: black; position: absolute; clear: both; width: 40px; top: 305px; left: 115px; object-fit: cover;">
+                        预留
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 152px; top: 305px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata1" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class=" jybimg2" style="position: absolute; width: 70px; top: 305px; left: 205px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle2" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 225px; color: #fff; height:25px; line-height:25px;">
+
+                    </div>
+
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 257px; top: 305px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata2" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class=" jybimg3" style="position: absolute; width: 70px; top: 305px; left: 310px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle3" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 330px; color: #fff; height:25px; line-height:25px;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 362px; top: 305px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata3" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class=" jybimg4" style="position: absolute; width: 70px; top: 305px; left: 415px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle4" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 435px; color: #fff; height:25px; line-height:25px;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 467px; top: 305px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata4" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class=" jybimg5" style="position: absolute; width: 70px; top: 305px; left: 520px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle5" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left:540px; color: #fff; height:25px; line-height:25px;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 572px; top: 305px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata5" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class="jysgimg6" style="position: absolute; width: 70px; top: 305px; left: 710px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle6" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 730px; color: #fff; line-height: 25px; ">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 305px; left: 762px; display: flex; background-color: #f6fbfc;">
+                            <div id="jysgdata6" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class="jysgimg7" style="position: absolute; width: 70px; top: 305px; left: 815px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle7" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 835px; color: #fff; line-height: 25px; ">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 305px; left: 867px; display: flex; background-color: #f6fbfc;">
+                            <div id="jysgdata7" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class="jysgimg8" style="position: absolute; width: 70px; top: 305px; left: 920px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle8" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 940px; color: #fff;line-height: 25px;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 305px; left: 972px; display: flex; background-color: #f6fbfc;">
+                            <div id="jysgdata8" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class="jysgimg9" style="position: absolute; width: 70px; top: 305px; left: 1025px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle9" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 1045px; color: #fff;line-height: 25px; ">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 305px; left: 1072px; display: flex; background-color: #f6fbfc;">
+                            <div id="jysgdata9" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class="jysgimg10" style="position: absolute; width: 70px; top: 305px; left: 1205px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle10" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 1225px; color: #fff; line-height: 25px;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 305px; left: 1257px; display: flex; background-color: #f6fbfc;">
+                            <div id="jysgdata10" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class="jysgimg11" style="position: absolute; width: 70px; top: 305px; left:1310px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jybtitle11" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 1330px; color: #fff; line-height: 25px;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 305px; left: 1362px; display: flex; background-color: #f6fbfc;">
+                            <div id="jysgdata11" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    @* 7#预留 *@
+                    @*<img id="wwz_201_1" class="jysgimg12" style="position: absolute; width: 70px; top: 305px; left:1415px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                        <div class="jybtitle12" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 1435px; color: #fff; line-height: 25px; ">
+
+                        </div>*@
+                    <div class="" style="color: black; position: absolute; clear: both; width: 40px; top: 305px; left: 1415px; object-fit: cover;">
+                        预留
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 305px; left: 1466px; display: flex; background-color: #f6fbfc;">
+                            <div id="jysgdata12" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    @* 6#预留 *@
+                    @*<img id="wwz_201_1" class="jysgimg13" style="position: absolute; width: 70px; top: 305px; left:1520px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                        <div class="jybtitle13" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 303px; left: 1540px; color: #fff;line-height: 25px; ">
+
+                        </div>*@
+                    <div class="" style="color: black; position: absolute; clear: both; width: 40px; top: 305px; left: 1520px; object-fit: cover;">
+                        预留
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 305px; left: 1572px; display: flex; background-color: #f6fbfc;">
+                            <div id="jysgdata13" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                </div>
+            </div>
+            @*凌庄送水泵站*@
+            <div class="gyt" style="display:none; padding:5px;width:100%;height:100%;" id="pid4">
+                <img style="position: absolute; width: 1660px;height:630px;top:100px;top:-40px" src="~/Areas/DataDisplay/Content/img/index/工艺图/凌庄03.png">
+                <div id="body3" style="position:relative; width:100%;height:100%; overflow:hidden;">
+                    <div style="width: 80px; height: 20px; position: absolute; top: 470px; left: 145px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">五干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 470px; left: 340px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">六干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 470px; left: 520px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">四干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 470px; left: 710px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">三干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 470px; left: 1080px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">二干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 470px; left: 1300px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">一干</div>
+                    <div class="tag" id="tag2" style="width: 160px; height: 60px; position: absolute; top:350px; left: 195px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color:black;  width:70px;">瞬时流量：</div>
+                            <div id="lzsgssll1" style="color: black; width: 55px;height:17px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color:black;  width:70px;">累计流量：</div>
+                            <div id="lzsgljll1" style="color: black; width: 55px; height: 17px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 140px; height:30px; position: absolute; top: 450px; left: 375px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px; ">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 50px;">3#压力：</div>
+                            <div id="lzsgyl2" style="color: black; width: 40px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 10px; padding-left: 10px;">MPa</div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 160px; height: 80px; position: absolute; top: 350px; left: 375px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px; ">
+
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="lzsgssll2" style="color: black; width: 55px; height: 17px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="lzsgljll2" style="color: black; width: 55px; height: 17px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 160px; height: 60px; position: absolute; top: 350px; left: 555px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px; ">
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="lzsgssll3" style="color: black; width: 55px; height: 17px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="lzsgljll3" style="color: black; width: 55px; height: 17px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 140px; height: 30px; position: absolute; top: 450px; left: 740px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px; ">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 50px;">1#压力：</div>
+                            <div id="lzsgyl4" style="color: black; width: 40px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 10px; padding-left: 10px;">MPa</div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 160px; height: 80px; position: absolute; top: 350px; left: 740px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px; ">
+                        @*<div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 75px;">压力：</div>
+                                <div id="lzsgyl4" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                                <div style="color: black; width: 50px; padding-left: 10px;">MPa</div>
+                            </div>*@
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="lzsgssll4" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="lzsgljll4" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 140px; height: 30px; position: absolute; top: 450px; left: 930px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px; ">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 50px;">2#压力：</div>
+                            <div id="lzsgy22m" style="color: black; width: 40px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 10px; padding-left: 10px;">MPa</div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 160px; height: 80px; position: absolute; top: 350px; left: 1100px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px; ">
+                        @*<div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 75px;">压力：</div>
+                                <div id="lzsgyl5" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                                <div style="color: black; width: 50px; padding-left: 10px;">MPa</div>
+                            </div>*@
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="lzsgssll5" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="lzsgljll5" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 160px; height: 60px; position: absolute; top: 350px; left: 1320px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px; ">
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="lzsgssll6" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="lzsgljll6" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 33px; padding-left: 10px; ">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top: 95px; left: 280px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="zuoywdata1" style="color: black; width: 30px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top: 95px; left: 580px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="zuoywdata2" style="color: black; width: 30px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top:95px; left: 920px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="youywdata1" style="color: black; width: 30px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top:95px; left: 1250px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="youywdata2" style="color: black; width: 30px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg1" style="position: absolute; width: 70px; top: 248px; left: 210px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="lzsgtitle1" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 248px; left: 233px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 248px; left: 263px; display: flex; background-color: #f6fbfc;">
+                            <div id="lzsgdata1" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="lzsgimg2" style="position: absolute; width: 70px; top: 248px; left: 358px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="lzsgtitle2" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 248px; left: 381px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 248px; left: 421px; display: flex; background-color: #f6fbfc;">
+                            <div id="lzsgdata2" style="width: 27px;font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="lzsgimg3" style="position: absolute; width: 70px; top: 248px; left: 521px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="lzsgtitle3" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 248px; left: 545px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 248px; left: 565px; display: flex; background-color: #f6fbfc;">
+                            <div id="lzsgdata3" style="width: 27px;font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class="lzsgimg4" style="position: absolute; width: 70px; top: 248px; left: 670px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="lzsgtitle4" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 248px; left: 693px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 248px; left: 723px; display: flex; background-color: #f6fbfc;">
+                            <div id="lzsgdata4" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+
+                    <img id="wwz_201_1" class="lzsgimg5" style="position: absolute; width: 70px; top: 248px; left: 890px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="lzsgtitle5" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 248px; left: 913px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 248px; left: 943px; display: flex; background-color: #f6fbfc;">
+                            <div id="lzsgdata5" style="width: 27px;  font-size: 10px; color: #5c91ef;">1.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+
+                    <img id="wwz_201_1" class="lzsgimg6" style="position: absolute; width: 70px; top: 248px; left: 1020px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="lzsgtitle6" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 248px; left: 1043px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 248px; left: 1073px; display: flex; background-color: #f6fbfc;">
+                            <div id="lzsgdata6" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="lzsgimg7" style="position: absolute; width: 70px; top: 248px; left: 1160px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="lzsgtitle7" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 248px; left: 1181px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 248px; left: 1211px; display: flex; background-color: #f6fbfc;">
+                            <div id="lzsgdata7" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="lzsgimg8" style="position: absolute; width: 70px; top: 248px; left: 1296px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="lzsgtitle8" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 248px; left: 1319px; color: #fff; ">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 248px; left: 1349px; display: flex; background-color: #f6fbfc;">
+                            <div id="lzsgdata8" style="width: 27px;font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="lzsgimg9" style="position: absolute; width: 70px; top: 248px; left: 1419px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="lzsgtitle9" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 248px; left: 1442px; color: #fff; ">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 248px; left: 1472px; display: flex; background-color: #f6fbfc;">
+                            <div id="lzsgdata9" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                </div>
+            </div>
+            @*新开河送水泵站*@
+            <div class="gyt" style="display:none; padding:5px;width:100%;height:100%;" id="pid6">
+                @*  *@
+                <img style="position: absolute; width: 1660px; height: 630px; top: 100px; top: -50px" src="~/Areas/DataDisplay/Content/img/index/工艺图/新开河03.png">
+                <div id="body4" style="position:relative; width:100%;height:100%; overflow:hidden;">
+                    <div style="width: 80px; height: 20px; position: absolute; top: 460px; left: 108px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">一干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 460px; left: 440px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">二干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 460px; left: 820px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">三干</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 460px; left: 1160px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">连通管</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 460px; left: 1443px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">四干</div>
+
+
+                    @*<div class="tag" id="tag1" style="width: 200px; height: 100px; position: absolute; top: 40px; left: 480px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 20px; padding-top: 7px; padding-bottom: 8px;">
+                            <div style="margin-bottom: 5px; display:flex;">
+                                <div style="color:black;  width:90px;">三干浊度：</div>
+                                <div id="xkh2sgzd" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.26</div>
+                                <div style="color: black; width: 50px; padding-left:10px;">NTU</div>
+                            </div>
+                            <div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 90px;">三干余氯：</div>
+                                <div id="xkh2sgyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                                <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                            </div>
+                            <div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 90px; ">三干pH值：</div>
+                                <div id="xkh2sgph" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">8.17</div>
+                            </div>
+                            <div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 90px; ">三干氨氮：</div>
+                                <div id="xkh2sgad" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                                <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                            </div>
+                        </div>*@
+
+                    <div class="tag" id="tag2" style="width: 170px; height: 50px; position: absolute; top:360px; left: 160px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        @*<div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 90px;">压力：</div>
+                                <div id="xkhsggwyl1" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                                <div style="color: black; width: 50px; padding-left: 10px;">Mpa</div>
+                            </div>*@
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color:black;  width:70px;">瞬时流量：</div>
+                            <div id="xkhsgssll1" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left:10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="xkhsgljll1" style="color: black; width: 55px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:360px; left: 480px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">压力：</div>
+                            <div id="xkhsggwyl2" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="xkhsgssll2" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="xkhsgljll2" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:360px; left: 850px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">压力：</div>
+                            <div id="xkhsggwyl3" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="xkhsgssll3" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="xkhsgljll3" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:360px; left: 1190px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">正向流量：</div>
+                            <div id="xkhsgssll4" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">反向流量：</div>
+                            <div id="xkhsggwyl4" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="xkhsgljll4" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left:10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:360px; left: 1465px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">压力：</div>
+                            <div id="xkhsggwyl5" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="xkhsgssll5" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="xkhsgljll5" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left:10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top: 150px; left: 300px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="xkhzuoywdata" style="color: black; width: 40px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top: 150px; left: 730px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="xkhyouywdata" style="color: black; width: 40px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top:150px; left: 1100px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="xkhyouywdata1" style="color: black; width: 40px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div style="width: 100px; height: 50px; position: absolute; top:150px; left: 1350px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:40px;height:25px ">液位：</div>
+                            <div id="xkhyouywdata22" style="color: black; width: 40px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+
+                    <img id="wwz_201_1" class="xkh2img1" style="position: absolute; width: 70px; top: 270px; left: 190px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="xkh2title1" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 213px; color: #fff; ">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 243px; display: flex; background-color: #f6fbfc; ">
+                            <div id="xkh2data1" style="width: 27px;font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="xkh2img2" style="position: absolute; width: 70px; top: 270px; left: 318px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="xkh2title2" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 341px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 371px; display: flex; background-color: #f6fbfc; ">
+                            <div id="xkh2data2" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="xkh2img3" style="position: absolute; width: 70px; top: 270px; left: 447px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="xkh2title3" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 470px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 500px; display: flex; background-color: #f6fbfc; ">
+                            <div id="xkh2data3" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="xkh2img4" style="position: absolute; width: 70px; top: 270px; left: 655px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="xkh2title4" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 678px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 708px; display: flex; background-color: #f6fbfc; ">
+                            <div id="xkh2data4" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="xkh2img5" style="position: absolute; width: 70px; top: 270px; left: 778px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="xkh2title5" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 801px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 832px; display: flex; background-color: #f6fbfc; ">
+                            <div id="xkh2data5" style="width: 27px;font-size: 10px; color: #5c91ef;">0.77</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="xkh2img6" style="position: absolute; width: 70px; top: 270px; left: 902px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="xkh2title6" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 925px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 955px; display: flex; background-color: #f6fbfc; ">
+                            <div id="xkh2data6" style="width: 27px;  font-size: 10px; color: #5c91ef;">1.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="xkh2img7" style="position: absolute; width: 70px; top: 275px; left: 1090px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="xkh2title7" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 275px; left: 1113px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 275px; left: 1143px; display: flex; background-color: #f6fbfc; ">
+                            <div id="xkh2data7" style="width: 27px;font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="xkh2img8" style="position: absolute; width: 70px; top: 275px; left: 1205px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="xkh2title8" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 275px; left: 1226px; color: #fff;  ">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 275px; left: 1256px; display: flex; background-color: #f6fbfc; ">
+                            <div id="xkh2data8" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="xkh2img9" style="position: absolute; width: 70px; top: 275px; left: 1356px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="xkh2title9" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 275px; left: 1379px; color: #fff; ">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 275px; left: 1409px; display: flex; background-color: #f6fbfc; ">
+                            <div id="xkh2data9" style="width: 27px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="xkh2img10" style="position: absolute; width: 70px; top: 275px; left: 1479px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="xkh2title10" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 275px; left: 1502px; color: #fff; ">
+
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 275px; left: 1532px; display: flex; background-color: #f6fbfc;">
+                            <div id="xkh2data10" style="width: 27px;  font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                </div>
+            </div>
+            @*津滨送水泵站*@
+            <div class="gyt" style="display:none; padding:5px;width:100%;height:100%;" id="pid7">
+                <img style="position: absolute; width: 1850px;height:680px;left:-50px;top:-60px" src="~/Areas/DataDisplay/Content/img/index/工艺图/jinbinNew1.png">
+                <div id="body5" style="position:relative; width:100%;height:100%; overflow:hidden;">
+                    <div style="width: 80px; height: 20px; position: absolute; top: 490px; left: 210px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">大港方向</div>
+                    <div style="width: 100px; height: 20px; position: absolute; top: 490px; left: 440px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">临港产业园区方向</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 490px; left: 690px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">临港方向</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 490px; left: 940px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">空港方向</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 490px; left: 1160px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">空港方向</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 490px; left: 1370px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">二线方向</div>
+
+
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:380px; left: 35px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">压力：</div>
+                            <div id="jbsggwyl1" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="jbsgssll1" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="jbsgljll1" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:380px; left: 280px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">压力：</div>
+                            <div id="jbsggwyl2" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="jbsgssll2" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="jbsgljll2" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:380px; left: 518px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">压力：</div>
+                            <div id="jbsggwyl3" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="jbsgssll3" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="jbsgljll3" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:380px; left: 753px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">压力：</div>
+                            <div id="jbsggwyl4" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="jbsgssll4" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="jbsgljll4" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:380px; left: 988px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">压力：</div>
+                            <div id="jbsggwyl5" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="jbsgssll5" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="jbsgljll5" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 170px; height: 80px; position: absolute; top:380px; left: 1198px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 5px;">
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 70px;">压力：</div>
+                            <div id="jbsggwyl6" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">MPa</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">瞬时流量：</div>
+                            <div id="jbsgssll6" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup>/h</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color: black; width: 70px;">累计流量：</div>
+                            <div id="jbsgljll6" style="color: black; width: 60px; background-color: white; align-items: center; justify-content: center; ">0</div>
+                            <div style="color: black; width: 35px; padding-left: 10px;">m<sup>3</sup></div>
+                        </div>
+                    </div>
+                    <div style="width: 150px; height: 50px; position: absolute; top: 105px; left: 400px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:90px;height:25px ">2号吸水井液位:</div>
+                            <div id="jbzuoywdata" style="color: black; width: 40px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div style="width: 150px; height: 50px; position: absolute; top:105px; left: 1150px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 5px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-top:10px; display: flex;">
+                            <div style="color: black; width:90px;height:25px ">1号吸水井液位:</div>
+                            <div id="jbyouywdata" style="color: black; width: 40px; height: 20px; background-color: white; align-items: center; justify-content: center; ">2.0</div>
+                            <div style="color: black; width: 20px; padding-left:10px;">m</div>
+                        </div>
+                    </div>
+                    <div class="" style="color: black; position: absolute; clear: both; width: 40px; top: 273px; left: 170px; object-fit: cover;">
+                        预留
+                    </div>
+                    @*<img id="wwz_201_1" class="jbimg1" style="position: absolute; width: 70px; top: 270px; left: 150px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jbtitle1" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 173px; color: #fff; ">
+
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 206px; display: flex; background-color: #f6fbfc; ">
+                            <div id="jbdata1" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="jbimg2" style="position: absolute; width: 70px; top: 270px; left: 292px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jbtitle2" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 315px; color: #fff;  ">
+
+                    </div>
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 345px; display: flex; background-color: #f6fbfc; ">
+                            <div id="jbdata2" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="jbimg3" style="position: absolute; width: 70px; top: 270px; left: 440px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jbtitle3" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 463px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 493px; display: flex; background-color: #f6fbfc; ">
+                            <div id="jbdata3" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="jbimg4" style="position: absolute; width: 70px; top: 270px; left: 590px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jbtitle4" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 613px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 643px; display: flex; background-color: #f6fbfc; ">
+                            <div id="jbdata4" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="jbimg5" style="position: absolute; width: 70px; top: 270px; left: 735px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="jbtitle5" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 758px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 788px; display: flex; background-color: #f6fbfc; ">
+                            <div id="jbdata5" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.77</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="jbimg6" style="position: absolute; width: 70px; top: 270px; left: 879px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jbtitle6" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 902px; color: #fff;">
+
+                    </div>
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 932px; display: flex; background-color: #f6fbfc; ">
+                            <div id="jbdata6" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="jbimg7" style="position: absolute; width: 70px; top: 270px; left: 1030px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jbtitle7" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 1053px; color: #fff; ">
+
+                    </div>
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 1085px; display: flex; background-color: #f6fbfc; ">
+                            <div id="jbdata7" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="jbimg8" style="position: absolute; width: 70px; top: 270px; left: 1179px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="jbtitle8" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 1202px; color: #fff; ">
+
+                    </div>
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 1234px; display: flex; background-color: #f6fbfc; ">
+                            <div id="jbdata8" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="jbimg9" style="position: absolute; width: 70px; top: 270px; left: 1324px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="jbtitle9" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 1346px; color: #fff ">
+
+                    </div>
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 1376px; display: flex; background-color: #f6fbfc; ">
+                            <div id="jbdata9" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                        </div>*@
+                    <img id="wwz_201_1" class="jbimg10" style="position: absolute; width: 70px; top: 270px; left: 1470px; " src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="jbtitle10" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 270px; left: 1493px; color: #fff; ">
+
+                    </div>
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 270px; left: 1523px; display: flex; background-color: #f6fbfc;">
+                        <div id="jbdata10" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">MPa</div>
+                    </div>*@
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <strong style="position: absolute; font-size: 17px; top: 580px; left: 20px;font-weight:500">现状方案：</strong>
+    <strong style="position: absolute; font-size: 17px; top: 580px; left: 395px;font-weight:500">优化方案：</strong>
+    <strong id="yjyl" style="position: absolute; font-size: 14px; top: 580px; left: 610px;font-weight:500">依据压力：</strong>
+    <strong id="yjll" style="position: absolute; font-size: 14px; top: 580px; left: 760px;font-weight:500">依据流量：</strong>
+    <strong id="yjss" style="position: absolute; font-size: 14px; top: 580px; left: 940px;font-weight:500">依据时间：</strong>
+    <strong style="position: absolute; font-size: 17px; top: 580px; left: 1430px;font-weight:500">当前能耗：</strong>
+    <button class="right11" style="width: 150px; position: absolute; top:18px; left: 180px;height:30px" onclick="openMessage(this)">水泵基本信息</button>
+    <button class="right11" style="width:80px; position: absolute; top:580px; left: 1195px;" onclick="planClick(this)">生成方案</button>
+    <button class="right21" style="width:110px;position:absolute;top:580px;left:1280px" onclick="instructClick(this)">下发调度指令</button>
+    <div style="position: absolute; top: 605px; left: 1410px;height:55px">
+        <div class="middle21" style="height:55px;">
+            <div class="middle211">
+                <table class="right1231">
+                    <tr class="right12311">
+                        <th class="right123111">千吨水耗电量kWh/km³</th>
+                        <td class="right123112" id="qdshdl">162</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div style="position: absolute; top: 645px; left: 1410px;height:55px">
+        <div class="middle21" style="height:55px;">
+            <div class="middle211">
+                <table class="right1231">
+                    <tr class="right12311">
+                        <th class="right123111">配水电耗kWh/(km³·MPa)</th>
+                        <td class="right123112" id="psdh">162</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tag" id="tag2" style="width: 1020px;  position: absolute; top: 610px; right: 270px; background-color: white; border: 1px solid #c6cbc5; font-size: 12px; color: black;">
+
+        <table id="gridList"></table>
+    </div>
+    <div id="gridPanel" class="gridPanel" style="position: absolute; top: 610px; left: 20px; width: 350px;font-size: 12px;">
+        <div class="gridPane1">
+            <table id="gridList1"></table>
+        </div>
+    </div>
+
+</div>
+<script>
+
+    var psId, planId;
+    var psId1 = 2;
+    $(function () {
+        $("#ORGANIZEID").bindSelect({
+            url: "/Elaborate/Optimize/GetPumpList",
+            id: "Value",
+            text: "Name"
+        });
+        psId = $("#ORGANIZEID").val();
+        gridList1();
+        //gridList();
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            datatype: "local",
+            height: 125,
+            colModel: [
+                { label: '水泵编号', name: 'PumpName', width: 160, align: 'center' },
+                {
+                    label: '是否启动', name: 'IsOpen', width: 160, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue) {
+                            return "是"
+                        } else {
+                            return "否"
+                        }
+                    }
+                },
+                {
+                    label: '调速比', name: 'SpeedRatio', width: 165, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue) {
+                            return cellvalue
+                        } else {
+                            return "-"
+                        }
+                    }
+                },
+                {
+                    label: '压力MPa', name: 'Press', width: 165, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue) {
+                            return cellvalue
+                        } else {
+                            return "-"
+                        }
+                    }
+                },
+                {
+                    label: '流量m³/h', name: 'Flow', width: 165, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue) {
+                            return cellvalue
+                        } else {
+                            return "-"
+                        }
+                    }
+                },
+                {
+                    label: '效率%', name: 'Frequency', width: 163, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue) {
+                            return cellvalue
+                        } else {
+                            return "-"
+                        }
+                    }
+                },
+                { label: '改变', name: 'IsChange', width: 20, hidden: true },
+            ],
+            sortname: 'PumpName asc',
+            viewrecords: true,
+            altRows: false,
+            gridComplete: function () {
+                var ids = $gridList.getDataIDs();
+                console.log(ids);
+                for (let i = 0; i < ids.length; i++) {
+                    var rowData = $gridList.getRowData(ids[i]);
+                    //console.log(rowData.IsChange, rowData.IsChange === true);
+                    if (rowData.IsChange === 'true') {
+                        $("#" + ids[i]).find("td").addClass("SelectBG");
+                    }
+                }
+            }
+
+        });
+    })
+    function openMessage() {
+        $.modalOpen({
+            id: "Details",
+            title: "水泵基本信息",
+            url: "/Elaborate/Optimize/Details?keyValue=" + psId,
+            width: "950px",
+            height: "500px",
+            btn: null,
+        });
+    }
+    function organizeidSelect() {
+        $("#gridList").jqGrid('clearGridData');
+        psId = $("#ORGANIZEID").val();
+        $("#pid2").css("display", "none");
+        $("#pid3").css("display", "none");
+        $("#pid4").css("display", "none");
+        $("#pid5").css("display", "none");
+        $("#pid6").css("display", "none");
+        $("#pid7").css("display", "none");
+        switch (psId) {
+            case '2':
+                $("#pid3").css("display", "");
+                break;
+            case '3':
+                $("#pid4").css("display", "");
+                break;
+            case '4':
+                $("#pid6").css("display", "");
+                break;
+            case '5':
+                $("#pid7").css("display", "");
+                break;
+
+        }
+        $("#yjyl").html("依据压力：");
+        $("#yjll").html("依据流量：");
+        $("#yjss").html("依据时间：");
+        gridList1()
+    }
+    function gridList() {
+        $("#gridList").jqGrid('clearGridData');
+        var $gridList = $("#gridList");
+        $.loading(true, '生成方案计算中...');
+        $.ajax({
+            type: "GET",
+            url: "/Elaborate/Optimize/CreateOptimizePlan?psId=" + psId1,
+            dataType: "json",
+            success: function (adata) {
+                $gridList.dataGrid({
+                    datatype: "local",
+                    height: 125,
+                    colModel: [
+                        { label: '水泵编号', name: 'PumpName', width: 160, align: 'center' },
+                        {
+                            label: '是否启动', name: 'IsOpen', width: 160, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue) {
+                                    return "是"
+                                } else {
+                                    return "否"
+                                }
+                            }
+                        },
+                        {
+                            label: '调速比', name: 'SpeedRatio', width: 165, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue) {
+                                    return cellvalue
+                                } else {
+                                    return "-"
+                                }
+                            }
+                        },
+                        {
+                            label: '压力MPa', name: 'Press', width: 165, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue) {
+                                    return cellvalue
+                                } else {
+                                    return "-"
+                                }
+                            }
+                        },
+                        {
+                            label: '流量m³/h', name: 'Flow', width: 165, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue) {
+                                    return cellvalue
+                                } else {
+                                    return "-"
+                                }
+                            }
+                        },
+                        {
+                            label: '效率%', name: 'Frequency', width: 163, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue) {
+                                    return cellvalue
+                                } else {
+                                    return "-"
+                                }
+                            }
+                        },
+                        { label: '改变', name: 'IsChange', width: 20, hidden: true },
+                    ],
+                    sortname: 'PumpName asc',
+                    viewrecords: true,
+                    altRows: false,
+                    gridComplete: function () {
+                        var ids = $gridList.getDataIDs();
+                        console.log(ids);
+                        for (let i = 0; i < ids.length; i++) {
+                            var rowData = $gridList.getRowData(ids[i]);
+                            //console.log(rowData.IsChange, rowData.IsChange === true);
+                            if (rowData.IsChange === 'true') {
+                                $("#" + ids[i]).find("td").addClass("SelectBG");
+                            }
+                        }
+                    }
+
+                });
+                if (adata[0]) {
+                    for (var i = 0; i < adata[0].length; i++) {
+                        $("#gridList").jqGrid('addRowData', i + 1, adata[0][i]);
+                    }
+                }
+                if (adata[1]) {
+                    planId = adata[1].ID;
+                }
+
+                $.loading();
+                if (adata[1]) { $.modalMsg("生成方案成功！", "success"); }
+                if (adata[2]) {
+                    let shdata = adata[2];
+                    $("#yjyl").html("依据压力：" + shdata[0] + "MPa");
+                    $("#yjll").html("依据流量：" + shdata[1] + "m³/h");
+                    $("#yjss").html("依据时间：" + shdata[2]);
+                }
+                if ($(window).height() >= 980) {
+                    $(window).unbind("onresize");
+                    $("#gridList").setGridHeight($(window).height() * 0.30); // grid_selector 是 DIV 的 ID
+                    $(window).bind("onresize", this);
+                } else {
+                    $(window).unbind("onresize");
+                    $("#gridList").setGridHeight($(window).height() * 0.20); // grid_selector 是 DIV 的 ID
+                    $(window).bind("onresize", this);
+                }
+            },
+        });
+    }
+    function gridList1() {
+        $("#gridList1").jqGrid('clearGridData');
+        var $gridList1 = $("#gridList1");
+        $.ajax({
+            type: "GET",
+            url: "/Elaborate/Optimize/GetPumpParam?psId=" + psId,
+            dataType: "json",
+            success: function (adata) {
+                $gridList1.dataGrid({
+                    datatype: "local",
+                    height: 125,
+                    colModel: [
+                        { label: '水泵编号', name: 'PumpName', width:160, align: 'center' },
+                        //{
+                        //    label: '压力MPa', name: 'Press', width:160, align: 'center',
+                        //    formatter: function (cellvalue, options, rowObject) {
+                        //        if (cellvalue) {
+                        //            return cellvalue
+                        //        } else {
+                        //            return "-"
+                        //        }
+                        //    }
+                        //},
+                        {
+                            label: '是否启动', name: 'IsOpen', width:152, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue) {
+                                    return "是"
+                                } else {
+                                    return "否"
+                                }
+                            }
+                        },
+                    ],
+                    sortname: 'PumpName asc',
+                    viewrecords: true,
+                    altRows: false
+                });
+
+                for (var i = 0; i < adata[0].length; i++) {
+                    if (adata[0][i].IsActive==1)
+                    $("#gridList1").jqGrid('addRowData', i + 1, adata[0][i]);
+                }
+                if ($(window).height() >= 980) {
+                    $(window).unbind("onresize");
+                    $("#gridList1").setGridHeight($(window).height() * 0.30); // grid_selector 是 DIV 的 ID
+                    $(window).bind("onresize", this);
+                } else {
+                    $(window).unbind("onresize");
+                    $("#gridList1").setGridHeight($(window).height() * 0.20); // grid_selector 是 DIV 的 ID
+                    $(window).bind("onresize", this);
+                }
+                $("#qdshdl").text(adata[2])
+                $("#psdh").text(adata[3])
+                if (psId == 2) {
+                    $("#jyyewei1").text(adata[1][0] == 0 ? 0 : adata[1][0] == null ? "-" : adata[1][0])
+                    $("#jyyewei2").text(adata[1][1] == 0 ? 0 : adata[1][1] == null ? "-" : adata[1][1])
+                    $("#jyyewei3").text(adata[1][2] == 0 ? 0 : adata[1][2] == null ? "-" : adata[1][2])
+                    $("#jysggwyl1").text(adata[1][3] == 0 ? 0 : adata[1][3] == null ? "-" : adata[1][3])
+                    $("#jysgssll1").text(adata[1][4] == 0 ? 0 : adata[1][4] == null ? "-" : adata[1][4])
+                    $("#jysgljll1").text(adata[1][5] == 0 ? 0 : adata[1][5] == null ? "-" : adata[1][5])
+                    $("#jysggwyl2").text(adata[1][6] == 0 ? 0 : adata[1][6] == null ? "-" : adata[1][6])
+                    $("#jysgssll2").text(adata[1][7] == 0 ? 0 : adata[1][7] == null ? "-" : adata[1][7])
+                    $("#jysgljll2").text(adata[1][8] == 0 ? 0 : adata[1][8] == null ? "-" : adata[1][8])
+                    $("#jysggwyl3").text(adata[1][9] == 0 ? 0 : adata[1][9] == null ? "-" : adata[1][9])
+                    $("#jysgssll3").text(adata[1][10] == 0 ? 0 : adata[1][10] == null ? "-" : adata[1][10])
+                    $("#jysgljll3").text(adata[1][11] == 0 ? 0 : adata[1][11] == null ? "-" : adata[1][11])
+                    adata[0][0].IsOpen ? $(".jybimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][0].IsOpen == null ? $(".jybimg1").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jybimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".jybimg2").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][1].IsOpen == null ? $(".jybimg2").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jybimg2").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".jybimg3").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][2].IsOpen == null ? $(".jybimg3").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jybimg3").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".jybimg4").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][3].IsOpen == null ? $(".jybimg4").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jybimg4").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][4].IsOpen ? $(".jybimg5").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][4].IsOpen == null ? $(".jybimg5").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jybimg5").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][5].IsOpen ? $(".jysgimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][5].IsOpen == null ? $(".jybimg6").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jysgimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][6].IsOpen ? $(".jysgimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][6].IsOpen == null ? $(".jybimg7").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jysgimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][7].IsOpen ? $(".jysgimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][7].IsOpen == null ? $(".jybimg8").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jysgimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][8].IsOpen ? $(".jysgimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][8].IsOpen == null ? $(".jybimg9").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jysgimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][9].IsOpen ? $(".jysgimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][9].IsOpen == null ? $(".jybimg10").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jysgimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][10].IsOpen ? $(".jysgimg11").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][10].IsOpen == null ? $(".jybimg11").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jysgimg11").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][11].IsOpen ? $(".jysgimg12").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][11].IsOpen == null ? $(".jybimg12").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jysgimg12").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][12].IsOpen ? $(".jysgimg13").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][12].IsOpen == null ? $(".jybimg13").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jysgimg13").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    $("#jysgdata6").text(adata[0][5].Press == 0 ? 0 : adata[0][5].Press == null ? "-" : adata[0][5].Press)
+                    $("#jysgdata7").text(adata[0][6].Press == 0 ? 0 : adata[0][6].Press == null ? "-" : adata[0][6].Press)
+                    $("#jysgdata8").text(adata[0][7].Press == 0 ? 0 : adata[0][7].Press == null ? "-" : adata[0][7].Press)
+                    $("#jysgdata9").text(adata[0][8].Press == 0 ? 0 : adata[0][8].Press == null ? "-" : adata[0][8].Press)
+                    $("#jysgdata10").text(adata[0][9].Press == 0 ? 0 : adata[0][9].Press == null ? "-" : adata[0][9].Press)
+                    $("#jysgdata11").text(adata[0][10].Press == 0 ? 0 : adata[0][10].Press == null ? "-" : adata[0][10].Press)
+                    $("#jysgdata12").text(adata[0][11].Press == 0 ? 0 : adata[0][11].Press == null ? "-" : adata[0][11].Press)
+                    $("#jysgdata13").text(adata[0][12].Press == 0 ? 0 : adata[0][12].Press == null ? "-" : adata[0][12].Press)
+                    $("#jybdata1").text(adata[0][0].Press == 0 ? 0 : adata[0][0].Press == null ? "-" : adata[0][0].Press)
+                    $("#jybdata2").text(adata[0][1].Press == 0 ? 0 : adata[0][1].Press == null ? "-" : adata[0][1].Press)
+                    $("#jybdata3").text(adata[0][2].Press == 0 ? 0 : adata[0][2].Press == null ? "-" : adata[0][2].Press)
+                    $("#jybdata4").text(adata[0][3].Press == 0 ? 0 : adata[0][3].Press == null ? "-" : adata[0][3].Press)
+                    $("#jybdata5").text(adata[0][4].Press == 0 ? 0 : adata[0][4].Press == null ? "-" : adata[0][4].Press)
+                    $(".jybtitle1").text(adata[0][0].PumpName == 0 ? 0 : adata[0][0].PumpName == null ? "-" : adata[0][0].PumpName)
+                    $(".jybtitle2").text(adata[0][1].PumpName == 0 ? 0 : adata[0][1].PumpName == null ? "-" : adata[0][1].PumpName)
+                    $(".jybtitle3").text(adata[0][2].PumpName == 0 ? 0 : adata[0][2].PumpName == null ? "-" : adata[0][2].PumpName)
+                    $(".jybtitle4").text(adata[0][3].PumpName == 0 ? 0 : adata[0][3].PumpName == null ? "-" : adata[0][3].PumpName)
+                    $(".jybtitle5").text(adata[0][4].PumpName == 0 ? 0 : adata[0][4].PumpName == null ? "-" : adata[0][4].PumpName)
+                    $(".jybtitle6").text(adata[0][5].PumpName == 0 ? 0 : adata[0][5].PumpName == null ? "-" : adata[0][5].PumpName)
+                    $(".jybtitle7").text(adata[0][6].PumpName == 0 ? 0 : adata[0][6].PumpName == null ? "-" : adata[0][6].PumpName)
+                    $(".jybtitle8").text(adata[0][7].PumpName == 0 ? 0 : adata[0][7].PumpName == null ? "-" : adata[0][7].PumpName)
+                    $(".jybtitle9").text(adata[0][8].PumpName == 0 ? 0 : adata[0][8].PumpName == null ? "-" : adata[0][8].PumpName)
+                    $(".jybtitle10").text(adata[0][9].PumpName == 0 ? 0 : adata[0][9].PumpName == null ? "-" : adata[0][9].PumpName)
+                    $(".jybtitle11").text(adata[0][10].PumpName == 0 ? 0 : adata[0][10].PumpName == null ? "-" : adata[0][10].PumpName)
+                    $(".jybtitle12").text(adata[0][11].PumpName == 0 ? 0 : adata[0][11].PumpName == null ? "-" : adata[0][11].PumpName)
+                    $(".jybtitle13").text(adata[0][12].PumpName == 0 ? 0 : adata[0][12].PumpName == null ? "-" : adata[0][12].PumpName)
+
+
+                } else if (psId == 3) {
+                    $("#zuoywdata1").text(adata[1][0] == 0 ? 0 : adata[1][0] == null ? "-" : adata[1][0])
+                    $("#zuoywdata2").text(adata[1][1] == 0 ? 0 : adata[1][1] == null ? "-" : adata[1][1])
+                    $("#youywdata1").text(adata[1][2] == 0 ? 0 : adata[1][2] == null ? "-" : adata[1][2])
+                    $("#youywdata2").text(adata[1][3] == 0 ? 0 : adata[1][3] == null ? "-" : adata[1][3])
+                    $("#lzsgssll1").text(adata[1][4] == 0 ? 0 : adata[1][4] == null ? "-" : adata[1][4])
+                    $("#lzsgljll1").text(adata[1][5] == 0 ? 0 : adata[1][5] == null ? "-" : adata[1][5])
+                    $("#lzsgssll2").text(adata[1][6] == 0 ? 0 : adata[1][6] == null ? "-" : adata[1][6])
+                    $("#lzsgljll2").text(adata[1][7] == 0 ? 0 : adata[1][7] == null ? "-" : adata[1][7])
+                    $("#lzsgssll3").text(adata[1][8] == 0 ? 0 : adata[1][8] == null ? "-" : adata[1][8])
+                    $("#lzsgljll3").text(adata[1][9] == 0 ? 0 : adata[1][9] == null ? "-" : adata[1][9])
+                    $("#lzsgssll4").text(adata[1][10] == 0 ? 0 : adata[1][10] == null ? "-" : adata[1][10])
+                    $("#lzsgljll4").text(adata[1][11] == 0 ? 0 : adata[1][11] == null ? "-" : adata[1][11])
+                    $("#lzsgssll5").text(adata[1][12] == 0 ? 0 : adata[1][12] == null ? "-" : adata[1][12])
+                    $("#lzsgljll5").text(adata[1][13] == 0 ? 0 : adata[1][13] == null ? "-" : adata[1][13])
+                    $("#lzsgssll6").text(adata[1][14] == 0 ? 0 : adata[1][14] == null ? "-" : adata[1][14])
+                    $("#lzsgljll6").text(adata[1][15] == 0 ? 0 : adata[1][15] == null ? "-" : adata[1][15])
+                    $("#lzsgyl4").text(adata[1][16] == 0 ? 0 : adata[1][16] == null ? "-" : adata[1][16])
+                    //$("#lzsgyl5").text(adata[1][17] == 0 ? 0 : adata[1][17] == null ? "-" : adata[1][17])
+                    $("#lzsgy22m").text(adata[1][17] == 0 ? 0 : adata[1][17] == null ? "-" : adata[1][17])
+                    $("#lzsgyl2").text(adata[1][18] == 0 ? 0 : adata[1][18] == null ? "-" : adata[1][18])
+                    adata[0][0].IsOpen ? $(".lzsgimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][0].IsOpen == null ? $(".lzsgimg1").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".lzsgimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".lzsgimg2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][1].IsOpen == null ? $(".lzsgimg2").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".lzsgimg2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".lzsgimg3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][2].IsOpen == null ? $(".lzsgimg3").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".lzsgimg3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".lzsgimg4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][3].IsOpen == null ? $(".lzsgimg4").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".lzsgimg4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][4].IsOpen ? $(".lzsgimg5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][4].IsOpen == null ? $(".lzsgimg5").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".lzsgimg5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][5].IsOpen ? $(".lzsgimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][5].IsOpen == null ? $(".lzsgimg6").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".lzsgimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][6].IsOpen ? $(".lzsgimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][6].IsOpen == null ? $(".lzsgimg7").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".lzsgimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][7].IsOpen ? $(".lzsgimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][7].IsOpen == null ? $(".lzsgimg8").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".lzsgimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][8].IsOpen ? $(".lzsgimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][8].IsOpen == null ? $(".lzsgimg9").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".lzsgimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    //adata[0][9].IsOpen ? $(".lzsgimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    $("#lzsgdata1").text(adata[0][0].Press == 0 ? 0 : adata[0][0].Press == null ? "-" : adata[0][0].Press)
+                    $("#lzsgdata2").text(adata[0][1].Press == 0 ? 0 : adata[0][1].Press == null ? "-" : adata[0][1].Press)
+                    $("#lzsgdata3").text(adata[0][2].Press == 0 ? 0 : adata[0][2].Press == null ? "-" : adata[0][2].Press)
+                    $("#lzsgdata4").text(adata[0][3].Press == 0 ? 0 : adata[0][3].Press == null ? "-" : adata[0][3].Press)
+                    $("#lzsgdata5").text(adata[0][4].Press == 0 ? 0 : adata[0][4].Press == null ? "-" : adata[0][4].Press)
+                    $("#lzsgdata6").text(adata[0][5].Press == 0 ? 0 : adata[0][5].Press == null ? "-" : adata[0][5].Press)
+                    $("#lzsgdata7").text(adata[0][6].Press == 0 ? 0 : adata[0][6].Press == null ? "-" : adata[0][6].Press)
+                    $("#lzsgdata8").text(adata[0][7].Press == 0 ? 0 : adata[0][7].Press == null ? "-" : adata[0][7].Press)
+                    $("#lzsgdata9").text(adata[0][8].Press == 0 ? 0 : adata[0][8].Press == null ? "-" : adata[0][8].Press)
+
+                    $(".lzsgtitle1").text(adata[0][0].PumpName == 0 ? 0 : adata[0][0].PumpName == null ? "-" : adata[0][0].PumpName)
+                    $(".lzsgtitle2").text(adata[0][1].PumpName == 0 ? 0 : adata[0][1].PumpName == null ? "-" : adata[0][1].PumpName)
+                    $(".lzsgtitle3").text(adata[0][2].PumpName == 0 ? 0 : adata[0][2].PumpName == null ? "-" : adata[0][2].PumpName)
+                    $(".lzsgtitle4").text(adata[0][3].PumpName == 0 ? 0 : adata[0][3].PumpName == null ? "-" : adata[0][3].PumpName)
+                    $(".lzsgtitle5").text(adata[0][4].PumpName == 0 ? 0 : adata[0][4].PumpName == null ? "-" : adata[0][4].PumpName)
+                    $(".lzsgtitle6").text(adata[0][5].PumpName == 0 ? 0 : adata[0][5].PumpName == null ? "-" : adata[0][5].PumpName)
+                    $(".lzsgtitle7").text(adata[0][6].PumpName == 0 ? 0 : adata[0][6].PumpName == null ? "-" : adata[0][6].PumpName)
+                    $(".lzsgtitle8").text(adata[0][7].PumpName == 0 ? 0 : adata[0][7].PumpName == null ? "-" : adata[0][7].PumpName)
+                    $(".lzsgtitle9").text(adata[0][8].PumpName == 0 ? 0 : adata[0][8].PumpName == null ? "-" : adata[0][8].PumpName)
+
+
+                } else if (psId == 4) {
+                    $("#xkhzuoywdata").text(adata[1][0] == 0 ? 0 : adata[1][0] == null ? "-" : adata[1][0])
+                    $("#xkhyouywdata").text(adata[1][1] == 0 ? 0 : adata[1][1] == null ? "-" : adata[1][1])
+                    $("#xkhyouywdata1").text(adata[1][2] == 0 ? 0 : adata[1][2] == null ? "-" : adata[1][2])
+                    $("#xkhyouywdata22").text(adata[1][3] == 0 ? 0 : adata[1][3] == null ? "-" : adata[1][3])
+                    $("#xkhsgssll1").text(adata[1][5] == 0 ? 0 : adata[1][5] == null ? "-" : adata[1][5])
+                    $("#xkhsgljll1").text(adata[1][6] == 0 ? 0 : adata[1][6] == null ? "-" : adata[1][6])
+                    $("#xkhsggwyl2").text(adata[1][7] == 0 ? 0 : adata[1][7] == null ? "-" : adata[1][7])
+                    $("#xkhsgssll2").text(adata[1][8] == 0 ? 0 : adata[1][8] == null ? "-" : adata[1][8])
+                    $("#xkhsgljll2").text(adata[1][9] == 0 ? 0 : adata[1][9] == null ? "-" : adata[1][9])
+                    $("#xkhsggwyl3").text(adata[1][10] == 0 ? 0 : adata[1][10] == null ? "-" : adata[1][10])
+                    $("#xkhsgssll3").text(adata[1][11] == 0 ? 0 : adata[1][11] == null ? "-" : adata[1][11])
+                    $("#xkhsgljll3").text(adata[1][12] == 0 ? 0 : adata[1][12] == null ? "-" : adata[1][12])
+                    $("#xkhsgssll4").text(adata[1][13] == 0 ? 0 : adata[1][13] == null ? "-" : adata[1][13])
+                    $("#xkhsggwyl4").text(adata[1][14] == 0 ? 0 : adata[1][14] == null ? "-" : adata[1][14])
+                    $("#xkhsgljll4").text(adata[1][15] == 0 ? 0 : adata[1][15] == null ? "-" : adata[1][15])
+                    $("#xkhsggwyl5").text(adata[1][16] == 0 ? 0 : adata[1][16] == null ? "-" : adata[1][16])
+                    $("#xkhsgssll5").text(adata[1][17] == 0 ? 0 : adata[1][17] == null ? "-" : adata[1][17])
+                    $("#xkhsgljll5").text(adata[1][18] == 0 ? 0 : adata[1][18] == null ? "-" : adata[1][18])
+
+                    adata[0][0].IsOpen ? $(".xkh2img1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][0].IsOpen == null ? $(".xkh2img1").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".xkh2img2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][1].IsOpen == null ? $(".xkh2img2").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".xkh2img3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][2].IsOpen == null ? $(".xkh2img3").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".xkh2img4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][3].IsOpen == null ? $(".xkh2img4").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][4].IsOpen ? $(".xkh2img5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][4].IsOpen == null ? $(".xkh2img5").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][5].IsOpen ? $(".xkh2img6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][5].IsOpen == null ? $(".xkh2img6").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][6].IsOpen ? $(".xkh2img7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][6].IsOpen == null ? $(".xkh2img7").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][7].IsOpen ? $(".xkh2img8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][7].IsOpen == null ? $(".xkh2img8").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][8].IsOpen ? $(".xkh2img9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][8].IsOpen == null ? $(".xkh2img9").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][9].IsOpen ? $(".xkh2img10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][9].IsOpen == null ? $(".xkh2img10").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".xkh2img10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    $("#xkh2data1").text(adata[0][0].Press == 0 ? 0 : adata[0][0].Press == null ? "-" : adata[0][0].Press)
+                    $("#xkh2data2").text(adata[0][1].Press == 0 ? 0 : adata[0][1].Press == null ? "-" : adata[0][1].Press)
+                    $("#xkh2data3").text(adata[0][2].Press == 0 ? 0 : adata[0][2].Press == null ? "-" : adata[0][2].Press)
+                    $("#xkh2data4").text(adata[0][3].Press == 0 ? 0 : adata[0][3].Press == null ? "-" : adata[0][3].Press)
+                    $("#xkh2data5").text(adata[0][4].Press == 0 ? 0 : adata[0][4].Press == null ? "-" : adata[0][4].Press)
+                    $("#xkh2data6").text(adata[0][5].Press == 0 ? 0 : adata[0][5].Press == null ? "-" : adata[0][5].Press)
+                    $("#xkh2data7").text(adata[0][6].Press == 0 ? 0 : adata[0][6].Press == null ? "-" : adata[0][6].Press)
+                    $("#xkh2data8").text(adata[0][7].Press == 0 ? 0 : adata[0][7].Press == null ? "-" : adata[0][7].Press)
+                    $("#xkh2data9").text(adata[0][8].Press == 0 ? 0 : adata[0][8].Press == null ? "-" : adata[0][8].Press)
+                    $("#xkh2data10").text(adata[0][9].Press == 0 ? 0 : adata[0][9].Press == null ? "-" : adata[0][9].Press)
+                    $(".xkh2title1").text(adata[0][0].PumpName == 0 ? 0 : adata[0][0].PumpName == null ? "-" : adata[0][0].PumpName)
+                    $(".xkh2title2").text(adata[0][1].PumpName == 0 ? 0 : adata[0][1].PumpName == null ? "-" : adata[0][1].PumpName)
+                    $(".xkh2title3").text(adata[0][2].PumpName == 0 ? 0 : adata[0][2].PumpName == null ? "-" : adata[0][2].PumpName)
+                    $(".xkh2title4").text(adata[0][3].PumpName == 0 ? 0 : adata[0][3].PumpName == null ? "-" : adata[0][3].PumpName)
+                    $(".xkh2title5").text(adata[0][4].PumpName == 0 ? 0 : adata[0][4].PumpName == null ? "-" : adata[0][4].PumpName)
+                    $(".xkh2title6").text(adata[0][5].PumpName == 0 ? 0 : adata[0][5].PumpName == null ? "-" : adata[0][5].PumpName)
+                    $(".xkh2title7").text(adata[0][6].PumpName == 0 ? 0 : adata[0][6].PumpName == null ? "-" : adata[0][6].PumpName)
+                    $(".xkh2title8").text(adata[0][7].PumpName == 0 ? 0 : adata[0][7].PumpName == null ? "-" : adata[0][7].PumpName)
+                    $(".xkh2title9").text(adata[0][8].PumpName == 0 ? 0 : adata[0][8].PumpName == null ? "-" : adata[0][8].PumpName)
+                    $(".xkh2title10").text(adata[0][9].PumpName == 0 ? 0 : adata[0][9].PumpName == null ? "-" : adata[0][9].PumpName)
+
+                } else if (psId == 5) {
+                    $("#jbzuoywdata").text(adata[1][0] == 0 ? 0 : adata[1][0] == null ? "-" : adata[1][0])
+                    $("#jbyouywdata").text(adata[1][1] == 0 ? 0 : adata[1][1] == null ? "-" : adata[1][1])
+
+                    $("#jbsggwyl1").text(adata[1][2] == 0 ? 0 : adata[1][2] == null ? "-" : adata[1][2])
+                    $("#jbsgssll1").text(adata[1][3] == 0 ? 0 : adata[1][3] == null ? "-" : adata[1][3])
+                    $("#jbsgljll1").text(adata[1][4] == 0 ? 0 : adata[1][4] == null ? "-" : adata[1][4])
+                    $("#jbsggwyl2").text(adata[1][5] == 0 ? 0 : adata[1][5] == null ? "-" : adata[1][5])
+                    $("#jbsgssll2").text(adata[1][6] == 0 ? 0 : adata[1][6] == null ? "-" : adata[1][6])
+                    $("#jbsgljll2").text(adata[1][7] == 0 ? 0 : adata[1][7] == null ? "-" : adata[1][7])
+                    $("#jbsggwyl3").text(adata[1][8] == 0 ? 0 : adata[1][8] == null ? "-" : adata[1][8])
+                    $("#jbsgssll3").text(adata[1][9] == 0 ? 0 : adata[1][9] == null ? "-" : adata[1][9])
+                    $("#jbsgljll3").text(adata[1][10] == 0 ? 0 : adata[1][10] == null ? "-" : adata[1][10])
+                    $("#jbsggwyl4").text(adata[1][11] == 0 ? 0 : adata[1][11] == null ? "-" : adata[1][11])
+                    $("#jbsgssll4").text(adata[1][12] == 0 ? 0 : adata[1][12] == null ? "-" : adata[1][12])
+                    $("#jbsgljll4").text(adata[1][13] == 0 ? 0 : adata[1][13] == null ? "-" : adata[1][13])
+                    $("#jbsggwyl5").text(adata[1][14] == 0 ? 0 : adata[1][14] == null ? "-" : adata[1][14])
+                    $("#jbsgssll5").text(adata[1][15] == 0 ? 0 : adata[1][15] == null ? "-" : adata[1][15])
+                    $("#jbsgljll5").text(adata[1][16] == 0 ? 0 : adata[1][16] == null ? "-" : adata[1][16])
+                    $("#jbsggwyl6").text(adata[1][17] == 0 ? 0 : adata[1][17] == null ? "-" : adata[1][17])
+                    $("#jbsgssll6").text(adata[1][18] == 0 ? 0 : adata[1][18] == null ? "-" : adata[1][18])
+                    $("#jbsgljll6").text(adata[1][19] == 0 ? 0 : adata[1][19] == null ? "-" : adata[1][19])
+                    //adata[0][0].IsOpen ? $(".jbimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][0].IsOpen == null ? $(".jbimg1").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".jbimg2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][1].IsOpen == null ? $(".jbimg2").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".jbimg3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][2].IsOpen == null ? $(".jbimg3").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".jbimg4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][3].IsOpen == null ? $(".jbimg4").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][4].IsOpen ? $(".jbimg5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][4].IsOpen == null ? $(".jbimg5").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][5].IsOpen ? $(".jbimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][5].IsOpen == null ? $(".jbimg6").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][6].IsOpen ? $(".jbimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][6].IsOpen == null ? $(".jbimg7").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][7].IsOpen ? $(".jbimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][7].IsOpen == null ? $(".jbimg8").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][8].IsOpen ? $(".jbimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][8].IsOpen == null ? $(".jbimg9").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][9].IsOpen ? $(".jbimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : adata[0][9].IsOpen == null ? $(".xkh2img10").attr("src", "/Areas/DataDisplay/Content/img/未知状态.png") : $(".jbimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    //$("#jbdata1").text(adata[0][0].Press == 0 ? 0 : adata[0][0].Press == null ? "-" : adata[0][0].Press)
+                    $("#jbdata2").text(adata[0][1].Press == 0 ? 0 : adata[0][1].Press == null ? "-" : adata[0][1].Press)
+                    $("#jbdata3").text(adata[0][2].Press == 0 ? 0 : adata[0][2].Press == null ? "-" : adata[0][2].Press)
+                    $("#jbdata4").text(adata[0][3].Press == 0 ? 0 : adata[0][3].Press == null ? "-" : adata[0][3].Press)
+                    $("#jbdata5").text(adata[0][4].Press == 0 ? 0 : adata[0][4].Press == null ? "-" : adata[0][4].Press)
+                    $("#jbdata6").text(adata[0][5].Press == 0 ? 0 : adata[0][5].Press == null ? "-" : adata[0][5].Press)
+                    $("#jbdata7").text(adata[0][6].Press == 0 ? 0 : adata[0][6].Press == null ? "-" : adata[0][6].Press)
+                    $("#jbdata8").text(adata[0][7].Press == 0 ? 0 : adata[0][7].Press == null ? "-" : adata[0][7].Press)
+                    $("#jbdata9").text(adata[0][8].Press == 0 ? 0 : adata[0][8].Press == null ? "-" : adata[0][8].Press)
+                    $("#jbdata10").text(adata[0][9].Press == 0 ? 0 : adata[0][9].Press == null ? "-" : adata[0][9].Press)
+
+                    //$(".jbtitle1").text(adata[0][0].PumpName == 0 ? 0 : adata[0][0].PumpName == null ? "-" : adata[0][0].PumpName)
+                    $(".jbtitle2").text(adata[0][1].PumpName == 0 ? 0 : adata[0][1].PumpName == null ? "-" : adata[0][1].PumpName)
+                    $(".jbtitle3").text(adata[0][2].PumpName == 0 ? 0 : adata[0][2].PumpName == null ? "-" : adata[0][2].PumpName)
+                    $(".jbtitle4").text(adata[0][3].PumpName == 0 ? 0 : adata[0][3].PumpName == null ? "-" : adata[0][3].PumpName)
+                    $(".jbtitle5").text(adata[0][4].PumpName == 0 ? 0 : adata[0][4].PumpName == null ? "-" : adata[0][4].PumpName)
+                    $(".jbtitle6").text(adata[0][5].PumpName == 0 ? 0 : adata[0][5].PumpName == null ? "-" : adata[0][5].PumpName)
+                    $(".jbtitle7").text(adata[0][6].PumpName == 0 ? 0 : adata[0][6].PumpName == null ? "-" : adata[0][6].PumpName)
+                    $(".jbtitle8").text(adata[0][7].PumpName == 0 ? 0 : adata[0][7].PumpName == null ? "-" : adata[0][7].PumpName)
+                    $(".jbtitle9").text(adata[0][8].PumpName == 0 ? 0 : adata[0][8].PumpName == null ? "-" : adata[0][8].PumpName)
+                    $(".jbtitle10").text(adata[0][9].PumpName == 0 ? 0 : adata[0][9].PumpName == null ? "-" : adata[0][9].PumpName)
+
+                }
+            }
+        });
+    }
+
+    window.onresize = function () {
+        var mainH = 0
+        var mainW = 0
+
+        mainH = $(window).height();
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        $(".middle").height(mainH);
+        $(".middle").width(mainW);
+        $(".middle1").height(mainH - 10);
+        $(".middle1").width(mainW);
+        if (mainH >= 980) {
+            $(window).unbind("onresize");
+            $("#gridList").setGridHeight($(window).height() * 0.30); // grid_selector 是 DIV 的 ID
+            $("#gridList1").setGridHeight($(window).height() * 0.30); // grid_selector 是 DIV 的 ID
+            $(window).bind("onresize", this);
+        } else {
+            $(window).unbind("onresize");
+            $("#gridList").setGridHeight($(window).height() * 0.20); // grid_selector 是 DIV 的 ID
+            $("#gridList1").setGridHeight($(window).height() * 0.20); // grid_selector 是 DIV 的 ID
+            $(window).bind("onresize", this);
+        }
+    }
+    window.onload = function () {
+        var mainH = 0
+        var mainW = 0
+
+        mainH = $(window).height()
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        $(".middle").height(mainH);
+        $(".middle").width(mainW);
+        $(".middle1").height(mainH - 10);
+        $(".middle1").width(mainW);
+        $(window).unbind("onresize");
+        if (mainH >= 980) {
+            $("#gridList").setGridHeight($(window).height() * 0.30); // grid_selector 是 DIV 的 ID
+            $("#gridList1").setGridHeight($(window).height() * 0.30); // grid_selector 是 DIV 的 ID
+        } else {
+            $("#gridList").setGridHeight($(window).height() * 0.20); // grid_selector 是 DIV 的 ID
+            $("#gridList1").setGridHeight($(window).height() * 0.20); // grid_selector 是 DIV 的 ID
+        }
+        $(window).bind("onresize", this);
+
+    }
+    function planClick() {
+        psId1 = $("#ORGANIZEID").val();
+        gridList()
+    }
+    function instructClick() {
+        $.modalConfirm("确定下发调令？", function (e) {
+            if (e) {
+                var urlLink24 = '/Elaborate/Optimize/CreatePumpOrder?planId=' + planId;
+                $.loading(true, '下发调令计算中...');
+                $.ajax({
+                    type: "GET",
+                    url: urlLink24,
+                    dataType: "JSON",
+                    success: function (adata) {
+                        $.loading();
+                        $.modalMsg("下发调令成功！", "success");
+                    }
+                });
+            } else {
+                $.modalMsg("已取消下发！", "success");
+            }
+        })
+
+    }
+</script>
+

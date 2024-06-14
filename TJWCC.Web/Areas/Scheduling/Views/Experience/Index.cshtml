@@ -1,0 +1,1946 @@
+﻿
+@{
+    ViewBag.Title = "调度经验库";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script src="~/Content/js/datepicker/WdatePicker.js"></script>
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/DailySchedule.css" rel="stylesheet" />
+<style>
+    html {
+        overflow-y: hidden !important;
+    }
+
+    body {
+        overflow-y: hidden !important;
+    }
+</style>
+<!-- 筛选条件 -->
+<div class="right6" style="height:35px; display:flex;margin-top: 20px;">
+    <div class="right61" style="width:220px;">
+        <div class="right611" style="font-size:14px; font-weight:bold; width:85px;">调度类型：</div>
+        <div class="" style="padding-top:3px; margin-left: 0px; height: 26px; width: 135px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px; display: flex; align-items: center;">
+            <select id="GetDispatchTypeList" name="Region" class="form-control right1121" style="margin-top: 0px; height: 30px; width: 130px; background-color: #216fed; color: #fff; border: 0; border-radius: 10px; margin-left: 0px;">
+                @*<option value="">请选择</option>*@
+            </select>
+        </div>
+    </div>
+    <div class="right61">
+        <div class="right621" style="margin:0px;">
+            <div class="right6211" style="font-size:14px; font-weight:bold; margin-top:8px; width:80px; padding-left:0px;"> 选择时间： </div>
+            <div class="dropdown right612" style="width:150px; ">
+                <input id="sDate" type="text" class="form-control input-wdatepicker right1121" style="margin-top: 5px; margin-left: 0px; height: 25px; width: 160px; border-radius: 10px; border: 1px solid black; background-color: white; color: black;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+            </div>
+            <div class="right6212" style="font-size: 14px; font-weight: bold; margin-top: 8px; width:25px;"> 到&emsp; </div>
+            <div class="dropdown right612" style="width:150px; ">
+                <input id="eDate" type="text" class="form-control input-wdatepicker right1121" style="margin-top: 5px; margin-left: 0px; height: 25px; width: 160px; border-radius: 10px; border: 1px solid black; background-color: white; color: black; " autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+            </div>
+        </div>
+        <div class="right621">
+            <div id="diaoduyijv" class="right6211" style="font-size: 14px; font-weight: bold; margin-top: 8px; width: 80px; padding-left: 0px;">调度依据：</div>
+            <div class="" style="padding-top:3px; margin-left: 0px; height: 26px; width: 135px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px; display: flex; align-items: center;">
+                <select id="GetPressList" name="Region" class="form-control right1121" style="margin-top: 0px; height: 30px; width: 130px; background-color: #216fed; color: #fff; border: 0; border-radius: 10px; margin-left: 0px;">
+                    <option value="none" selected>请选择</option>
+                    @*<option value="all">全部节点</option>*@
+                </select>
+            </div>
+        </div>
+
+        <div id="srk" style="width: 450px; height: 30px; color: black; background-color: #fff; border-radius: 10px; border: 1px solid black; margin-left: 10px; overflow-y: auto; display: flex; flex-wrap: wrap; ">
+            @*<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">
+                    asdadafafasfasfa四十五中&emsp;<button class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>
+                </div>*@
+        </div>
+
+        <button onclick="onclicksearch(this)" style="font-size: 14px; border: 0; background-color: white; height: 26px; margin-top: 5px; margin-left:10px;">
+            <span class="glyphicon glyphicon-search right1421" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>
+<!-- 筛选条件 -->
+<!-- 推荐结果 -->
+<div id="top_bar" style="display:flex; margin-bottom:20px;margin-top: 20px;">
+    <div class="right71" style="padding-top:0px; height:30px; line-height:30px;">
+        <div id="fa_counts" class="right711" style="font-size: 14px; font-weight: bold; padding-left: 15px;margin-left:0px; margin-top: 0px; height: 30px; line-height: 30px;">推荐结果：符合筛选条件的方案共（   ）个</div>
+    </div>
+    <div class="" style="padding-top:3px; margin-left: 10px; height: 26px; width: 135px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px; display: flex; align-items: center;">
+        <select id="fa_buttons" name="Region" class="form-control right1121" style="margin-top: 0px; height: 30px; width: 130px; background-color: #216fed; color: #fff; border: 0; border-radius: 10px; margin-left: 0px;">
+            @*<option value="">请选择</option>*@
+        </select>
+    </div>
+</div>
+<!-- 推荐结果 -->
+<!-- 推荐结果详情 -->
+<div class="right7" style="height:130px; margin-left:0px;">
+    <!-- 调度日志 -->
+    <div class="right73" style="width:1655px; margin-right:0; margin-bottom:5px; height:130px;">
+        <div style="display:flex;">
+            <div style="width:80px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">序号</div>
+            <div style="width:190px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">下发日期时间</div>
+            <div style="width:190px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">执行日期时间</div>
+            <div style="width:80px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">班次</div>
+            <div style="width:95px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">操作人员</div>
+            <div style="width:90px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">调度类型</div>
+            <div style="width:300px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">调令状态</div>
+            @*<div style="width:183px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">平均偏差率</div>
+            <div style="width:243px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">添加到方案库</div>*@
+            <div style="width:1003px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">调度指令</div>
+        </div>
+        <div style="display:flex;">
+            <div id="xh1" style="width: 80px; font-size: 14px; justify-content: center; align-items: center; height: 80px; line-height: 40px; text-align:center"></div>
+            <div id="xfrqsj1" style="width: 190px; font-size: 14px; justify-content: center; align-items: center; height: 80px; text-align: center; line-height: 40px; "></div>
+            <div id="zxrqsj1" style="width: 190px; font-size: 14px; justify-content: center; align-items: center; height: 80px; text-align: center; line-height: 40px; "></div>
+            <div id="bc" style="width: 80px; font-size: 14px; justify-content: center; align-items: center; height: 80px; line-height: 40px; text-align: center "></div>
+            <div id="czry" style="width: 95px; font-size: 14px; justify-content: center; align-items: center; height: 80px; line-height: 40px; text-align: center "></div>
+            <div id="ddlx1" style="width: 90px; font-size: 14px; justify-content: center; align-items: center; height: 80px; line-height: 40px; text-align: center "></div>
+            <div id="dlzt" style="width: 300px; font-size: 14px; justify-content: center; align-items: center; height: 73px; text-align: center; overflow-y: auto;margin-top:10px"></div>
+            @*<div id="pjpcl" style="width:183px; font-size:14px; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center"></div>
+            <div id="tjdfak" style="width:243px; font-size:14px; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center"></div>*@
+            <div style="width:1003px; font-size:14px; justify-content: center; align-items: center; height:73px; text-align:center;line-height:30px">
+                <div id="ddzl1" style="height: 30px; line-height: 30px; text-align: center"></div>
+                <div id="ddzl2" style="height: 30px; line-height: 30px; text-align: center"></div>
+            </div>
+        </div>
+    </div>
+    @*<div class="right73" style="width: 1655px; margin-right: 0; margin-bottom: 5px; height: 95px;">
+            <div style="display:flex;">
+                <div style="width:103px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">序号</div>
+                <div style="width:183px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">下发日期时间</div>
+                <div style="width:183px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">执行日期时间</div>
+                <div style="width:183px; font-size:14px; font-weight:bold; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center">调度类型</div>
+            </div>
+            <div style="display:flex;">
+                <div id="xh2" style="width:103px; font-size:14px; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center"></div>
+                <div id="xfrqsj2" style="width:183px; font-size:14px; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center"></div>
+                <div id="zxrqsj2" style="width:183px; font-size:14px; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center"></div>
+                <div id="ddlx2" style="width:183px; font-size:14px; justify-content: center; align-items: center; height:47px; line-height:47px; text-align:center"></div>
+            </div>
+        </div>*@
+    <!-- 调度日志 -->
+</div>
+<!-- 推荐结果详情 -->
+<!-- 实时监测数据 -->
+<div id="rc" class="right4" style="margin-left: 0px; width:1675px; margin-right:0px; height:275px;">
+    <div class="right41" style="display:flex;">
+        <div style="font-size:14px; line-height:25px; font-weight:bold;">监测数据</div>
+
+    </div>
+    <div class="right42" style="height:230px;">
+        <!-- 实时压力 -->
+        <div class="right421" style="width:450px; height:230px;">
+            <div class="right4211" style="font-weight: bold;">压力（MPa）</div>
+            <div class="right4212" style="height:205px;">
+                <div id="yali" class='right42121'>
+                </div>
+            </div>
+        </div>
+        <!-- 实时流量 -->
+        <div class="right421" style="height:230px;">
+            <div class="right4211" style="font-weight: bold;">流量（m<sup>3</sup>/h）</div>
+            <div class="right4212" style="height:205px;">
+                <div id="liuliang" class='right42121'>
+                </div>
+            </div>
+        </div>
+        <!-- 实时水质 -->
+        <div class="right422" style="height:230px;">
+            <div class="right4211" style="font-weight: bold;">水质（NTU , mg/L）</div>
+            <div class="right4212" style="height:205px;">
+                <div id="shuizhi" class='right42122'>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 实时监测数据 -->
+<!-- 方案和调令 -->
+<div id="rc1" class="right5" style="margin-left: 0px; margin-top: 0px; padding-top: 0px; width: 1675px; height:304px;">
+    <div class="right5_bg" style="width: 1655px; height: 295px;">
+        <!-- 方案 -->
+        <div class="right51">
+            <div style="display:flex;">
+                <div style="font-size:14px; font-weight:bold;">调度依据</div>
+                @*<button class="right17" style="height: 26px; width: 26px; border: 0; border-radius: 8px; background-color: #fe8721;position:absolute;left:80px;top:565px" onclick='clickrefresh(this)'>
+                        <span class="glyphicon glyphicon-refresh right171"></span>
+                    </button>*@
+                <div style="font-size:14px; font-weight:bold; margin-left:365px;">调度方案</div>
+            </div>
+            <div class="right512" style="margin-top:5px;">
+                <div class="right5121" style="width:480px;">
+                    <div class="right51211" style="display:flex; padding-top:0px;">
+                        @*<div style="height:40px; line-height:40px; margin-right:10px;">
+                                调度依据
+                            </div>*@
+                        <div id="xzsl_time" style="height: 40px; width: 140px; margin-right: 1px;  text-align: center; border: #216fed 1px solid; background-color: #ffffff; color: #000; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                            <div id="xzsl_time_content" style="height:20px; line-height:20px;">
+                                @*2022/3/16 14:00*@
+                            </div>
+                            <div style="height:20px; line-height:20px;">现状水量（m<sup>3</sup>/h）</div>
+                        </div>
+                        <div id="xzsl" style="margin-right:5px; height: 40px; width: 60px; line-height: 40px; text-align: center; background-color: #216fed; color: #fff; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                            @*18956*@
+                        </div>
+                        <div id="ycsl_time" style="height: 40px; width: 140px; margin-right: 1px; text-align: center; border: #216fed 1px solid; background-color: #ffffff; color: #000; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                            <div id="ycsl_time_content" style="height:20px; line-height:20px;">
+                                @*2022/3/16 14:00*@
+                            </div>
+                            <div style="height:20px; line-height:20px;">预测水量（m<sup>3</sup>/h）</div>
+                        </div>
+                        <div id="ycsl" style="height: 40px; width: 60px; line-height: 40px; text-align: center; background-color: #216fed; color: #fff; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                            @*18956*@
+                        </div>
+                    </div>
+                    <div class="right51212">
+                        <div class="right512121">
+                            <table class="right512121_title">
+                                <tr class="right5121211">
+                                    <th class="right51212111">压力监测点</th>
+                                    <th class="right51212111">当前压力（MPa）</th>
+                                    <th class="right51212111">方案压力（MPa）</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="right512122" style="height:84%">
+                            <table id="down1" class="right512122_data">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="right5122" style="width:495px;">
+                    <div class="right51211" style="padding-top:7px; display:flex;">
+                        @*<button class="right511" id="scfaBut" style="margin-left:0px; width:75px;" onclick='clickscfa(this)'>生成方案</button>*@
+                        <div id="scfa_time" style="border-radius:10px; font-size: 10px; height:30px; width:210px; margin-left:5px; padding-left:7px; line-height: 30px; background-color: #ff8723; color:white; display:none;">
+                            @*生成方案时间：2022-3-16 14:10 星期一*@
+                        </div>
+                    </div>
+                    <div class="right51222" style="width:495px;">
+                        <div class="right512221" style="width:495px;">
+                            <table class="right512221_title" style="width:495px;">
+                                <tr class="right5122211" style="width:495px;">
+                                    <th class="right51222111">水厂</th>
+                                    <th class="right51222111">当前供水压力（MPa)</th>
+                                    <th class="right51222111">当前供水流量（m<sup>3</sup>/h)</th>
+                                    <th class="right51222111">方案供水压力（MPa)</th>
+                                    <th class="right51222111">方案供水流量（m<sup>3</sup>/h)</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="right512222" style="width: 495px; height: 171px;">
+                            <table id="down2" class="right512222_data" style="width:495px;">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 方案 -->
+        <!-- 下发调令 -->
+        <div class="right52">
+            <div style="display:flex;">
+                <div style="font-size:14px; font-weight:bold;">调度指令</div>
+                <div style="font-size: 14px; font-weight: bold; margin-left: 245px">执行效果</div>
+
+            </div>
+            <div class="right522">
+                <div class="" style="width:300px; height:50px; margin-top:10px;">
+                    <div class="right52211" style="width:300px; height:45px; border:0; background-color:">
+                        @*<button class="right511" id="xfdlBut" style="margin-left:0px; width:75px;" onclick='clickxfddzl(this)'>下发调令</button>*@
+                        <div id="xfddzl_time" style="border-radius:10px; font-size: 10px; height:30px; width:210px; margin-left:5px; padding-left:7px; line-height: 30px; background-color: #ff8723; color:white; display:none;">
+                            @*生成方案时间：2022-3-16 14:10 星期一*@
+                        </div>
+                    </div>
+                    <div class="right52212" style="width:290px;">
+                        <div class="right522121" style="width:290px;">
+                            <table class="right522121_title" style="width:290px;">
+                                <tr class="right5221211" style="width: 290px;">
+                                    <th class="right52212111">水厂</th>
+                                    <th class="right52212111">当前供水压力（MPa）</th>
+                                    <th class="right52212111">方案供水压力（MPa）</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="right522122" style="width:290px; height:171px;">
+                            <table id="down3" class="right522122_data" style="width:290px;">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="right5222" style="width: 410px; height: 49px; margin-top: 6px;">
+                    <div class="right52221" style="width:430px; height:49px;display:flex; padding-top:0px;">
+
+                        <div style="height: 40px; line-height: 40px; width: 110px; margin-top: 0px; margin-right: 1px; text-align: center; border: #216fed 1px solid; background-color: #ffffff; color: #000; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                            平均偏差率（%）
+                        </div>
+                        <div id="pjpcl1" style="margin-right: 5px; height: 40px; width: 80px; line-height: 40px; margin-top: 0px; text-align: center; background-color: #216fed; color: #ffffff; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                            @*18956*@
+                        </div>
+                    </div>
+                    <div class="right52222" style="width: 410px;">
+                        <div class="right522221" style="width: 410px;">
+                            <table class="right522221_title" style="width: 410px;">
+                                <tr class="right5222211" style="width: 410px;">
+                                    <th class="right52222111">压力监测点</th>
+                                    <th class="right52222111">方案压力（MPa）</th>
+                                    <th class="right52222111">实际压力（MPa）</th>
+                                    <th class="right52222111">偏差率（%）</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="right522222" style="width: 410px; height: 171px;">
+                            <table id="down4" class="right522222_data" style="width: 410px;height:171px;">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 下发调令 -->
+    </div>
+</div>
+
+<!-- 水厂停减产 -->
+<div id="sctjc" class="" style="margin-top: 10px; margin-left: 0px; margin-bottom: 0px; padding-top: 10px; padding-left: 10px; padding-bottom: 10px; width: 1655px; height: 215px; background-color: #fff; border: 0; border-radius: 10px; display:none;">
+    <div class="right5_bg" style="width: 1655px; height: 215px; display: flex;">
+        <div id="sctjcxxlr">
+            <div class="" style="height: 25px; margin-left: 8px; font-weight: bold; line-height: 25px;">水厂停(减)产信息录入</div>
+            <div>
+                <div class="" style="height: 25px; margin-left: 8px; font-weight: bold; line-height: 25px;">停产水厂设置</div>
+
+                <!-- 多选 -->
+                <div class="" style="height: 60px; padding-top: 5px; padding-bottom: 5px;">
+                    <div class="" style="height: 30px; width: 400px; display: flex;">
+                        <div id="jysc" class="" style="height: 18px; width: 200px; display: flex; margin-left: 8px;">
+                            <input id="jysc1" type="checkbox" onchange="changeCheck1()" unchecked disabled><label for="jysc1">芥园水厂</label>
+                        </div>
+                        <div id="lzsc" class="" style="height: 18px; width: 200px; display: flex; margin-left: 8px;">
+                            <input id="lzsc1" type="checkbox" onchange="changeCheck2()" unchecked disabled><label for="lzsc1">凌庄水厂</label>
+                        </div>
+                    </div>
+                    <div class="" style="height: 30px; width: 400px; display: flex;">
+                        <div id="xkhsc" class="" style="height: 18px; width: 200px; display: flex; margin-left: 8px;">
+                            <input id="xkhsc1" type="checkbox" onchange="changeCheck3()" unchecked disabled><label for="xkhsc1">新开河水厂</label>
+                        </div>
+                        <div id="jbsc" class="" style="height: 18px; width: 200px; display: flex; margin-left: 8px;">
+                            <input id="jbsc1" type="checkbox" onchange="changeCheck4()" unchecked disabled><label for="jbsc1">津滨水厂</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="" style="height: 25px; margin-left: 8px; font-weight: bold; line-height: 25px;">供水厂设置</div>
+
+                <!-- 多选 -->
+                <div class="" style="height: 60px; padding-top: 5px; padding-bottom: 5px;">
+                    <div class="" style="height: 30px; width: 400px; display: flex;">
+                        <div id="jysc111" class="" style="height: 18px; width: 200px; display: flex; margin-left: 8px;">
+                            <input id="jysc11" type="checkbox" onchange="changeCheck11()" unchecked disabled><label for="jysc11">芥园水厂</label>
+                        </div>
+                        <div id="lzsc111" class="" style="height: 18px; width: 200px; display: flex; margin-left: 8px;">
+                            <input id="lzsc11" type="checkbox" onchange="changeCheck22()" unchecked disabled><label for="lzsc11">凌庄水厂</label>
+                        </div>
+                    </div>
+                    <div class="" style="height: 30px; width: 400px; display: flex;">
+                        <div id="xkhsc111" class="" style="height: 18px; width: 200px; display: flex; margin-left: 8px;">
+                            <input id="xkhsc11" type="checkbox" onchange="changeCheck33()" unchecked disabled><label for="xkhsc11">新开河水厂</label>
+                        </div>
+                        <div id="jbsc111" class="" style="height: 18px; width: 200px; display: flex; margin-left: 8px;">
+                            <input id="jbsc11" type="checkbox" onchange="changeCheck44()" unchecked disabled><label for="jbsc11">津滨水厂</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="scyldd" style="margin-left:15px;">
+            <!-- 水厂压力调度 -->
+            <div class="" style="height: 220px; width: 100%; margin-left: 8px; margin-top: 5px; margin-bottom: 5px;">
+                <div class="" style="font-weight: bold; height: 30px; line-height: 30px;">水厂压力调度</div>
+                <div class="" style="height: 160px; width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 32px; width: 380px; font-size: 10px;">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">水厂</th>
+                                <th class="" style="font-size: 10px; text-align: center;">现状供水压力(Mpa)</th>
+                                <th class="" style="font-size: 10px; text-align: center;">现状供水流量(m³/h)</th>
+                                <th class="" style="font-size: 10px; text-align: center;">方案供水压力(Mpa)</th>
+                                <th class="" style="font-size: 10px; text-align: center;">方案供水流量(m³/h)</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style="height: 160px; width: 380px;">
+                        <table id="sctjc_scyldd" class="" style=" height: 32px; width: 380px; font-size: 10px;">
+                            @*<tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">凌庄水厂</td>
+                                <td class='' style="font-size: 10px;">0.341</td>
+                                <td class='' style="font-size: 10px;">15632</td>
+                                <td class='' style="font-size: 10px;">
+                                    0.462<span class='glyphicon glyphicon-arrow-up' aria-hidden='true' style="color: #b53350;"></span>
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    18965<span class='glyphicon glyphicon-arrow-up' aria-hidden='true' style="color: #b53350;"></span>
+                                </td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">津滨水厂</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">新开河水厂</td>
+                                <td class='' style="font-size: 10px;">0.361</td>
+                                <td class='' style="font-size: 10px;">16892</td>
+                                <td class='' style="font-size: 10px;">
+                                    0.488<span class='glyphicon glyphicon-arrow-up' aria-hidden='true' style="color: #b53350;"></span>
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    21596<span class='glyphicon glyphicon-arrow-up' aria-hidden='true' style="color: #b53350;"></span>
+                                </td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">芥园水厂</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                            </tr>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="czxgdb" style="margin-left:15px;">
+            <!-- 处置效果对比 -->
+            <div class="" style="height: 145px; height: 95px; margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <div class="" style="font-weight: bold; height: 30px;  line-height: 30px;">处置效果对比</div>
+                <div class="" style="width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">&emsp;&emsp;</th>
+                                <th class="" style="font-size: 10px; text-align: center;width:150px">停水用户（以地表计，块）</th>
+                                <th class="" style="font-size: 10px; text-align: center; width: 150px">影响区域面积（km²）</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style="height: 63px; width: 380px;">
+                        <table id="sctjc_czxgdb" class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            @*<tr class="" style="position: relative; height: 30px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">
+                                <td class="" style="font-size: 10px;">处置前</td>
+                                <td class="" style="font-size: 10px;">900</td>
+                                <td class="" style="font-size: 10px;">402.26</td>
+                            </tr>
+                            <tr class="" style="position: relative; height: 30px; border: 1px solid #cbe1f9;  text-align: center; background-color: #fff;">
+                                <td class="" style="font-size: 10px;">处置后</td>
+                                <td class="" style="font-size: 10px;">310</td>
+                                <td class="" style="font-size: 10px;">198.33</td>
+                            </tr>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="yjczzl" style="margin-left:15px;">
+            <!-- 应急处置指令 -->
+            <div class="" style="margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <div class="" style="font-weight: bold; height: 30px; line-height: 30px;">应急处置指令</div>
+
+                <div class="" style="width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">序号</th>
+                                <th class="" style="font-size: 10px; text-align: center;">水厂</th>
+                                <th class="" style="font-size: 10px; text-align: center;">方案供水压力(Mpa)</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style="height: 535px; width: 380px;">
+                        <table id="sctjc_yjczzl" class="" style="height: 120px; width: 380px; font-size: 10px;">
+                            @*<tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">1</td>
+                                <td class='' style="font-size: 10px;">凌庄水厂</td>
+                                <td class='' style="font-size: 10px;"></td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">2</td>
+                                <td class='' style="font-size: 10px;">津滨水厂</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">3</td>
+                                <td class='' style="font-size: 10px;">津滨水厂</td>
+                                <td class='' style="font-size: 10px;">0.488</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">4</td>
+                                <td class='' style="font-size: 10px;">芥园水厂</td>
+                                <td class='' style="font-size: 10px;">-</td>
+                            </tr>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 爆管应急 -->
+<div id="bgyj" class="" style="display: none; margin-top: 10px; margin-left: 0px; margin-bottom: 0px; padding-top: 10px; padding-left: 10px; padding-bottom: 10px; width: 1655px; height: 320px; background-color: #fff; border: 0; border-radius: 10px; ">
+    <div class="right5_bg" style="width: 1655px; height: 320px; display: flex;">
+
+        <div id="bgdxx">
+            <div class="" style="height: 95px; margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <div class="" style="font-weight: bold; height: 30px; /*width: 100px;*/ line-height: 30px;">爆管点信息</div>
+                <div class="" style="width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">所在管道</th>
+                                <th class="" style="font-size: 10px; text-align: center;">X</th>
+                                <th class="" style="font-size: 10px; text-align: center;">Y</th>
+                                <th class="" style="font-size: 10px; text-align: center;">管径</th>
+                                <th class="" style="font-size: 10px; text-align: center;">管材</th>
+                                <th class="" style="font-size: 10px; text-align: center;">营销公司</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style=" height: 63px; width: 380px;">
+                        <table id="bgyj_bgdxx" class="right622_data" style="height: 30px; width: 380px; font-size: 10px;">
+                            @*<tr class='' style="position: relative; height: 30px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px; ">
+                                    凌庄水厂
+                                </td>
+                                <td class='' style="font-size: 10px; ">
+                                    125.4
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    147.3
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    管径1
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    管材1
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    市一营销
+                                </td>
+                            </tr>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gfmx" style="margin-left:145px;">
+            <div class="" style=" margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <div class="" style="font-weight: bold; height: 30px; width: 220px; line-height: 30px; float: left;">关阀明细</div>
+
+                <div class="" style="width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 30px; width: 380px; font-size: 10px; ">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">序号</th>
+                                <th class="" style="font-size: 10px; text-align: center;">地址</th>
+                                <th class="" style="font-size: 10px; text-align: center;">口径（mm）</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style="height: 535px; width: 380px;">
+                        <table id="bgyj_gfmx" class="" style="height: 120px; width: 380px; font-size: 10px;">
+                            @*<tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">1</td>
+                                <td class='' style="font-size: 10px;">真理道与红星路交口</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">2</td>
+                                <td class='' style="font-size: 10px;">真理道与红星路交口</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">3</td>
+                                <td class='' style="font-size: 10px;">真理道与红星路交口</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">4</td>
+                                <td class='' style="font-size: 10px;">幸福道与红星路交口东南侧</td>
+                                <td class='' style="font-size: 10px;">400</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">5</td>
+                                <td class='' style="font-size: 10px;">幸福道与红星路交口东南侧</td>
+                                <td class='' style="font-size: 10px;">400</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">6</td>
+                                <td class='' style="font-size: 10px;">幸福道与红星路交口东南侧</td>
+                                <td class='' style="font-size: 10px;">400</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">7</td>
+                                <td class='' style="font-size: 10px;">河北区正义道（红星路-江都路）</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">8</td>
+                                <td class='' style="font-size: 10px;">河北区正义道（红星路-江都路）</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gfhdyx" style="margin-left:145px;">
+            <div class="" style="font-weight: bold; height: 30px; /*width: 100px;*/ line-height: 30px;">关阀后的影响</div>
+            <div class="" style="width: 380px;">
+                <div class="" style="height: 30px; width: 380px;">
+                    <table class="" style="height: 30px; width: 380px; font-size: 10px;">
+                        <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                            @*<th class="right62111">停水管道长度（km）</th>*@
+                            <th class="" style="font-size: 10px; text-align: center;">停水用户（以地表计,块）</th>
+                            <th class="" style="font-size: 10px; text-align: center;">影响区域面积（km<sup>2</sup>）</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="" style="height: 63px; width: 380px;">
+                    <table id="bgyj_gfhdyx" class="right622_data" style="height: 30px; width: 380px; font-size: 10px;">
+                        <!--<tr class='' style="position: relative; height: 30px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">-->
+                            @*<td class='right62211'>
+                                100.56
+                                </td>*@
+                            <!--<td class='' style="font-size: 10px;">
+                                900
+                            </td>
+                            <td class='' style="font-size: 10px;">
+                                402.26
+                            </td>
+                        </tr>-->
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 水质污染应急 -->
+<div id="szwryj" class="" style="display: none; margin-top: 10px; margin-left: 0px; margin-bottom: 0px; padding-top: 10px; padding-left: 10px; padding-bottom: 10px; width: 1655px; height: 320px; background-color: #fff; border: 0; border-radius: 10px; ">
+    <div class="right5_bg" style="width: 1655px; height: 320px; display: flex;">
+
+        <div id="bgdxx">
+            <div class="" style="height: 95px; margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <div class="" style="font-weight: bold; height: 30px; /*width: 100px;*/ line-height: 30px;">事件点信息</div>
+                <div class="" style="width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">所在管道</th>
+                                <th class="" style="font-size: 10px; text-align: center;">X</th>
+                                <th class="" style="font-size: 10px; text-align: center;">Y</th>
+                                <th class="" style="font-size: 10px; text-align: center;">管径</th>
+                                <th class="" style="font-size: 10px; text-align: center;">管材</th>
+                                <th class="" style="font-size: 10px; text-align: center;">营销公司</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style=" height: 63px; width: 380px;">
+                        <table id="szwryj_bgdxx" class="right622_data" style="height: 30px; width: 380px; font-size: 10px;">
+                            @*<tr class='' style="position: relative; height: 30px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px; ">
+                                    凌庄水厂
+                                </td>
+                                <td class='' style="font-size: 10px; ">
+                                    125.4
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    147.3
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    管径1
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    管材1
+                                </td>
+                                <td class='' style="font-size: 10px;">
+                                    市一营销
+                                </td>
+                            </tr>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gfmx" style="margin-left:145px;">
+            <div class="" style=" margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <div class="" style="font-weight: bold; height: 30px; width: 220px; line-height: 30px; float: left;">关阀明细</div>
+
+                <div class="" style="width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 30px; width: 380px; font-size: 10px; ">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">序号</th>
+                                <th class="" style="font-size: 10px; text-align: center;">地址</th>
+                                <th class="" style="font-size: 10px; text-align: center;">口径（mm）</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style="height: 535px; width: 380px;">
+                        <table id="szwryj_gfmx" class="" style="height: 120px; width: 380px; font-size: 10px;">
+                            @*<tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">1</td>
+                                <td class='' style="font-size: 10px;">真理道与红星路交口</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">2</td>
+                                <td class='' style="font-size: 10px;">真理道与红星路交口</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">3</td>
+                                <td class='' style="font-size: 10px;">真理道与红星路交口</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">4</td>
+                                <td class='' style="font-size: 10px;">幸福道与红星路交口东南侧</td>
+                                <td class='' style="font-size: 10px;">400</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">5</td>
+                                <td class='' style="font-size: 10px;">幸福道与红星路交口东南侧</td>
+                                <td class='' style="font-size: 10px;">400</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">6</td>
+                                <td class='' style="font-size: 10px;">幸福道与红星路交口东南侧</td>
+                                <td class='' style="font-size: 10px;">400</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">7</td>
+                                <td class='' style="font-size: 10px;">河北区正义道（红星路-江都路）</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">8</td>
+                                <td class='' style="font-size: 10px;">河北区正义道（红星路-江都路）</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gfhdyx" style="margin-left:145px;">
+            <div class="" style="font-weight: bold; height: 30px; /*width: 100px;*/ line-height: 30px;">关阀后的影响</div>
+            <div class="" style="width: 380px;">
+                <div class="" style="height: 30px; width: 380px;">
+                    <table class="" style="height: 30px; width: 380px; font-size: 10px;">
+                        <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                            @*<th class="right62111">停水管道长度（km）</th>*@
+                            <th class="" style="font-size: 10px; text-align: center;">停水用户（以地表计,块）</th>
+                            <th class="" style="font-size: 10px; text-align: center;">影响区域面积（km<sup>2</sup>）</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="" style="height: 63px; width: 380px;">
+                    <table id="szwryj_gfhdyx" class="right622_data" style="height: 30px; width: 380px; font-size: 10px;">
+                        <!--<tr class='' style="position: relative; height: 30px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">-->
+                            @*<td class='right62211'>
+                                100.56
+                                </td>*@
+                            <!--<td class='' style="font-size: 10px;">
+                                900
+                            </td>
+                            <td class='' style="font-size: 10px;">
+                                402.26
+                            </td>
+                        </tr>-->
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 压力突降 -->
+<div id="yltj" class="" style="display: none; margin-top: 10px; margin-left: 0px; margin-bottom: 0px; padding-top: 10px; padding-left: 10px; padding-bottom: 10px; width: 1655px; height: 280px; background-color: #fff; border: 0; border-radius: 10px; ">
+    <div class="right5_bg" style="width: 1655px; height: 280px; display: flex;">
+
+        <div id="sbtjyy">
+            @*<div class="" style="height: 33px; /*margin-top: 5px;margin-bottom: 5px;*/ display: flex; line-height: 30px;">
+                <strong class=" " style="margin-left: 8px;  font-weight: bold; height: 30px; width: 100px; font-size: 13px">识别突降原因：</strong>
+                <strong class="" style="background-color: #fc0606; text-align: center; margin-left: 8px; font-weight: bold; height: 30px; width: 100px; font-size: 13px;">真实压力突降</strong>
+            </div>*@
+            <div class="" style="height: 95px; margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <div class="" style="font-weight: bold; height: 30px; /*width: 100px;*/ line-height: 30px;">事件点信息</div>
+                <div class="" style="width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">名称</th>
+                                <th class="" style="font-size: 10px; text-align: center;">设备状态</th>
+                                <th class="" style="font-size: 10px; text-align: center;">现状压力(Mpa)</th>
+                                <th class="" style="font-size: 10px; text-align: center;">营销公司</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style="height: 63px; width: 380px;">
+                        <table id="yltjyj_bgdxx" class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            @*<tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">增产道压力检测点</td>
+                                <td class='' style="font-size: 10px;">在线</td>
+                                <td class='' style="font-size: 10px;">0.05</td>
+                                <td class='' style="font-size: 10px;">市北河北营销</td>
+                            </tr>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pcqy" style="margin-left:15px;">
+            <div class="" style="margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                @*<div class="" style="height: 33px; /*margin-top: 5px; margin-bottom: 5px;*/ display: flex; line-height: 30px;">
+                    <strong class=" " style="margin-left: 8px; /* font-weight: bold; */ height: 30px; width: 100px; font-size: 13px; font-weight:bold;">排查区域：</strong>
+                    <strong class="" style="background-color: #fc0606; text-align: center; margin-left: 8px; /* font-weight: bold; */ height: 30px; width: 100px; font-size: 13px">首次计算</strong>
+                </div>*@
+                <div class="" style="font-weight: bold; height: 30px; width: 220px; line-height: 30px; float: left;">边界阀门明细</div>
+                <div class="" style="height: 30px; /*width: 400px;*/ display: flex; margin-bottom: 5px;">
+
+                </div>
+                <div class="" style="width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">序号</th>
+                                <th class="" style="font-size: 10px; text-align: center;">地址</th>
+                                <th class="" style="font-size: 10px; text-align: center;">口径（mm）</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style="height: 535px; width: 300px;">
+                        <table id="yltjyj_bjfmmx" class="" style="height: 120px; width: 380px; font-size: 10px;">
+                            @*<tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">1</td>
+                                <td class='' style="font-size: 10px;">真理道与红星路交口</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">2</td>
+                                <td class='' style="font-size: 10px;">真理道与红星路交口</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">3</td>
+                                <td class='' style="font-size: 10px;">真理道与红星路交口</td>
+                                <td class='' style="font-size: 10px;">600</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">4</td>
+                                <td class='' style="font-size: 10px;">幸福道与红星路交口东南侧</td>
+                                <td class='' style="font-size: 10px;">400</td>
+                            </tr>
+                            <tr class='' style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                                <td class='' style="font-size: 10px;">5</td>
+                                <td class='' style="font-size: 10px;">幸福道与红星路交口东南侧</td>
+                                <td class='' style="font-size: 10px;">400</td>
+                            </tr>*@
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="qyxx" style="margin-left:15px;">
+            <div class="" style="height: 95px; margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <div class="" style="font-weight: bold; height: 30px; /*width: 100px;*/ line-height: 30px;">区域信息</div>
+                <div class="" style="width: 380px;">
+                    <div class="" style="height: 30px; width: 380px;">
+                        <table class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">排查区域管道长度（km）</th>
+                                <th class="" style="font-size: 10px; text-align: center;">排查区域面积（km<sup>2</sup>）</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style="height: 63px; width: 380px;">
+                        <table id="yltjyj_qyxx" class="" style="height: 30px; width: 380px; font-size: 10px;">
+                            <!--<tr class='' style="position: relative; height: 30px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">-->
+                                @*<td class='right62211'>
+                                    100.56
+                                    </td>*@
+                                <!--<td class='' style="font-size: 10px; ">
+                                    5.2
+                                </td>
+                                <td class='' style="font-size: 10px; ">
+                                    0.543
+                                </td>
+                            </tr>-->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div id="sgdcz" style="margin-left:15px;">
+            <div class="" style="height: 65px;  margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <strong>事件点处置：</strong>
+                <div>
+                    <strong>找到事件点</strong>
+                    <div class="accidentPointFa" style=" width: 80px; height: 30px; background-color: #216fed; border-radius: 10px; text-align: center; line-height: 30px; display: inline-block;"><span class="accidentPoint" style="color: #fff;">某某点</span> <span style="margin-left: 10px; width: 20px; height: 20px; background-color: #fff; text-align: center; font-size: 15px">X</span></div>
+                    <div class="accidentPointFa" style=" width: 80px; height: 30px; background-color: #216fed; border-radius: 10px; text-align: center; line-height: 30px; display: inline-block;"><span class="accidentPoint" style="color: #fff;">某某点</span><span style="margin-left: 10px; width: 20px; height: 20px; background-color: #fff; text-align: center; font-size: 15px">X</span></div>
+                </div>
+            </div>
+        </div>*@
+
+    </div>
+</div>
+
+<!-- 泵站优化 -->
+<div id="bzyh" class="" style="display: none; margin-top: 10px; margin-left: 0px; margin-bottom: 0px; padding-top: 10px; padding-left: 10px; padding-bottom: 10px; width: 1655px; height: 210px; background-color: #fff; border: 0; border-radius: 10px; ">
+    <div class="right5_bg" style="width: 1655px; height: 210px; display: flex;">
+        <div id="">
+            <div class="" style="height: 150px; margin-top: 5px; margin-bottom: 5px; margin-left: 5px;">
+                <div class="" style="font-weight: bold; height: 30px; /*width: 100px;*/ line-height: 30px;">优化方案</div>
+                <strong id="jykyjyl" style="position: absolute; font-size: 14px; top: 285px; left: 110px;font-weight:500">依据压力：</strong>
+                <strong id="jykyjll" style="position: absolute; font-size: 14px; top: 285px; left: 260px;font-weight:500">依据流量：</strong>
+                <strong id="jykyjss" style="position: absolute; font-size: 14px; top: 285px; left: 440px;font-weight:500">依据时间：</strong>
+                <div class="" style="width: 680px;">
+                    <div class="" style="height: 30px; width: 680px;">
+                        <table class="" style="height: 30px; width: 680px; font-size: 10px;">
+                            <tr class="" style="border-left: 1px solid #cbe1f9; border-right: 1px solid #cbe1f9; border-top: 1px solid #cbe1f9; text-align: center; background-color: #fff !important;">
+                                <th class="" style="font-size: 10px; text-align: center;">水泵编号</th>
+                                <th class="" style="font-size: 10px; text-align: center;">是否启动</th>
+                                <th class="" style="font-size: 10px; text-align: center;">调速比</th>
+                                <th class="" style="font-size: 10px; text-align: center;">压力MPa</th>
+                                <th class="" style="font-size: 10px; text-align: center;">流量m<sup>3</sup>/h</th>
+                                <th class="" style="font-size: 10px; text-align: center;">效率%</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="" style=" height: 120px; width: 680px; overflow-y: auto; overflow-x: hidden;">
+                        <table id="bzyh_" class="right622_data" style="width: 680px; font-size: 10px;">
+                            @*<tr class='' style="position: relative; height: 30px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">
+                        <td class='' style="font-size: 10px; ">
+                            凌庄水厂
+                        </td>
+                        <td class='' style="font-size: 10px; ">
+                            125.4
+                        </td>
+                        <td class='' style="font-size: 10px;">
+                            147.3
+                        </td>
+                        <td class='' style="font-size: 10px;">
+                            管径1
+                        </td>
+                        <td class='' style="font-size: 10px;">
+                            管材1
+                        </td>
+                        <td class='' style="font-size: 10px;">
+                            市一营销
+                        </td>
+                    </tr>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script>
+    var sks_name = [];
+    var sks = [];
+    var selected_sks = [];
+    var selected_sks_name = [];
+    var active_fa_id;
+    var fangan_array = [];
+
+    function init() {
+
+        //jiekou3_6_1();
+        //jiekou3_6();
+
+        $("#GetDispatchTypeList").bindSelect({
+            url: "/Scheduling/Log/GetDispatchTypeList",
+            text: "Name",
+            id: "Value"
+        });
+
+        $("#GetPressList").bindSelect({
+            url: "/Scheduling/Experience/GetPressList",
+            text: "Name",
+            id: "Value"
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/Scheduling/Experience/GetPressList",
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                onclicksearch();
+            }
+        });
+
+        //gridList();
+    }
+
+    $("#GetDispatchTypeList").change(function () {
+        //console.log($("#GetDispatchTypeList option:selected").val());
+        if ($("#GetDispatchTypeList option:selected").val() == 1) {
+            let diaoduyijv = document.getElementById("diaoduyijv");
+            diaoduyijv.innerHTML = "调度依据："
+            $("#GetPressList").find("option").remove();
+            $("#GetPressList").append('<option value="none" selected>请选择</option>');
+            //$("#GetPressList").append('<option value="all">全部节点</option>');
+            $("#GetPressList").bindSelect({
+                url: "/Scheduling/Experience/GetPressList",
+                text: "Name",
+                id: "Value",
+                search: true
+                //multiple: true
+            });
+            $.ajax({
+                type: "GET",
+                url: "/Scheduling/Experience/GetPressList",
+                dataType: "JSON",
+                success: function (adata) {
+                    //console.log(adata);
+                    //Data24length = adata.length;
+                    //console.log(Data24length);
+                    sks = [];
+                    for (let i = 0; i < adata.length; i++) {
+                        sks.push(adata[i].Value);
+                    }
+                    //console.log(datadetail);
+                    //console.log(sks);
+                }
+            });
+            selected_sks = [];
+            selected_sks_name = [];
+            document.getElementById("srk").innerHTML = "";
+        }
+        else if ($("#GetDispatchTypeList option:selected").val() == 3) {
+            let diaoduyijv = document.getElementById("diaoduyijv");
+            diaoduyijv.innerHTML = "水厂："
+            $("#GetPressList").find("option").remove();
+            $("#GetPressList").append('<option value="none" selected>请选择</option>');
+            $("#GetPressList").bindSelect({
+                url: "/Scheduling/Experience/GetFactoryList",
+                text: "Name",
+                id: "Value",
+                search: true
+                //multiple: true
+            });
+            $.ajax({
+                type: "GET",
+                url: "/Scheduling/Experience/GetFactoryList",
+                dataType: "JSON",
+                success: function (adata) {
+                    //console.log(adata);
+                    //Data24length = adata.length;
+                    //console.log(Data24length);
+                    sks = [];
+                    for (let i = 0; i < adata.length; i++) {
+                        sks.push(adata[i].Value);
+                    }
+                    //console.log(datadetail);
+                    //console.log(sks);
+                }
+            });
+            selected_sks = [];
+            selected_sks_name = [];
+            document.getElementById("srk").innerHTML = "";
+        }
+        else if ($("#GetDispatchTypeList option:selected").val() == 7) {
+            let diaoduyijv = document.getElementById("diaoduyijv");
+            diaoduyijv.innerHTML = "水厂："
+            $("#GetPressList").find("option").remove();
+            $("#GetPressList").append('<option value="none" selected>请选择</option>');
+            //$("#GetPressList").append('<option value="all">全部节点</option>');
+            $("#GetPressList").bindSelect({
+                url: "/Scheduling/Experience/GetFactoryList",
+                text: "Name",
+                id: "Value",
+                search: true
+                //multiple: true
+            });
+            $.ajax({
+                type: "GET",
+                url: "/Scheduling/Experience/GetFactoryList",
+                dataType: "JSON",
+                success: function (adata) {
+                    //console.log(adata);
+                    //Data24length = adata.length;
+                    //console.log(Data24length);
+                    sks = [];
+                    for (let i = 0; i < adata.length; i++) {
+                        sks.push(adata[i].Value);
+                    }
+                    //console.log(datadetail);
+                    //console.log(sks);
+                }
+            });
+            selected_sks = [];
+            selected_sks_name = [];
+            document.getElementById("srk").innerHTML = "";
+        }
+        else {
+            let diaoduyijv = document.getElementById("diaoduyijv");
+            diaoduyijv.innerHTML = "营销："
+            $("#GetPressList").find("option").remove();
+            $("#GetPressList").append('<option value="none" selected>请选择</option>');
+            //$("#GetPressList").append('<option value="all">全部节点</option>');
+            $("#GetPressList").bindSelect({
+                url: "/Scheduling/Experience/GetDMAList",
+                text: "Name",
+                id: "Value",
+                search: true
+                //multiple: true
+            });
+            $.ajax({
+                type: "GET",
+                url: "/Scheduling/Experience/GetDMAList",
+                dataType: "JSON",
+                success: function (adata) {
+                    //console.log(adata);
+                    //Data24length = adata.length;
+                    //console.log(Data24length);
+                    sks = [];
+                    for (let i = 0; i < adata.length; i++) {
+                        sks.push(adata[i].Value);
+                    }
+                    //console.log(datadetail);
+                    //console.log(sks);
+                }
+            });
+            selected_sks = [];
+            selected_sks_name = [];
+            document.getElementById("srk").innerHTML = "";
+        }
+    })
+
+    $("#GetPressList").change(function () {
+        if ($("#GetPressList option:selected").text() != "请选择") {
+            //console.log($("#GetPressList option:selected").val());
+            let ls_selectedid = $("#GetPressList option:selected").val();
+            //console.log(ls_selectedid);
+            //console.log(selected_sks);
+            //console.log($("#GetPressList option:selected").text());
+            if (selected_sks.indexOf(ls_selectedid) != -1) {
+                alert("请勿重复添加同一节点！");
+            }
+            else {
+                selected_sks.push($("#GetPressList option:selected").val());
+                selected_sks_name.push($("#GetPressList option:selected").text());
+                srk.innerHTML +=
+                    '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                    + $("#GetPressList option:selected").text() + '<button id="' + $("#GetPressList option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                    + '</div>'
+            }
+        }
+        else {
+            selected_sks = [];
+            selected_sks_name = [];
+            document.getElementById("srk").innerHTML = "";
+        }
+    })
+
+    function onclickdelete(node) {
+        for (let i = 0; i < selected_sks.length; i++) {
+            if (selected_sks[i] == node.id) {
+                selected_sks.splice(i, 1);
+                selected_sks_name.splice(i, 1);
+            }
+        }
+        let srk = document.getElementById("srk");
+        srk.innerHTML = '';
+        for (let j = 0; j < selected_sks.length; j++) {
+            srk.innerHTML +=
+                '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                + selected_sks_name[j] + '<button id="' + selected_sks[j] + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                + '</div>'
+        }
+
+        //console.log(selected_sks);
+    }
+
+    function onclicksearch() {
+        let fa_buttons = document.getElementById("fa_buttons");
+        fa_buttons.innerHTML = '';
+        document.getElementById("fa_counts").innerHTML = "推荐结果：符合筛选条件的方案共（   ）个";
+        document.getElementById("down1").innerHTML = "";
+        document.getElementById("down2").innerHTML = "";
+        document.getElementById("down3").innerHTML = "";
+        document.getElementById("down4").innerHTML = "";
+        document.getElementById("pjpcl1").innerHTML = "";
+        document.getElementById("yali").innerHTML = "";
+        document.getElementById("liuliang").innerHTML = "";
+        document.getElementById("shuizhi").innerHTML = "";
+        document.getElementById("xh1").innerHTML = "";
+        document.getElementById("xfrqsj1").innerHTML = "";
+        document.getElementById("zxrqsj1").innerHTML = "";
+        document.getElementById("bc").innerHTML = "";
+        document.getElementById("czry").innerHTML = "";
+        document.getElementById("ddlx1").innerHTML = "";
+        document.getElementById("dlzt").innerHTML = "";
+        //document.getElementById("pjpcl").innerHTML = "";
+        //document.getElementById("tjdfak").innerHTML = "";
+        //document.getElementById("xh2").innerHTML = "";
+        //document.getElementById("xfrqsj2").innerHTML = "";
+        //document.getElementById("zxrqsj2").innerHTML = "";
+        //document.getElementById("ddlx2").innerHTML = "";
+        document.getElementById("ddzl1").innerHTML = "";
+        document.getElementById("ddzl2").innerHTML = "";
+        document.getElementById("xzsl_time_content").innerHTML = "";
+        document.getElementById("xzsl").innerHTML = "";
+        document.getElementById("ycsl_time_content").innerHTML = "";
+        document.getElementById("ycsl").innerHTML = "";
+        document.getElementById("scfa_time").innerHTML = "";
+        document.getElementById("xfddzl_time").innerHTML = "";
+
+        document.getElementById("jysc").innerHTML = '<input id="jysc1" type="checkbox" onchange="changeCheck1()" unchecked disabled><label for="jysc1">芥园水厂</label>';
+        document.getElementById("lzsc").innerHTML = '<input id="lzsc1" type="checkbox" onchange="changeCheck2()" unchecked disabled><label for="lzsc1">凌庄水厂</label>';
+        document.getElementById("xkhsc").innerHTML = '<input id="xkhsc1" type="checkbox" onchange="changeCheck3()" unchecked disabled><label for="xkhsc1">新开河水厂</label>';
+        document.getElementById("jbsc").innerHTML = '<input id="jbsc1" type="checkbox" onchange="changeCheck4()" unchecked disabled><label for="jbsc1">津滨水厂</label>';
+        document.getElementById("jysc111").innerHTML = '<input id="jysc11" type="checkbox" onchange="changeCheck11()" unchecked disabled><label for="jysc11">芥园水厂</label>';
+        document.getElementById("lzsc111").innerHTML = '<input id="lzsc11" type="checkbox" onchange="changeCheck22()" unchecked disabled><label for="lzsc11">凌庄水厂</label>';
+        document.getElementById("xkhsc111").innerHTML = '<input id="xkhsc11" type="checkbox" onchange="changeCheck33()" unchecked disabled><label for="xkhsc11">新开河水厂</label>';
+        document.getElementById("jbsc111").innerHTML = '<input id="jbsc11" type="checkbox" onchange="changeCheck44()" unchecked disabled><label for="jbsc11">津滨水厂</label>';
+        document.getElementById("sctjc_scyldd").innerHTML = "";
+        document.getElementById("sctjc_czxgdb").innerHTML = "";
+        document.getElementById("sctjc_yjczzl").innerHTML = "";
+
+        document.getElementById("bgyj_bgdxx").innerHTML = "";
+        document.getElementById("bgyj_gfmx").innerHTML = "";
+        document.getElementById("bgyj_gfhdyx").innerHTML = "";
+
+        document.getElementById("szwryj_bgdxx").innerHTML = "";
+        document.getElementById("szwryj_gfmx").innerHTML = "";
+        document.getElementById("szwryj_gfhdyx").innerHTML = "";
+
+        document.getElementById("yltjyj_bgdxx").innerHTML = "";
+        document.getElementById("yltjyj_bjfmmx").innerHTML = "";
+        document.getElementById("yltjyj_qyxx").innerHTML = "";
+
+        document.getElementById("bzyh_").innerHTML = "";
+        
+        @*
+
+        document.getElementById("").innerHTML = "";
+        document.getElementById("").innerHTML = "";
+        document.getElementById("").innerHTML = "";
+        document.getElementById("").innerHTML = "";
+        document.getElementById("").innerHTML = "";
+        *@
+
+        if ($("#GetDispatchTypeList option:selected").val() == "3") {
+            document.getElementById("rc").style.display = "none";
+            document.getElementById("rc1").style.display = "none";
+            document.getElementById("sctjc").style.display = "block";
+            document.getElementById("bgyj").style.display = "none";
+            document.getElementById("szwryj").style.display = "none";
+            document.getElementById("yltj").style.display = "none";
+            document.getElementById("bzyh").style.display = "none";
+        }
+        else if ($("#GetDispatchTypeList option:selected").val() == "4") {
+            document.getElementById("rc").style.display = "none";
+            document.getElementById("rc1").style.display = "none";
+            document.getElementById("sctjc").style.display = "none";
+            document.getElementById("bgyj").style.display = "block";
+            document.getElementById("szwryj").style.display = "none";
+            document.getElementById("yltj").style.display = "none";
+            document.getElementById("bzyh").style.display = "none";
+        }
+        else if ($("#GetDispatchTypeList option:selected").val() == "5") {
+            document.getElementById("rc").style.display = "none";
+            document.getElementById("rc1").style.display = "none";
+            document.getElementById("sctjc").style.display = "none";
+            document.getElementById("bgyj").style.display = "none";
+            document.getElementById("szwryj").style.display = "block";
+            document.getElementById("yltj").style.display = "none";
+            document.getElementById("bzyh").style.display = "none";
+        }
+        else if ($("#GetDispatchTypeList option:selected").val() == "6") {
+            document.getElementById("rc").style.display = "none";
+            document.getElementById("rc1").style.display = "none";
+            document.getElementById("sctjc").style.display = "none";
+            document.getElementById("bgyj").style.display = "none";
+            document.getElementById("szwryj").style.display = "none";
+            document.getElementById("yltj").style.display = "block";
+            document.getElementById("bzyh").style.display = "none";
+        }
+        else if ($("#GetDispatchTypeList option:selected").val() == "7") {
+            document.getElementById("rc").style.display = "none";
+            document.getElementById("rc1").style.display = "none";
+            document.getElementById("sctjc").style.display = "none";
+            document.getElementById("bgyj").style.display = "none";
+            document.getElementById("szwryj").style.display = "none";
+            document.getElementById("yltj").style.display = "none";
+            document.getElementById("bzyh").style.display = "block";
+        }
+        else {
+            document.getElementById("rc").style.display = "block";
+
+            document.getElementById("rc1").style.display = "block";
+            document.getElementById("sctjc").style.display = "none";
+            document.getElementById("bgyj").style.display = "none";
+            document.getElementById("szwryj").style.display = "none";
+            document.getElementById("yltj").style.display = "none";
+            document.getElementById("bzyh").style.display = "none";
+        }
+        //console.log("1");
+
+        url_3_15 = "/Scheduling/Experience/GetDispatchPlan?dtype=" + $("#GetDispatchTypeList option:selected").val();
+        //console.log(document.getElementById("sDate").value);
+        if ($("#GetPressList option:selected").val() == "none") {
+            url_3_15 = "/Scheduling/Experience/GetDispatchPlan?dtype=" + $("#GetDispatchTypeList option:selected").val();
+        }
+        else if ($("#GetPressList option:selected").val() == "all") {
+            //console.log("onclicknewsearch");
+            url_3_15 += "&pressList=";
+            for (let i = 0; i < sks.length; i++) {
+                if (i != (sks.length - 1)) {
+                    url_3_15 += sks[i] + ",";
+                }
+                else {
+                    url_3_15 += sks[i];
+                }
+            }
+        }
+        else {
+            url_3_15 += "&pressList=";
+            for (let i = 0; i < selected_sks.length; i++) {
+                if (i != (selected_sks.length - 1)) {
+                    url_3_15 += selected_sks[i] + ",";
+                }
+                else {
+                    url_3_15 += selected_sks[i];
+                }
+            }
+        }
+        //console.log(document.getElementById("sDate").value);
+        if (document.getElementById("sDate").value.length != 0) {
+            url_3_15 += "&sDate=" + document.getElementById("sDate").value;
+        }
+        if (document.getElementById("eDate").value.length != 0) {
+            url_3_15 += "&eDate=" + document.getElementById("eDate").value;
+        }
+        //console.log($("#GetPointList option:selected").val());
+        //console.log(selected_sks);
+        if ($("#GetPressList option:selected").val() != "none" && $("#GetPressList option:selected").val() != "all" && selected_sks.length == 0) {
+            //console.log("1");
+            alert("请选择节点进行查询");
+
+        }
+        else {
+            //console.log("2");
+            //console.log(url_3_15);
+            $.ajax({
+                type: "GET",
+                url: url_3_15,
+                dataType: "JSON",
+                success: function (adata) {
+                    fangan_array = adata;
+                    //console.log(fangan_array);
+                    //console.log(adata);
+                    active_fa_id = adata[0];
+                    let fa_counts = document.getElementById("fa_counts");
+                    fa_counts.innerText = "推荐结果：符合筛选条件的方案共（ " + adata.length + " ）个";
+
+                    for (let i = 0; i < adata.length; i++) {
+                        if (i == 0) {
+                            //console.log(i);
+                            let num = i + 1;
+                            $("#fa_buttons").append("<option value='" + adata[i] + "' selected>方案" + num + "</option>");
+                        }
+                        else {
+                            let count = i + 1;
+                            $("#fa_buttons").append("<option value='" + adata[i] + "'>方案" + count + "</option>");
+                        }
+                    }
+                    //console.log(datadetail);
+                    if (adata.length == 0) {
+                        alert("没有符合筛选条件的方案！");
+
+                    }
+                    else {
+                        showdetail();
+                    }
+                }
+            });
+        }
+    }
+
+    $("#fa_buttons").change(function () {
+        active_fa_id = $("#fa_buttons option:selected").val();
+        document.getElementById("down1").innerHTML = "";
+        document.getElementById("down2").innerHTML = "";
+        document.getElementById("down3").innerHTML = "";
+        document.getElementById("down4").innerHTML = "";
+        document.getElementById("pjpcl1").innerHTML = "";
+        document.getElementById("yali").innerHTML = "";
+        document.getElementById("liuliang").innerHTML = "";
+        document.getElementById("shuizhi").innerHTML = "";
+        document.getElementById("xh1").innerHTML = "";
+        document.getElementById("xfrqsj1").innerHTML = "";
+        document.getElementById("zxrqsj1").innerHTML = "";
+        document.getElementById("bc").innerHTML = "";
+        document.getElementById("czry").innerHTML = "";
+        document.getElementById("ddlx1").innerHTML = "";
+        document.getElementById("dlzt").innerHTML = "";
+        //document.getElementById("pjpcl").innerHTML = "";
+        //document.getElementById("tjdfak").innerHTML = "";
+        //document.getElementById("xh2").innerHTML = "";
+        //document.getElementById("xfrqsj2").innerHTML = "";
+        //document.getElementById("zxrqsj2").innerHTML = "";
+        //document.getElementById("ddlx2").innerHTML = "";
+        document.getElementById("ddzl1").innerHTML = "";
+        document.getElementById("ddzl2").innerHTML = "";
+        document.getElementById("xzsl_time_content").innerHTML = "";
+        document.getElementById("xzsl").innerHTML = "";
+        document.getElementById("ycsl_time_content").innerHTML = "";
+        document.getElementById("ycsl").innerHTML = "";
+        document.getElementById("scfa_time").innerHTML = "";
+        document.getElementById("xfddzl_time").innerHTML = "";
+
+        document.getElementById("jysc").innerHTML = '<input id="jysc1" type="checkbox" onchange="changeCheck1()" unchecked disabled><label for="jysc1">芥园水厂</label>';
+        document.getElementById("lzsc").innerHTML = '<input id="lzsc1" type="checkbox" onchange="changeCheck2()" unchecked disabled><label for="lzsc1">凌庄水厂</label>';
+        document.getElementById("xkhsc").innerHTML = '<input id="xkhsc1" type="checkbox" onchange="changeCheck3()" unchecked disabled><label for="xkhsc1">新开河水厂</label>';
+        document.getElementById("jbsc").innerHTML = '<input id="jbsc1" type="checkbox" onchange="changeCheck4()" unchecked disabled><label for="jbsc1">津滨水厂</label>';
+        document.getElementById("jysc111").innerHTML = '<input id="jysc11" type="checkbox" onchange="changeCheck11()" unchecked disabled><label for="jysc11">芥园水厂</label>';
+        document.getElementById("lzsc111").innerHTML = '<input id="lzsc11" type="checkbox" onchange="changeCheck22()" unchecked disabled><label for="lzsc11">凌庄水厂</label>';
+        document.getElementById("xkhsc111").innerHTML = '<input id="xkhsc11" type="checkbox" onchange="changeCheck33()" unchecked disabled><label for="xkhsc11">新开河水厂</label>';
+        document.getElementById("jbsc111").innerHTML = '<input id="jbsc11" type="checkbox" onchange="changeCheck44()" unchecked disabled><label for="jbsc11">津滨水厂</label>';
+        document.getElementById("sctjc_scyldd").innerHTML = "";
+        document.getElementById("sctjc_czxgdb").innerHTML = "";
+        document.getElementById("sctjc_yjczzl").innerHTML = "";
+
+        document.getElementById("bgyj_bgdxx").innerHTML = "";
+        document.getElementById("bgyj_gfmx").innerHTML = "";
+        document.getElementById("bgyj_gfhdyx").innerHTML = "";
+
+        document.getElementById("szwryj_bgdxx").innerHTML = "";
+        document.getElementById("szwryj_gfmx").innerHTML = "";
+        document.getElementById("szwryj_gfhdyx").innerHTML = "";
+
+        document.getElementById("yltjyj_bgdxx").innerHTML = "";
+        document.getElementById("yltjyj_bjfmmx").innerHTML = "";
+        document.getElementById("yltjyj_qyxx").innerHTML = "";
+
+        document.getElementById("bzyh_").innerHTML = "";
+        @*
+            document.getElementById("").innerHTML = "";
+            document.getElementById("").innerHTML = "";
+            document.getElementById("").innerHTML = "";
+            document.getElementById("").innerHTML = "";
+            document.getElementById("").innerHTML = "";
+            document.getElementById("").innerHTML = "";
+            document.getElementById("").innerHTML = "";
+            document.getElementById("").innerHTML = "";
+            document.getElementById("").innerHTML = "";
+            document.getElementById("").innerHTML = "";
+        *@
+
+
+        showdetail();
+    })
+
+    function showdetail() {
+        let url_3_16 = "/Scheduling/Experience/GetData?planId=" + active_fa_id;
+        //console.log(url_3_16);
+        $.ajax({
+            type: "GET",
+            url: url_3_16,
+            dataType: "JSON",
+            success: function (adata) {
+                console.log(adata);
+                let xh1 = document.getElementById("xh1");
+                xh1.innerHTML = adata[7];
+                let xfrqsj1 = document.getElementById("xfrqsj1");
+                xfrqsj1.innerHTML = adata[9];
+                let zxrqsj1 = document.getElementById("zxrqsj1");
+                zxrqsj1.innerHTML = adata[10];
+                let bc = document.getElementById("bc");
+                bc.innerHTML = adata[12];
+                let czry = document.getElementById("czry");
+                czry.innerHTML = adata[13];
+                let ddlx1 = document.getElementById("ddlx1");
+                ddlx1.innerHTML = $("#GetDispatchTypeList option:selected").text();
+                let dlzt = document.getElementById("dlzt");
+                dlzt.innerHTML =adata[14];
+                //let pjpcl = document.getElementById("pjpcl");
+                //pjpcl.innerHTML = adata[11];
+                //let tjdfak = document.getElementById("tjdfak");
+                //tjdfak.innerHTML = "";
+                //let xh2 = document.getElementById("xh2");
+                //xh2.innerHTML = adata[7];
+                //let xfrqsj2 = document.getElementById("xfrqsj2");
+                //xfrqsj2.innerHTML = adata[9];
+                //let zxrqsj2 = document.getElementById("zxrqsj2");
+                //zxrqsj2.innerHTML = adata[10];
+                //let ddlx2 = document.getElementById("ddlx2");
+                //ddlx2.innerHTML = $("#GetDispatchTypeList option:selected").text();
+                let ddzl1 = document.getElementById("ddzl1");
+                ddzl1.innerHTML = adata[5][0] + adata[5][1];
+                let ddzl2 = document.getElementById("ddzl2");
+                ddzl2.innerHTML = adata[5][2] + adata[5][3];
+                if ($("#GetDispatchTypeList option:selected").val() == 1) {
+                    yali_data = adata[0];
+                    liuliang_data = adata[1];
+                    shuizhi_data = adata[2];
+                    down1_time = adata[3];
+                    down2 = adata[4];
+                    down3 = adata[5];
+                    yali_length = adata[0].length;
+                    liuliang_length = adata[1].length;
+                    shuizhi_length = adata[2].length;
+                    let yali = document.getElementById("yali");
+                    for (let i = 0; i < yali_length; i++) {
+                        if (Number(yali_data[i].Tag_value) != Number(yali_data[i].Remark) && isRefresh) {
+                            yali.innerHTML += "<table class='right421211'>" +
+                                "<tr class='right4212111'>" +
+                                "<th class='right42121111' >" +
+                            @* "<input type='checkbox' checked='checked' id='" + yali_data[i].WMeter_ID + "' onclick='clickCheckbox(this)' style='width:15px;'/>" +*@
+                                yali_data[i].Meter_Name +
+                                "</th>" +
+                                "<td class='right42121112'>" +
+                                yali_data[i].Tag_value +
+                                "</td>" +
+                                "</tr>" +
+                                "</table>";
+                            yali_list += "<tr class='right5121221' style='height:42.5px;' id='down_" + yali_data[i].WMeter_ID + "'>" +
+                                "<td class='right51212211' >" +
+                            @* "<input class='down1_1' type='checkbox' checked='checked' id='" + yali_data[i].WMeter_ID + "' onclick='clickCheckbox2(this)' style='width:15px; margin-left:10px; margin-top:7px;'/>" +*@
+                                yali_data[i].Meter_Name +
+                                "</td>" +
+                                "<td class='down1_2 right51212211'>" +
+                                yali_data[i].Tag_value +
+                                "</td>" +
+                                "<td class='right51212211'>" +
+                           @* "<input class='down1_3' type='text' name='LastName' style='background-color:#eef9fb;width:90px;text-align:center;' value='" + yali_data[i].Remark + "'/>" +*@
+                                yali_data[i].Remark +
+                                "</td>" +
+                                "</tr>";
+                        } else {
+                            yali.innerHTML += "<table class='right421211'>" +
+                                "<tr class='right4212111'>" +
+                                "<th class='right42121111'>" +
+                                @* "<input type='checkbox' checked='checked' id='" + yali_data[i].WMeter_ID + "' onclick='clickCheckbox(this)' style='width:15px;'/>" +*@
+                                yali_data[i].Meter_Name +
+                                "</th>" +
+                                "<td class='right42121112'>" +
+                                yali_data[i].Tag_value +
+                                "</td>" +
+                                "</tr>" +
+                                "</table>";
+                        }
+                        if (i == yali_length - 1 && isRefresh) {
+                            isRefresh = false;
+                            document.getElementById("down1").innerHTML = yali_list;
+                            let xzsl_time_content = document.getElementById("xzsl_time_content");
+                            let xzsl = document.getElementById("xzsl");
+                            let ycsl_time_content = document.getElementById("ycsl_time_content");
+                            let ycsl = document.getElementById("ycsl");
+                            //console.log(down1_time[0][1]);
+                            xzsl_time_content.innerText = down1_time[0][0].substring(0, 16);
+                            xzsl.innerText = down1_time[0][1] == null ? "" : down1_time[0][1].toFixed(2);
+                            ycsl_time_content.innerText = down1_time[1][0].substring(0, 16);
+                            ycsl.innerText = down1_time[1][1] == null ? "" : down1_time[1][1].toFixed(2);
+                        }
+                    }
+                    for (let i = 0; i < liuliang_length; i++) {
+                        let liuliang = document.getElementById("liuliang");
+                        liuliang.innerHTML += "<table class='right421211'>" +
+                            "<tr class='right4212111'>" +
+                            "<th class='right42121111'>" +
+                            liuliang_data[i].Meter_Name + "</th>" +
+                            "<td class='right42121112'>" +
+                            liuliang_data[i].Tag_value + "</td>" +
+                            "</tr>" +
+                            "</table>";
+                    }
+                    for (let i = 0; i < shuizhi_length; i++) {
+                        let shuizhi = document.getElementById("shuizhi");
+                        shuizhi.innerHTML += "<table class='right421212'>" +
+                            "<tr class='right4212111'>" +
+                            "<th class='right42121111'>" +
+                            shuizhi_data[i].Meter_Name + "</th>" +
+                            "<td class='right42121112'>" +
+                            "浊度：" + shuizhi_data[i].Tag_value[0] + "<br>" + "余氯：" + shuizhi_data[i].Tag_value[1] + "</td>" +
+                            "</tr>" +
+                            "</table>";
+
+                    }
+                    //console.log(down1_time[0][1]);
+                    for (let i = 0; i < down3.length; i++) {
+                        let Down2 = document.getElementById("down2");
+                        Down2.innerHTML += "<tr class='right5122221' style='height:42px;'>" +
+                            "<td class='right51222211'>" +
+                            down3[i][0] +
+                            "</td>" +
+                            "<td class='right51222211'>" +
+                            down3[i][2] +
+                            "</td>" +
+                            "<td class='right51222211'>" +
+                            down3[i][3] +
+                            "</td>" +
+                            "<td class='right51222211'>" +
+                            down3[i][4] +
+                            "</td>" +
+                            "<td class='right51222211'>" +
+                            down3[i][5] + "</td>" +
+                            "</tr>";
+                    }
+                    for (let i = 0; i < down3.length; i++) {
+                        let Down3 = document.getElementById("down3");
+                        Down3.innerHTML += "<tr class='right5221221' style='height:42px;'>" +
+                            "<td class='right52212211 down3_1'>" +
+                            down3[i][0] +
+                            "</td>" +
+                            "<td class='down3_2 right52212211'>" +
+                            down3[i][2] +
+                            "</td>" +
+                            "<td class='right52212211'>" +
+                        @* "<input class='down3_3' type='text' name='LastName' style='border:0; background-color:#eef9fb;width:88px;text-align:center;' value='" + down3[i][4] + "'/>" +*@
+                            down3[i][4] +
+                            "</td>" +
+                            "</tr>"
+                    }
+                    for (let i = 0; i < down2.length; i++) {
+                        let Down4 = document.getElementById("down4");
+                        Down4.innerHTML += "<tr style='height:42.5px;' class='right5222221'>" +
+                            "<td class='right52222211'>" +
+                            down2[i][1] +
+                            "</td>" +
+                            "<td class='right52222211'>" +
+                            down2[i][3] +
+                            "</td>" +
+                            "<td class='right52222211'>" +
+                            down2[i][4] +
+                            "</td>" +
+                            "<td class='right52222211'>" +
+                            down2[i][5] +
+                            "</td>" +
+                            "</tr>";
+                        //console.log(yali_data);
+                        //down1_data.push(yali_data[i]);
+                        flagId.push(down2[i][0])
+                        let down1 = document.getElementById("down1");
+                        down1.innerHTML += "<tr class='right5121221' style='height:38.5px;' id='down_" + down2[i][0] + "'>" +
+                            "<td class='right51212211' >" +
+                        @* "<input class='down1_1' type='checkbox' checked='checked' id='" + down2[i][0] + "' onclick='clickCheckbox2(this)' style='width:15px; margin-left:10px; margin-top:7px;'/>" +*@
+                            down2[i][1] +
+                            "</td>" +
+                            "<td class='down1_2 right51212211'>" +
+                            down2[i][2] +
+                            "</td>" +
+                            "<td class='right51212211'>" +
+                        @* "<input class='down1_3' type='text' name='LastName' style='background-color:#eef9fb;width:90px;text-align:center;' value='" + down2[i][3] + "'/>" +*@
+                            down2[i][3] +
+                            "</td>" +
+                            "</tr>";
+                    }
+                    let xzsl_time_content = document.getElementById("xzsl_time_content");
+                    let xzsl = document.getElementById("xzsl");
+                    let ycsl_time_content = document.getElementById("ycsl_time_content");
+                    let ycsl = document.getElementById("ycsl");
+                    let pjpcl1 = document.getElementById("pjpcl1");
+                    xzsl_time_content.innerText = down1_time[0][0];
+                    xzsl.innerText = down1_time[0][1] == null ? "" : down1_time[0][1].toFixed(2);
+                    ycsl_time_content.innerText = down1_time[1][0];
+                    ycsl.innerText = down1_time[1][1] == null ? "" : down1_time[1][1].toFixed(2);
+                    pjpcl1.innerHTML = adata[11];
+                    console.log(pjpcl1);
+                    if (adata[8] != "") {
+                        document.getElementById("scfa_time").innerHTML = "生成方案时间：" + adata[8];
+                        document.getElementById("scfa_time").style.display = "block";
+                    }
+                    if (adata[9] != "") {
+                        document.getElementById("xfddzl_time").innerHTML = "下发调令时间：" + adata[9];
+                        document.getElementById("xfddzl_time").style.display = "block";
+                    }
+                }
+                else if ($("#GetDispatchTypeList option:selected").val() == 3) {
+
+                    sctjc_checkbox = adata[4];
+                    let jysc = document.getElementById("jysc");
+                    let lzsc = document.getElementById("lzsc");
+                    let xkhsc = document.getElementById("xkhsc");
+                    let jbsc = document.getElementById("jbsc");
+                    let jysc111 = document.getElementById("jysc111");
+                    let lzsc111 = document.getElementById("lzsc111");
+                    let xkhsc111 = document.getElementById("xkhsc111");
+                    let jbsc111 = document.getElementById("jbsc111");
+                    for (let i = 0; i < sctjc_checkbox.length; i++) {
+                        if (sctjc_checkbox[i][0] == '10') {
+                            console.log('芥园水厂');
+                            jysc.innerHTML = '<input id="jysc1" type="checkbox" onchange="changeCheck1()" checked><label for="jysc1">芥园水厂</label>'
+                        }
+                        else if (sctjc_checkbox[i][0] == '11') {
+                            console.log('凌庄水厂');
+                            lzsc.innerHTML = '<input id="lzsc1" type="checkbox" onchange="changeCheck2()" checked><label for="lzsc1">凌庄水厂</label>'
+                        }
+                        else if (sctjc_checkbox[i][0] == '12') {
+                            console.log('新开河水厂');
+                            xkhsc.innerHTML = '<input id="xkhsc1" type="checkbox" onchange="changeCheck3()" checked><label for="xkhsc1">新开河水厂</label>'
+                        }
+                        else if (sctjc_checkbox[i][0] == '13') {
+                            console.log('津滨水厂');
+                            jbsc.innerHTML = '<input id="jbsc1" type="checkbox" onchange="changeCheck4()" checked><label for="jbsc1">津滨水厂</label>'
+                        }
+                    }
+                    for (let i = 0; i < adata[15].length; i++) {
+                        if (adata[15][i] == '10') {
+                            console.log('芥园水厂');
+                            jysc111.innerHTML = '<input id="jysc11" type="checkbox" onchange="changeCheck11()" checked><label for="jysc11">芥园水厂</label>'
+                        }
+                        else if (adata[15][i] == '11') {
+                            console.log('凌庄水厂');
+                            lzsc111.innerHTML = '<input id="lzsc11" type="checkbox" onchange="changeCheck22()" checked><label for="lzsc11">凌庄水厂</label>'
+                        }
+                        else if (adata[15][i] == '12') {
+                            console.log('新开河水厂');
+                            xkhsc111.innerHTML = '<input id="xkhsc11" type="checkbox" onchange="changeCheck33()" checked><label for="xkhsc11">新开河水厂</label>'
+                        }
+                        else if (adata[15][i] == '13') {
+                            console.log('津滨水厂');
+                            jbsc111.innerHTML = '<input id="jbsc11" type="checkbox" onchange="changeCheck45()" checked><label for="jbsc11">津滨水厂</label>'
+                        }
+                    }
+                    sctjc_scyldd = adata[5];
+                    for (let i = 0; i < sctjc_scyldd.length; i++) {
+                        document.getElementById('sctjc_scyldd').innerHTML +=
+                            '<tr style="position: relative; height: 32px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">'
+                            + '<td style="font-size: 10px;">' + sctjc_scyldd[i][1] + '</td>'
+                            + '<td style="font-size: 10px;">' + sctjc_scyldd[i][2] + '</td>'
+                            + '<td style="font-size: 10px;">' + sctjc_scyldd[i][3] + '</td>'
+                            + '<td style="font-size: 10px;">' + sctjc_scyldd[i][4] + '</td>'
+                            + '<td style="font-size: 10px;">' + sctjc_scyldd[i][5] + '</td>'
+                            + '</tr>';
+                    }
+
+                    sctjc_czxgdb = adata[3];
+                    for (let i = 0; i < sctjc_czxgdb.length; i++) {
+                        if (i == 0) {
+                            document.getElementById('sctjc_czxgdb').innerHTML +=
+                                '<tr class="" style="position: relative; height: 30px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">'
+                                + '<td class="" style="font-size: 10px;">处置前</td>'
+                                + '<td class="" style="font-size: 10px;">' + sctjc_czxgdb[i][0] + '</td>'
+                                + '<td class="" style="font-size: 10px;">' + sctjc_czxgdb[i][1] + '</td>'
+                                + '</tr>';
+                        } else {
+                            document.getElementById('sctjc_czxgdb').innerHTML +=
+                                '<tr class="" style="position: relative; height: 30px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">'
+                                + '<td class="" style="font-size: 10px;">处置后</td>'
+                                + '<td class="" style="font-size: 10px;">' + sctjc_czxgdb[i][0] + '</td>'
+                                + '<td class="" style="font-size: 10px;">' + sctjc_czxgdb[i][1] + '</td>'
+                                + '</tr>';
+                        }
+
+                    }
+
+                    sctjc_yjczzl = adata[5];
+                    for (let i = 0; i < sctjc_yjczzl.length; i++) {
+                        let count = i + 1;
+                        document.getElementById('sctjc_yjczzl').innerHTML +=
+                            '<tr style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">'
+                            + '<td style="font-size: 10px;">' + count + '</td>'
+                            + '<td style="font-size: 10px;">' + sctjc_yjczzl[i][1] + '</td>'
+                            + '<td style="font-size: 10px;">' + sctjc_yjczzl[i][4] + '</td>'
+                            + '</tr>';
+                    }
+                }
+                else if ($("#GetDispatchTypeList option:selected").val() == 4) {
+
+                    let bgyj_bgdxx = adata[4];
+                    for (let i = 0; i < bgyj_bgdxx.length; i++) {
+                        document.getElementById('bgyj_bgdxx').innerHTML +=
+                            '<tr style="position: relative; height: 30px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">'
+                            + '<td style="font-size: 10px; ">' + bgyj_bgdxx[i][2] + '</td >'
+                            + '<td style = "font-size: 10px; ">' + bgyj_bgdxx[i][3] + '</td >'
+                            + '<td style = "font-size: 10px;">' + bgyj_bgdxx[i][4] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + bgyj_bgdxx[i][5] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + bgyj_bgdxx[i][6] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + bgyj_bgdxx[i][7] + '</td > '
+                            + '</tr >';
+                    }
+                    let bgyj_gfmx = adata[5];
+                    for (let i = 0; i < bgyj_gfmx.length; i++) {
+                        let id = i + 1;
+                        document.getElementById('bgyj_gfmx').innerHTML +=
+                            '<tr style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">'
+                            + '<td style = "font-size: 10px;" > ' + id + '</td > '
+                            + '<td style="font-size: 10px;">' + bgyj_gfmx[i][1] + '</td>'
+                            + '<td style="font-size: 10px;">' + bgyj_gfmx[i][3] + '</td>'
+                            + '</tr >';
+                    }
+                    let bgyj_gfhdyx = adata[3];
+                    for (let i = 0; i < bgyj_gfhdyx.length; i++) {
+                        document.getElementById('bgyj_gfhdyx').innerHTML +=
+                            '<tr style="position: relative; height: 30px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">'
+                            + '<td style="font-size: 10px;">'
+                            + bgyj_gfhdyx[i][0]
+                            + '</td>'
+                            + '<td style="font-size: 10px;">'
+                            + bgyj_gfhdyx[i][1]
+                            + '</td>'
+                            + '</tr>';
+                    }
+
+                    //console.log(down1_time[0][1]);
+                }
+                else if ($("#GetDispatchTypeList option:selected").val() == 5) {
+
+                    let szwryj_bgdxx = adata[4];
+                    for (let i = 0; i < szwryj_bgdxx.length; i++) {
+                        document.getElementById('szwryj_bgdxx').innerHTML +=
+                            '<tr style="position: relative; height: 30px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">'
+                            + '<td style="font-size: 10px; ">' + szwryj_bgdxx[i][2] + '</td >'
+                            + '<td style = "font-size: 10px; ">' + szwryj_bgdxx[i][3] + '</td >'
+                            + '<td style = "font-size: 10px;">' + szwryj_bgdxx[i][4] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + szwryj_bgdxx[i][5] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + szwryj_bgdxx[i][6] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + szwryj_bgdxx[i][7] + '</td > '
+                            + '</tr >';
+                    }
+                    let szwryj_gfmx = adata[5];
+                    for (let i = 0; i < szwryj_gfmx.length; i++) {
+                        let id = i + 1;
+                        document.getElementById('szwryj_gfmx').innerHTML +=
+                            '<tr style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">'
+                            + '<td style = "font-size: 10px;" > ' + id + '</td > '
+                            + '<td style="font-size: 10px;">' + szwryj_gfmx[i][1] + '</td>'
+                            + '<td style="font-size: 10px;">' + szwryj_gfmx[i][3] + '</td>'
+                            + '</tr >';
+                    }
+                    let szwryj_gfhdyx = adata[3];
+                    for (let i = 0; i < szwryj_gfhdyx.length; i++) {
+                        document.getElementById('szwryj_gfhdyx').innerHTML +=
+                            '<tr style="position: relative; height: 30px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">'
+                            + '<td style="font-size: 10px;">'
+                            + szwryj_gfhdyx[i][0]
+                            + '</td>'
+                            + '<td style="font-size: 10px;">'
+                            + szwryj_gfhdyx[i][1]
+                            + '</td>'
+                            + '</tr>';
+                    }
+                    //console.log(down1_time[0][1]);
+                }
+                else if ($("#GetDispatchTypeList option:selected").val() == 6) {
+
+                    let yltjyj_bgdxx = adata[4];
+                    for (let i = 0; i < yltjyj_bgdxx.length; i++) {
+                        document.getElementById('yltjyj_bgdxx').innerHTML +=
+                            '<tr style="position: relative; height: 30px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">'
+                            + '<td style="font-size: 10px; ">' + yltjyj_bgdxx[i][2] + '</td >'
+                            + '<td style = "font-size: 10px; ">' + yltjyj_bgdxx[i][3] + '</td >'
+                            + '<td style = "font-size: 10px;">' + yltjyj_bgdxx[i][4] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + yltjyj_bgdxx[i][5] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + yltjyj_bgdxx[i][6] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + yltjyj_bgdxx[i][7] + '</td > '
+                            + '</tr >';
+                    }
+                    let yltjyj_bjfmmx = adata[5];
+                    for (let i = 0; i < yltjyj_bjfmmx.length; i++) {
+                        let id = i + 1;
+                        document.getElementById('yltjyj_bjfmmx').innerHTML +=
+                            '<tr style="position: relative; height: 32px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">'
+                            + '<td style = "font-size: 10px;" > ' + id + '</td > '
+                            + '<td style="font-size: 10px;">' + yltjyj_bjfmmx[i][1] + '</td>'
+                            + '<td style="font-size: 10px;">' + yltjyj_bjfmmx[i][3] + '</td>'
+                            + '</tr >';
+                    }
+                    let yltjyj_qyxx = adata[3];
+                    for (let i = 0; i < yltjyj_qyxx.length; i++) {
+                        document.getElementById('yltjyj_qyxx').innerHTML +=
+                            '<tr style="position: relative; height: 30px; border: 1px solid #cbe1f9; /* margin-left: 5px; */ text-align: center; background-color: #fff;">'
+                            + '<td style="font-size: 10px;">'
+                            + yltjyj_qyxx[i][0]
+                            + '</td>'
+                            + '<td style="font-size: 10px;">'
+                            + yltjyj_qyxx[i][1]
+                            + '</td>'
+                            + '</tr>';
+                    }
+                    //console.log(down1_time[0][1]);
+                }
+                else if ($("#GetDispatchTypeList option:selected").val() == 7) {
+                    let bzyh = adata[5];
+                    for (let i = 0; i < bzyh.length; i++) {
+                        let istrueorfalse = (bzyh[i][2] == 'True') ? '是' : '否';
+                        document.getElementById('bzyh_').innerHTML +=
+                            '<tr style="position: relative; height: 30px; border: 1px solid #cbe1f9; text-align: center; background-color: #fff;">'
+                            + '<td style="font-size: 10px; ">' + bzyh[i][1] + '</td >'
+                            + '<td style = "font-size: 10px; ">' + istrueorfalse + '</td >'
+                            + '<td style = "font-size: 10px;">' + bzyh[i][3] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + bzyh[i][4] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + bzyh[i][5] + '</td > '
+                            + '<td style = "font-size: 10px;" > ' + (bzyh[i][6] == '' ? '' : Number(bzyh[i][6]).toFixed(2)) + '</td > '
+                            + '</tr >';
+                    }
+                    let jykyj = adata[15].split(';');
+                    $("#jykyjyl").html("依据压力：" + jykyj[0] + "MPa");
+                    $("#jykyjll").html("依据流量：" + jykyj[1] + "m³/h");
+                    $("#jykyjss").html("依据时间：" + jykyj[2]);
+                    //console.log(down1_time[0][1]);
+                }
+            }
+        });
+    }
+
+    var psId, planId;
+    var psId1 = 66;
+    var isRefresh = false;
+    var yali_data = [];
+    var yali_list = "";
+    var liuliang_data = [];
+    var shuizhi_data = [];
+    var down1_time = [];
+    var down2 = [];
+    var down3 = [];
+    var scfadata = [];
+    var zldata = []
+    var yali_length = 0;
+    var liuliang_length = 0;
+    var shuizhi_length = 0;
+    var down1_length = 0;
+    var down2_length = 0;
+    var down3_length = 0;
+    var planId;
+    var flagId = [];
+    var firstId = [];
+    var scfaTime = '';
+
+    
+    window.onload = init();
+
+</script>

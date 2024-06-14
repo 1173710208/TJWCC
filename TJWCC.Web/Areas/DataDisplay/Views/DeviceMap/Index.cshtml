@@ -1,0 +1,341 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_Index.cshtml";
+    Layout = null;
+}
+
+<!--基础js-->
+<link href="~/Content/js/bootstrap/bootstrap.css" rel="stylesheet" />
+<script src="~/Content/js/jquery/jquery.js"></script>
+<script src="~/Content/js/jquery-ui/jquery-ui.min.js"></script>
+<script src="~/Content/js/bootstrap/bootstrap.js"></script>
+<link href="~/Content/js/ALTE/css/AdminLTE.min.css" rel="stylesheet" />
+<script src="~/Content/js/ALTE/js/adminlte.js"></script>
+<link href="~/Content/css/framework-font.css" rel="stylesheet" />
+<link href="~/Content/css/framework-theme.css" rel="stylesheet" />
+<script src="~/Content/js/framework-ui.js"></script>
+<link href="~/Content/css/site.css" rel="stylesheet" />
+
+<!-- arcgis  -->
+<link href="~/Areas/DataDisplay/Content/css/jquery-ui.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/map/indexMap.css" rel="stylesheet" />
+@*<link rel="stylesheet" type="text/css" href="~/Content/JSAPI_3.21/dijit/themes/tundra/tundra.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/JSAPI_3.21/esri/css/esri.css" />*@
+@*<script src="~/Content/JSAPI_3.21/init.js"></script>*@
+<script src="~/Areas/DataDisplay/Content/js/map/map1.js"></script>
+<script src="~/Areas/DataDisplay/Content/js/map/map2.js"></script>
+<!-- 右键菜单 -->
+<script src="~/Areas/DataDisplay/Content/js/map/indexmenu.js"></script>
+
+<style>
+
+    .textValue {
+        font-size: 42px;
+    }
+
+    .textTitle {
+        font-size: 18px;
+        color: #000;
+    }
+</style>
+
+<div class="container-fluid">
+    <!--查询按钮-->
+    <div class="row">
+        <div class="box box-solid">
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="topPanel">
+                    <div class="search">
+                        <table>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <input id="txt_keyword" type="text" class="form-control" placeholder="请输入IMEI号" style="width: 200px;line-height:29px;height:29px">
+                                        <span class="input-group-btn">
+                                            <button id="btn_search" type="button" class="btn  btn-primary" style="height:29px;width:30px;padding:0"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+    <!--显示查询表计区域数据-->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid box-black-blue ">
+                <div class="box-header with-border">
+                    <h3 class="box-title">表计所在区域信息</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-md-3">
+                        <div class="inner">
+                            <h3 id="install" class="text-danger textValue">-</h3>
+                            <p class="textTitle">装表数量(具)</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="inner">
+                            <h3 id="online" class="text-danger textValue">-</h3>
+                            <p class="textTitle">上线数量(具)</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="inner">
+                            <h3 id="inp" class="text-danger textValue">-</h3>
+                            <p class="textTitle">上线率</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="inner">
+                            <h3 id="alarm" class="text-danger textValue">-</h3>
+                            <p class="textTitle">报警数量</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+        </div>
+    </div>
+
+
+    <!--gis-->
+    <div class="row" id="home" style="height:300px;  min-height:300px;">
+        <div class="col-md-8">
+            <div id="maptop" class="map_top">
+                <div style="width:100%;float:left;padding-left:60px">
+                    <div class="map_home" id="homeExtent" onclick="homeExtentClick()">定位</div>
+                    <div class="map_clear" id="clear1" onclick="clearClick()">清除</div>
+                    <div class="map_stss" id="fullExtent" onclick="fullExtentClick()">全图</div>
+                    <div id="measutreLength" class="map_gc" onclick="measutreLength()">长度测量</div>
+                    <div id="measutreArea" class="map_gc" onclick="measutreArea()">面积测量</div>
+                </div>
+                <div id="mapCenterInfo" style=""></div>
+            </div>
+            <div id="map" class="map1">
+                <img id="loadingImg" src="~/Areas/DataDisplay/Content/img/gif/5-121204193Q8.gif" style="position:absolute;z-index:10;display:none" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="box map_top">
+                <div class="box-header">
+                    <h3 class="box-title">表计详细信息</h3>
+                    <div class="btn-group">
+                        <a id="DM-edit" class="btn btn-primary dropdown-text" onclick="btn_dmedit()">修改坐标</a>
+                    </div>
+                </div>
+                <div id="meter_info" class="box-body table-responsive no-padding">
+                    <table class="table table-bordered table-hover ">
+                        <tbody>
+                            <tr><td>水表编号</td><td></td>-</tr>
+                            <tr><td>仪表类型</td><td></td>-</tr>
+                            <tr><td>协议版本号</td><td></td>-</tr>
+                            <tr><td>通讯运营商平台中的设备ID</td><td></td>-</tr>
+                            <tr><td>通讯运营商ID</td><td></td>-</tr>
+                            <tr><td>所属水务公司ID</td><td></td>-</tr>
+                            <tr><td>所属营销公司ID</td><td></td>-</tr>
+                            <tr><td>所属营销分公司ID</td><td></td>-</tr>
+                            <tr><td>用户ID</td><td></td>-</tr>
+                            <tr><td>数据中心的水表注册号</td><td></td>-</tr>
+                            <tr><td>水表型号ID</td><td></td>-</tr>
+                            <tr><td>水表生产商ID</td><td></td>-</tr>
+                            <tr><td>安装日期</td><td></td>-</tr>
+                            <tr><td>初始水量</td><td></td>-</tr>
+                            <tr><td>当前累计水量</td><td></td>-</tr>
+                            <tr><td>采集累计水量时间</td><td></td>-</tr>
+                            <tr><td>报警状态</td><td></td>-</tr>
+                            <tr><td>电池电压</td><td></td>-</tr>
+                            <tr><td>信号强度</td><td></td>-</tr>
+                            <tr><td>信噪比</td><td></td>-</tr>
+                            <tr><td>覆盖等级</td><td></td>-</tr>
+                            <tr><td>小区ID</td><td></td>-</tr>
+                            <tr><td>IMSI号码</td><td></td>-</tr>
+                            <tr><td>水表内的水表表号</td><td></td>-</tr>
+                            <tr><td>水表内的厂商代码</td><td></td>-</tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    var ArcGISServer = "http://cache1.arcgisonline.cn/arcgis/rest/services/ChinaOnlineCommunity";
+    //var ArcGISServer = "http://192.168.1.143:6080/arcgis/rest/services/BSTJ/BaseMap";
+    var keyValue = "";
+    $(function () {
+        resizeGisH();
+        $("#btn_search").click(function () {
+            hideAndClear();
+            $.ajax({
+                url: "/DataDisplay/DeviceMap/GetWaterMeter?mid=" + $("#txt_keyword").val(),
+                type: "get",
+                async: false,
+                success: function (data) {
+                    var JsonData = JSON.parse(data);
+                    if (JsonData.result != null) {
+                        keyValue = JsonData.result.NBMETERID;
+                        setValueForDiv('meter_info', '<table class="table table-bordered table-hover "><tbody>'
+                            + '<tr><td>水表编号</td><td>' + (JsonData.result.IMEI == null ? "-" : JsonData.result.IMEI) + '</td></tr>'
+                            + '<tr><td>仪表类型</td><td>' + (JsonData.result.TYPECOD == null ? "-" : JsonData.result.TYPECOD) + '</td></tr>'
+                            + '<tr><td>协议版本号</td><td>' + (JsonData.result.PROTOCOLVER == null ? "-" : JsonData.result.PROTOCOLVER) + '</td></tr>'
+                            + '<tr><td>通讯运营商平台中的设备ID</td><td>' + (JsonData.result.EQUIPID == null ? "-" : JsonData.result.EQUIPID) + '</td></tr>'
+                            + '<tr><td>通讯运营商ID</td><td>' + (JsonData.result.COMMID == null ? "-" : JsonData.result.COMMID) + '</td></tr>'
+                            + '<tr><td>所属水务公司ID</td><td>' + (JsonData.result.COMPANYID == null ? "-" : JsonData.result.COMPANYID) + '</td></tr>'
+                            + '<tr><td>所属营销公司ID</td><td>' + (JsonData.result.BUSINESSID == null ? "-" : JsonData.result.BUSINESSID) + '</td></tr>'
+                            + '<tr><td>所属营销分公司ID</td><td>' + (JsonData.result.SUBBUSIID == null ? "-" : JsonData.result.SUBBUSIID) + '</td></tr>'
+                            + '<tr><td>用户ID</td><td>' + (JsonData.result.USERID == null ? "-" : JsonData.result.USERID) + '</td></tr>'
+                            + '<tr><td>数据中心的水表注册号</td><td>' + (JsonData.result.SBZCH == null ? "-" : JsonData.result.SBZCH) + '</td></tr>'
+                            + '<tr><td>水表型号ID</td><td>' + (JsonData.result.TYPEID == null ? "-" : JsonData.result.TYPEID) + '</td></tr>'
+                            + '<tr><td>水表生产商ID</td><td>' + (JsonData.result.MAKERID == null ? "-" : JsonData.result.MAKERID) + '</td></tr>'
+                            + '<tr><td>安装日期</td><td>' + (JsonData.result.INSTALLDATE == null ? "-" : JsonData.result.INSTALLDATE) + '</td></tr>'
+                            + '<tr><td>初始水量</td><td>' + (JsonData.result.INICOUNT == null ? "-" : JsonData.result.INICOUNT) + '</td></tr>'
+                            + '<tr><td>当前累计水量</td><td>' + (JsonData.result.CURCOUNT == null ? "-" : JsonData.result.CURCOUNT) + '</td></tr>'
+                            + '<tr><td>采集累计水量时间</td><td>' + (JsonData.result.CURTIME == null ? "-" : JsonData.result.CURTIME) + '</td></tr>'
+                            + '<tr><td>报警状态</td><td>' + (JsonData.result.ALARM == null ? "-" : JsonData.result.ALARM) + '</td></tr>'
+                            + '<tr><td>电池电压</td><td>' + (JsonData.result.VOLTAGE == null ? "-" : JsonData.result.VOLTAGE) + '</td></tr>'
+                            + '<tr><td>信号强度</td><td>' + (JsonData.result.RSRP == null ? "-" : JsonData.result.RSRP) + '</td></tr>'
+                            + '<tr><td>信噪比</td><td>' + (JsonData.result.SNR == null ? "-" : JsonData.result.SNR) + '</td></tr>'
+                            + '<tr><td>覆盖等级</td><td>' + (JsonData.result.COVLEVEL == null ? "-" : JsonData.result.COVLEVEL) + '</td></tr>'
+                            + '<tr><td>小区ID</td><td>' + (JsonData.result.CELLID == null ? "-" : JsonData.result.CELLID) + '</td></tr>'
+                            + '<tr><td>IMSI号码</td><td>' + (JsonData.result.IMSI == null ? "-" : JsonData.result.IMSI) + '</td></tr>'
+                            + '<tr><td>水表内的水表表号</td><td>' + (JsonData.result.METERCODE == null ? "-" : JsonData.result.METERCODE) + '</td></tr>'
+                            + '<tr><td>水表内的厂商代码</td><td>' + (JsonData.result.MAKERCODE == null ? "-" : JsonData.result.MAKERCODE) + '</td></tr></tbody></table>');
+                    } else {
+                        keyValue = "";
+                        setValueForDiv('meter_info', '<table class="table table-bordered table-hover "><tbody>'
+                            + '<tr><td>水表编号</td><td></td>-</tr>'
+                            + '<tr><td>仪表类型</td><td></td>-</tr>'
+                            + '<tr><td>协议版本号</td><td></td>-</tr>'
+                            + '<tr><td>通讯运营商平台中的设备ID</td><td></td>-</tr>'
+                            + '<tr><td>通讯运营商ID</td><td></td>-</tr>'
+                            + '<tr><td>所属水务公司ID</td><td></td>-</tr>'
+                            + '<tr><td>所属营销公司ID</td><td></td>-</tr>'
+                            + '<tr><td>所属营销分公司ID</td><td></td>-</tr>'
+                            + '<tr><td>用户ID</td><td></td>-</tr>'
+                            + '<tr><td>数据中心的水表注册号</td><td></td>-</tr>'
+                            + '<tr><td>水表型号ID</td><td></td>-</tr>'
+                            + '<tr><td>水表生产商ID</td><td></td>-</tr>'
+                            + '<tr><td>安装日期</td><td></td>-</tr>'
+                            + '<tr><td>初始水量</td><td></td>-</tr>'
+                            + '<tr><td>当前累计水量</td><td></td>-</tr>'
+                            + '<tr><td>采集累计水量时间</td><td></td>-</tr>'
+                            + '<tr><td>报警状态</td><td></td>-</tr>'
+                            + '<tr><td>电池电压</td><td></td>-</tr>'
+                            + '<tr><td>信号强度</td><td></td>-</tr>'
+                            + '<tr><td>信噪比</td><td></td>-</tr>'
+                            + '<tr><td>覆盖等级</td><td></td>-</tr>'
+                            + '<tr><td>小区ID</td><td></td>-</tr>'
+                            + '<tr><td>IMSI号码</td><td></td>-</tr>'
+                            + '<tr><td>水表内的水表表号</td><td></td>-</tr>'
+                            + '<tr><td>水表内的厂商代码</td><td></td>-</tr></tbody></table>');
+                    }
+                    setValueForDiv('install', JsonData.install == undefined ? "0" : JsonData.install);
+                    setValueForDiv('online', JsonData.online == undefined ? "0" : JsonData.online);
+                    setValueForDiv('inp', JsonData.inp == undefined ? "0%" : JsonData.inp);
+                    setValueForDiv('alarm', JsonData.alarm == undefined ? "0" : JsonData.alarm);
+                    if (JsonData.install != undefined && JsonData.install != 0)
+                        showArea(JsonData.bid);
+                    var cPoint = new esri.geometry.Point();
+                    cPoint.x = JsonData.result.X;
+                    cPoint.y = JsonData.result.Y;
+                    cPoint.spatialReference = map.spatialReference;
+                    var graphic = new esri.Graphic(cPoint, RedGlowPolygonSymbol);
+                    //清除上一次的画图内容
+                    map.graphics.clear();
+                    map.graphics.add(graphic);
+                }
+            });
+        });
+        //autoComplete: function () {
+        //    $('#txt_keyword').typeahead({
+        //        source: function (query, process) {
+        //            //query是输入值
+        //            $.getJSON('/DataDisplay/DeviceMap/GetWaterMeterlist', { "query": query }, function (data) {
+        //                process(data);
+        //            });
+        //        },
+        //        updater: function (item) {
+        //            return item.replace(/<a(.+?)<\/a>/, ""); //这里一定要return，否则选中不显示
+        //        },
+        //        afterSelect: function (item) {
+        //            //选择项之后的时间，item是当前选中的项
+        //            alert(item);
+        //        },
+        //        items: 10, //显示8条
+        //        delay: 500 //延迟时间
+        //    });
+        //}
+        (function () {
+            var insertOptions = function (data) {
+                var result = new Array();
+                $.each(data, function (i, item) {
+                    if (i < 10)
+                        result.push(item.imei);
+                });
+                //alert(result.toString());
+                //console.log(result.toString());
+                $('#txt_keyword').autocomplete({
+                    source: result
+                });
+            }
+
+            $('#txt_keyword').keyup(function () {
+                var url = "/DataDisplay/DeviceMap/GetWaterMeterlist";
+                var skeyword = $("#search_kw").val();
+                $.ajax({
+                    url: url,
+                    dataType: 'json',
+                    data: { "imei": skeyword },
+                    success: function (data) {
+                        insertOptions(data);
+                    }
+
+                });
+            });
+
+        })();
+    });
+
+    function btn_dmedit() {
+        if (keyValue == "") {
+            alert("无查询结果不能修改坐标！");
+            return;
+        }
+        $.modalOpen({
+            id: "Form",
+            title: "修改坐标",
+            url: "/DataDisplay/DeviceMap/DMEditForm?keyValue=" + keyValue,
+            width: "400px",
+            height: "250px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    //设置GIS高度
+    function resizeGisH() {
+        $("#map_root").height($(window).height() - 300);
+        $("#map_container").height($(window).height() - 300);
+    }
+    //动态修改GIS高度
+    window.onresize = function () {
+        resizeGisH();
+    }
+    window.onload = function () {
+        resizeGisH();
+    }
+</script>

@@ -1,0 +1,417 @@
+﻿html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+/* 字体引入 */
+@font-face {
+    font-family: 'custom';
+    src:url(../../../../Areas/DataDisplay/Content/css/font/custom.TTF);
+}
+/*.bg1{
+    background: transparent;
+}
+.bg-one{
+    background: url(../../../../Areas/DataDisplay/Content/img/bg-border1.png);
+    background-size: 100% 100%;
+}
+.bg-two{
+    background: url(../../../../Areas/DataDisplay/Content/img/bg-border3.png);
+    background-size: 100% 100%;
+}
+#box-map1,#box-s-map{
+    background: url(../../../../Areas/DataDisplay/Content/img/bg-border2.png);
+    background-size: 100% 100%;
+}
+.title-bg{
+    padding: 0px 0 5px 0px;
+}
+.title-bg>span{
+    text-align: center;
+    display: inline-block;
+    padding: 10px 20px;
+    min-width: 124px;
+    background: url(../../../../Areas/DataDisplay/Content/img/title-bg.png);
+    background-size: 100% 100%;
+}
+.box {
+    color: white;
+
+}
+
+.icon-Water {
+    background: url(../../../../Areas/DataDisplay/Content/img/icon_shui.png);
+    background-size: 100% 100%;
+    display: inline-block;
+    width: 36px;
+    height: 46px;
+    left: 10px;
+    margin-right: 20px;
+    position: absolute;
+    top: 50%;
+    margin-top: -5px;
+}
+
+.icon-Exit {
+    background: url(../../../../Areas/DataDisplay/Content/img/icon_tuichu.png) 100% 100% no-repeat;
+    display: block;
+    vertical-align: middle;
+    width: 38px;
+    height: 38px;
+}
+
+.icon-GoBack {
+    background: url(../../../../Areas/DataDisplay/Content/img/icon-fanhui.png) 100% 100% no-repeat;
+    display: block;
+    vertical-align: middle;
+    width: 38px;
+    height: 38px;
+    margin-right: 10px;
+}
+
+.icon-time {
+    background: url(../../../../Areas/DataDisplay/Content/img/bg_shijian.png) 100% 100% no-repeat;
+    display: block;
+    width: 24px;
+    height: 32px;
+    float: left;
+    margin-right: 5px;
+    text-align: center;
+    font-family: 'custom';
+}
+.center-block{
+    text-align: center;
+}
+.total-value{
+    font-family: 'custom';
+    letter-spacing: 1px;
+    font-size: 28px;
+}*/
+/* 标题*/
+.title-box {
+    display: flex;
+    justify-content: center;
+    align-items: Center;
+    position: relative;
+    border-bottom: 1px solid #D2DFF2;
+}
+/*.title-div{
+    display: inline-block;
+    width: calc((100% - 475.5px)/3);
+    height: 48px;
+}
+.title-left{
+    background: url(../../../../Areas/DataDisplay/Content/img/title-div1.png);
+    background-size: 100% 100%;
+}*/
+/*.title-right{
+    background: url(../../../../Areas/DataDisplay/Content/img/title-div2.png);
+    background-size: 100% 100%;
+}*/
+#title-btn-left {
+    position: absolute;
+    left: 20px;
+}
+#title-btn-right{
+    position: absolute;
+    right: 20px;
+}
+/*首页地图 start*/
+/*#map {
+    display: block;
+    width: 700px;
+    height: 450px;
+    background: url(/Areas/DataDisplay/Content/img/map/map.png) no-repeat scroll 0% 0% transparent;
+    background-size: 100% 100%;
+    position: relative;
+    margin: 0 auto 2em auto;
+    padding: 0px;
+}
+
+#canvas-map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0px none;
+    padding: 0px;
+    opacity: 1;
+    width: 100%;
+    height: 100%;
+}
+
+#img-map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0px none;
+    opacity: 0;
+}
+
+.map {
+    display: block;
+    width: 440px;
+    height: 422px;
+    background-size: 100% 100%;
+    position: relative;
+    margin: 0 auto 2em auto;
+}
+
+.AreaMap {
+    display: block;
+    width: 440px;
+    height: 422px;
+    position: relative;
+    margin: 0 auto 2em auto;
+}
+
+#tjmap {
+    background: url(/Areas/DataDisplay/Content/img/map/tjzls2.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+#wlymap {
+    background: url(/Areas/DataDisplay/Content/img/map/wly2.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+#bhmap {
+    background: url(/Areas/DataDisplay/Content/img/map/bhzls2.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+
+/*天津自来水公司相关信息*/
+#tjzls-text {
+    position: absolute;
+    left: 60px;
+    top: 170px;
+}
+/*威立雅自来水公司相关信息*/
+#wly-text {
+    position: absolute;
+    left: 250px;
+    top: 100px;
+}
+/*滨海自来水公司相关信息*/
+#bhzls-text {
+    position: absolute;
+    left: 500px;
+    top: 230px;
+}
+
+
+/*一营销相关信息*/
+#tjyyx-text {
+    position: absolute;
+    left: 130px;
+    top: 20px;
+}
+
+
+/*二营销相关信息*/
+#tjeyx-text {
+    position: absolute;
+    left: 300px;
+    top: 70px;
+}
+
+
+/*三营销相关信息*/
+#tjsanyx-text {
+    position: absolute;
+    left: 200px;
+    top: 120px;
+}
+
+/*四营销相关信息*/
+#tjsiyx-text {
+    position: absolute;
+    left: 250px;
+    top: 260px;
+}
+
+/*五营销相关信息*/
+#tjwyx-text {
+    position: absolute;
+    left: 300px;
+    top: 180px;
+}
+
+/*西青营销相关信息*/
+#tjxqyx-text {
+    position: absolute;
+    left: 60px;
+    top: 130px;
+}
+
+
+/*河东营销相关信息*/
+#wlyhdyx-text {
+    position: absolute;
+    left: 30px;
+    top: 150px;
+}
+
+/*河北营销相关信息*/
+#wlyhbyx-text {
+    position: absolute;
+    left: 120px;
+    top: 100px;
+}
+
+/*北辰营销相关信息*/
+#wlybcyx-text {
+    position: absolute;
+    left: 80px;
+    top: 30px;
+}
+
+/*东丽营销相关信息*/
+#wlydlyx-text {
+    position: absolute;
+    left: 230px;
+    top: 230px;
+}
+
+
+
+/*空港水务相关信息*/
+#bhkgsw-text {
+    position: absolute;
+    left: 0px;
+    top: 20px;
+}
+
+
+/*华新水务相关信息*/
+#bhhxsw-text {
+    position: absolute;
+    left: 80px;
+    top: 90px;
+}
+
+
+/*塘沽水务相关信息*/
+#bhtgsw-text {
+    position: absolute;
+    left: 190px;
+    top: 150px;
+}
+
+/*华滨水务相关信息*/
+#bhhbsw-text {
+    position: absolute;
+    left: 260px;
+    top: 280px;
+}
+
+/*大港水务相关信息*/
+#bhdgsw-text {
+    position: absolute;
+    left: 30px;
+    top: 300px;
+}
+
+/*首页地图 end*/
+/*时间框*/
+.time {
+    height: 70px;
+    font-size: 24px;
+    padding-left: 10px;
+}
+
+#time {
+    font-size: 20px;
+}
+
+#TotalWater {
+    font-family: 'custom';
+    font-size: 55px;
+    display: inline-block;
+    width: 200px;
+    letter-spacing: 3px;
+}
+/*设置首页box高度*/
+#box-time {
+    height: 250px;
+}
+
+#box-RSSI {
+    height: 250px;
+}
+#box-0nline{
+    height: 300px;
+}
+#box-map1 {
+    height: 560px;
+}
+
+#box-Online {
+    height: 250px;
+}
+
+#box-alarm {
+    height: 300px;
+} 
+
+/*设置二级页面元素高度*/
+.tabNav {
+    color: white;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+    .tabNav .tabNavMenu:hover {
+        background-color: #133a81;
+    }
+
+    .tabNav .selected {
+        background-color: #094cc4 !important;
+    }
+
+
+#box-s-alarm {
+    height: 230px;
+}
+
+#box-s-map {
+    height: 530px;
+}
+
+/*横向柱状图-在线率统计*/
+.progress-chart {
+    line-height: 24px;
+    vertical-align: middle;
+    margin-bottom: 50px;
+}
+
+    .progress-chart .progress-Name {
+        float: left;
+        margin-right: 10px;
+        display: block;
+        width: 78px;
+        min-width: 78px;
+    }
+
+    .progress-chart .progress-value {
+        width: 60%;
+        height: 24px;
+        float: left;
+        margin-right: 10px;
+        border-radius: 12px;
+    }
+
+    .progress-chart .progress-bar-green {
+        background-color: #10a79e;
+    }
+
+.text-light-green {
+    color: #10a79e;
+}*/

@@ -1,0 +1,2401 @@
+﻿
+@{
+    ViewBag.Title = "泵站优化调度";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/OptimalOperation.css" rel="stylesheet" />
+<style>
+    html {
+        overflow-y: hidden !important;
+    }
+
+    body {
+        overflow-y: hidden !important;
+    }
+    .unwritten {
+        display: none;
+    }
+</style>
+<div class="main-container">
+    <div class="middle" style="width: 1670px; height: 855px;">
+        <div class="middle1" style="position:relative; width:1655px; height:845px;">
+            <div class="dropdown middle11" style="position: absolute; top: 1%; left: 0.5%; margin: 0px; z-index: 100;">
+                <select id="ORGANIZEID" name="ORGANIZEID" class="form-control right1121 " style="display:inline;width:160px" onchange="organizeidSelect(this)"></select>
+            </div>
+
+            @*芥园水厂送水一泵站*@
+            <div class="gyt" style="display:block; padding:5px; width:1660px; height:845px;" id="pid2">
+                <div id="body1" style="position:relative; width:100%; overflow:hidden;">
+                    <div id="info">
+                        <div class="tag" id="tag1" style="width: 220px; height: 130px; position: absolute; top: 25px; left: 400px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 20px;">
+                            <div style="margin-bottom: 5px; display:flex;">
+                                <div style="color:black;  width:90px;">一干浊度：</div>
+                                <div id="jyygzd" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.26</div>
+                                <div style="color: black; width: 50px; padding-left:10px;">NTU</div>
+                            </div>
+                            <div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 90px;">一干余氯：</div>
+                                <div id="jyygyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                                <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                            </div>
+                            <div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 90px; ">一干pH值：</div>
+                                <div id="jyygph" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">8.17</div>
+                            </div>
+                            <div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 90px; ">一干氨氮：</div>
+                                <div id="jyygad" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                                <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                            </div>
+                        </div>
+
+                        <div class="tag" id="tag2" style="width: 220px; height: 80px; position: absolute; top: 25px; left: 780px; background-color: #dfe9ea; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 20px;">
+                            <div style="margin-bottom: 5px; display:flex;">
+                                <div style="color:black;  width:90px;">瞬时流量：</div>
+                                <div id="jyssll" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.26</div>
+                                <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/h</div>
+                            </div>
+                            <div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 90px;">一干管网压力：</div>
+                                <div id="jyyggwya" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                                <div style="color: black; width: 50px; padding-left: 10px;">Mpa</div>
+                            </div>
+                        </div>
+
+
+                        <div class="tag" id="tag2" style="width: 220px; height: 80px; position: absolute; top: 720px; left: 720px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 20px;">
+                            <div style="margin-bottom: 5px; display:flex;">
+                                <div style="color:black;  width:90px;">7#库余氯：</div>
+                                <div id="jykyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                                <div style="color: black; width: 50px; padding-left:10px;">mg/L</div>
+                            </div>
+                            <div style="margin-bottom: 5px; display: flex;">
+                                <div style="color: black; width: 90px;">7#库氨氮：</div>
+                                <div id="jykad" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                                <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                            </div>
+                        </div>
+
+                        <div class="tag" id="tag2" style="width: 200px; height: 40px; position: absolute; top: 620px; right: 25px; background-color: #dfe9ea; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 10px;">
+                            <div style=" display:flex;">
+                                <div style="color:black;  width:90px;">瞬时流量：</div>
+                                <div id="jyssll2" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.00</div>
+                                <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/h</div>
+                            </div>
+                        </div>
+
+                        @*<div style="width: 80px; height: 20px; position: absolute; top: 450px; left: 15px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">快滤来水</div>*@
+                        <div style="width: 80px; height: 20px; position: absolute; top: 495px; left: 15px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">气浮来水</div>
+                        <div style="width: 80px; height: 20px; position: absolute; top: 50px; left: 1180px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第一出厂干管</div>
+                        <div style="width: 80px; height: 20px; position: absolute; top: 570px; left: 1505px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第二出厂干管</div>
+                        <div style="width: 80px; height: 20px; position: absolute; top: 570px; left: 430px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">2#清水库</div>
+                        <div style="width: 80px; height: 20px; position: absolute; top: 670px; left: 785px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">7#清水库</div>
+                        <img id="wwz_201_1" class=" jybimg1" style="position: absolute; width: 70px; top: 155px; left: 1070px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                        <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 155px; left: 1105px; color: #fff; height:25px; line-height:25px;">
+                            1#泵
+                        </div>
+                        <div style="width: 70px; height: 25px; line-height:25px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 1145px; top: 155px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata1" style="width: 32px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                            <div style="width: 33px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                        </div>
+
+                        <img id="wwz_201_1 " class="jybimg2" style="position: absolute; width: 70px; top: 210px; left: 1100px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                        <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 210px; left: 1135px; color: #fff; height: 25px; line-height: 25px; ">
+                            2#泵
+                        </div>
+                        <div style="width: 70px; height: 25px; line-height: 25px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 1175px; top: 210px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata2" style="width: 32px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.37</div>
+                            <div style="width: 33px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                        </div>
+
+                        <img id="wwz_201_1 " class="jybimg3" style="position: absolute; width: 70px; top: 280px; left: 1130px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                        <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 280px; left: 1165px; color: #fff; height: 25px; line-height: 25px; ">
+                            3#泵
+                        </div>
+                        <div style="width: 70px; height: 25px; line-height: 25px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 1205px; top: 280px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata3" style="width: 32px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.29</div>
+                            <div style="width: 33px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                        </div>
+
+                        <img id="wwz_201_1 " class="jybimg4" style="position: absolute; width: 70px; top: 340px; left: 1165px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                        <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 340px; left: 1200px; color: #fff; height: 25px; line-height: 25px; ">
+                            4#泵
+                        </div>
+                        <div style="width: 70px; height: 25px; line-height: 25px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 1240px; top: 340px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata4" style="width: 32px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.21</div>
+                            <div style="width: 33px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                        </div>
+
+                        <img id="wwz_201_1 " class="jybimg5" style="position: absolute; width: 70px; top: 415px; left: 1200px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                        <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 415px; left: 1235px; color: #fff; height: 25px; line-height: 25px; ">
+                            5#泵
+                        </div>
+                        <div style="width: 70px; height: 25px; line-height: 25px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 1275px; top: 415px; display: flex; background-color: #f6fbfc;">
+                            <div id="jybdata5" style="width: 32px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.67</div>
+                            <div style="width: 33px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                        </div>
+
+
+                        <div id="" class="" style="position: absolute; clear: both; width: 120px; top: 420px; left: 720px;">
+                            <img class="" style="position: relative; width: 120px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                            <div id="jyyw1" class="" style="position: absolute; font-size: 1rem; font-weight: bold; top: 25%; left: 50px; ">
+                                液位：<br>
+                                2.942 m
+                            </div>
+                            <div id="" class="" style="width: 39px; bottom: 1px; left: 1px; background-color: #1efdfa; border: 0; position: absolute; height: 60%;"></div>
+                        </div>
+
+                        <div id="" class="" style="position: absolute; clear: both; width: 120px; top: 265px; left: 410px;">
+                            <img class="" style="position: relative; width: 120px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                            <div id="jyyw2" class="" style="position: absolute; font-size: 1rem; font-weight: bold; top: 25%; left: 50px;">
+                                液位：<br>
+                                2.500 m
+                            </div>
+                            <div id="" class="" style="width: 39px; bottom: 1px; left: 1px; background-color: #1efdfa; border: 0; position: absolute; height: 50%;"></div>
+                        </div>
+
+                    </div>
+                    <script type="module">
+                                //import {  } from '../../../../Areas/DataDisplay/Content/threejs/firstthreejs/balitailibs/three.js';
+                                import { AxesHelper, MathUtils, PMREMGenerator, AnimationMixer, Clock, Color, DirectionalLight, Fog, GridHelper, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneBufferGeometry, PlaneGeometry, RepeatWrapping, Scene, Sprite, SpriteMaterial, Texture, TextureLoader, Vector3, WebGLRenderer } from '../../../../Areas/DataDisplay/Content/threejs/firstthreejs/balitailibs/three.module.js';
+                                import { OrbitControls } from '../../../../Areas/DataDisplay/Content/threejs/firstthreejs/balitailibs/OrbitControls.js';
+                                import { FBXLoader } from '../../../../Areas/DataDisplay/Content/threejs/firstthreejs/balitailibs/FBXLoader.js';
+                                import { Water } from '../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/jsm/objects/Water.js';
+                                import { Sky } from '../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/jsm/objects/Sky.js';
+
+                                var container, stats, controls;
+                                var camera, scene, renderer, light;
+                                var water, water2, sun, mesh;
+
+                                var clock = new Clock();
+
+                                var mixers = [];
+
+                                init();
+                                animate();
+
+                                function init() {
+
+                                    container = document.createElement('div');
+                                    document.getElementById("body1").appendChild(container);
+
+                                    //摄像机
+                                    camera = new PerspectiveCamera(45, 1645/835, 1, 2000);
+                                    camera.position.set(-125, 1000, 700);
+                                    camera.lookAt(new Vector3());
+
+                                    //场景
+                                    scene = new Scene();
+                                    scene.background = new Color(0xa0a0a0);
+                                    scene.fog = new Fog(0xffffff, 200, 3000);
+                                    scene.width = 1645;
+                                    scene.height = 835;
+                                    // // 显示三维坐标系 20表示长度 红x绿y蓝z
+                                    @*var axes = new AxesHelper(1000);
+                                    // // 添加坐标系到场景中
+                                    scene.add(axes);*@
+
+                                    //添加灯源
+                                    var directionalLight1 = new DirectionalLight(0xffffff, 1.0);
+                                    directionalLight1.position.set(164, 422, 473);
+                                    var directionalLight2 = new DirectionalLight(0xffffff, 1.0);
+                                    directionalLight2.position.set(-766, 328, -286);
+                                    var directionalLight3 = new DirectionalLight(0xffffff, 1.0);
+                                    directionalLight3.position.set(143, 345, -437);
+                                    scene.add(directionalLight1);
+                                    scene.add(directionalLight2);
+                                    scene.add(directionalLight3);
+
+                                    // scene.add( new THREE.CameraHelper( light.shadow.camera ) );
+
+                                    // 地面
+                                    var mesh = new Mesh(new PlaneBufferGeometry(10000, 10000), new MeshPhongMaterial({
+                                        color: 0xffffff,
+                                        depthWrite: false
+                                    }));
+                                    mesh.rotation.x = -Math.PI / 2;
+                                    mesh.receiveShadow = true;
+                                    scene.add(mesh);
+                                    //地面网格
+                                    @*var grid = new GridHelper(10000, 100, 0x000000, 0x000000);
+                                    grid.material.opacity = 0.2;
+                                    grid.material.transparent = true;
+                                    scene.add(grid);*@
+
+
+                                    //标签
+                                    @*var beng1 = "1#泵";
+                                    var beng1status = "开";
+                                    var beng1Hz = "0.87";
+                                    var beng2 = "2#泵";
+                                    var beng2status = "开";
+                                    var beng2Hz = "0.57";
+                                    var beng3 = "3#泵";
+                                    var beng3status = "关";
+                                    var beng3Hz = "0.56";
+                                    var yewei = 3.589;
+                                    var spritey1 = makeTextSprite(beng1 + "\r\n" + beng1status + "\r\n" + beng1Hz + "Hz", {
+                                        fontsize: 32,
+                                        // fontface: "Georgia",
+                                        borderColor: {
+                                            r: 117,
+                                            g: 117,
+                                            b: 117,
+                                            a: 1.0
+                                        },
+                                        backgroundColor: {
+                                            r: 247,
+                                            g: 253,
+                                            b: 253,
+                                            a: 1.0
+                                        }
+                                    });
+                                    spritey1.position.set(110, 30, 175);
+                                    scene.add(spritey1);
+                                    var spritey2 = makeTextSprite(beng2 + "\r\n" + beng2status + "\r\n" + beng2Hz + "Hz", {
+                                        fontsize: 32,
+                                        // fontface: "Georgia",
+                                        borderColor: {
+                                            r: 117,
+                                            g: 117,
+                                            b: 117,
+                                            a: 1.0
+                                        },
+                                        backgroundColor: {
+                                            r: 247,
+                                            g: 253,
+                                            b: 253,
+                                            a: 1.0
+                                        }
+                                    });
+                                    spritey2.position.set(110, 30, 40);
+                                    scene.add(spritey2);
+                                    var spritey3 = makeTextSprite(beng3 + "\r\n" + beng3status + "\r\n" + beng3Hz + "Hz", {
+                                        fontsize: 32,
+                                        // fontface: "Georgia",
+                                        borderColor: {
+                                            r: 117,
+                                            g: 117,
+                                            b: 117,
+                                            a: 1.0
+                                        },
+                                        backgroundColor: {
+                                            r: 247,
+                                            g: 253,
+                                            b: 253,
+                                            a: 1.0
+                                        }
+                                    });
+                                    spritey3.position.set(110, 30, -65);
+                                    scene.add(spritey3);
+                                    var spritey4 = makeTextSprite("液位：" + "\r\n" + yewei + "m", {
+                                        fontsize: 32,
+                                        // fontface: "Georgia",
+                                        borderColor: {
+                                            r: 117,
+                                            g: 117,
+                                            b: 117,
+                                            a: 1.0
+                                        },
+                                        backgroundColor: {
+                                            r: 247,
+                                            g: 253,
+                                            b: 253,
+                                            a: 1.0
+                                        }
+                                    });
+                                    spritey4.position.set(-130, 125, 80);
+                                    scene.add(spritey4);*@
+
+
+                                    // model
+                                    var loader = new FBXLoader();
+                                    @*../../../../Areas/DataDisplay/Content/threejs/firstthreejs/bltimport/blt6.fbx*@
+                                    loader.load('../../../../Areas/DataDisplay/Content/threejs/firstthreejs/bltimport/第一送水泵房.fbx', function (object) {
+
+                                        object.position.set(80, 450, 30);
+                                        object.mixer = new AnimationMixer(object);
+                                        // console.log(object.mixer);
+                                        // console.log(object.animations);
+                                        mixers.push(object.mixer);
+                                        var action = object.mixer.clipAction(object.animations[0]);
+                                        action.setDuration(1).play();
+
+                                        // object.traverse(function(child) {
+                                        //     if (child.isMesh) {
+                                        //         child.castShadow = true;
+                                        //         child.receiveShadow = true;
+                                        //     }
+                                        // });
+
+                                        scene.add(object);
+
+                                    });
+
+                                    renderer = new WebGLRenderer({
+                                        antialias: true
+                                    });
+                                    renderer.setSize(1645, 835);
+                                    renderer.setPixelRatio(window.devicePixelRatio);
+                                    //renderer.setSize(window.innerWidth, window.innerHeight);
+                                    renderer.shadowMap.enabled = true;
+                                    // renderer.setPixelRatio(window.devicePixelRatio);
+                                    // renderer.context.getExtension('OES_texture_float');
+                                    // renderer.context.getExtension('OES_texture_float_linear');
+                                    document.getElementById("body1").appendChild(renderer.domElement);
+
+                                    sun = new Vector3();
+
+                                    //Ocean
+
+
+                                    // Water
+                                    const waterGeometry = new PlaneGeometry(135, 235);
+                                    water = new Water(
+                                        waterGeometry,
+                                        {
+                                            textureWidth: 135,
+                                            textureHeight: 235,
+                                            waterNormals: new TextureLoader().load('../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/textures/waternormals.jpg', function (texture) {
+
+                                                texture.wrapS = texture.wrapT = RepeatWrapping;
+
+                                            }),
+                                            sunDirection: new Vector3(),
+                                            sunColor: 0xffffff,
+                                            // waterColor: 0x8f9291,
+                                            waterColor: 0x001e0f,
+                                            distortionScale: 0.7,
+                                            fog: scene.fog !== undefined
+                                        }
+                                    );
+                                    water.position.set(-75, 440, 300);
+                                    water.rotation.x = - Math.PI / 2;
+                                    scene.add(water);
+
+                                    const waterGeometry2 = new PlaneGeometry(135, 235);
+                                    water2 = new Water(
+                                        waterGeometry2,
+                                        {
+                                            textureWidth: 135,
+                                            textureHeight: 235,
+                                            waterNormals: new TextureLoader().load('../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/textures/waternormals.jpg', function (texture) {
+
+                                                texture.wrapS = texture.wrapT = RepeatWrapping;
+
+                                            }),
+                                            sunDirection: new Vector3(),
+                                            sunColor: 0xffffff,
+                                            // waterColor: 0x8f9291,
+                                            waterColor: 0x001e0f,
+                                            distortionScale: 0.7,
+                                            fog: scene.fog !== undefined
+                                        }
+                                    );
+                                    water2.position.set(-270, 440, 200);
+                                    water2.rotation.x = - Math.PI / 2;
+                                    scene.add(water2);
+
+                                    // Skybox
+
+                                    const sky = new Sky();
+                                    sky.scale.setScalar(10000);
+                                    scene.add(sky);
+
+                                    const skyUniforms = sky.material.uniforms;
+
+                                    skyUniforms['turbidity'].value = 10;
+                                    skyUniforms['rayleigh'].value = 2;
+                                    skyUniforms['mieCoefficient'].value = 0.005;
+                                    skyUniforms['mieDirectionalG'].value = 0.8;
+
+                                    const parameters = {
+                                        elevation: 40,
+                                        azimuth: 160
+                                    };
+
+                                    const pmremGenerator = new PMREMGenerator(renderer);
+
+                                    function updateSun() {
+
+                                        const phi = MathUtils.degToRad(90 - parameters.elevation);
+                                        const theta = MathUtils.degToRad(parameters.azimuth);
+
+                                        sun.setFromSphericalCoords(1, phi, theta);
+
+                                        sky.material.uniforms['sunPosition'].value.copy(sun);
+                                        water.material.uniforms['sunDirection'].value.copy(sun).normalize();
+                                        water2.material.uniforms['sunDirection'].value.copy(sun).normalize();
+
+                                        scene.environment = pmremGenerator.fromScene(sky).texture;
+
+                                    }
+
+                                    updateSun();
+
+
+                                    @*controls = new OrbitControls(camera, renderer.domElement);
+                                    controls.target.set(0, 100, 0);
+                                    controls.update();*@
+
+                                    window.addEventListener('resize', onWindowResize, false);
+
+                                    // stats
+                                    // stats = new Stats();
+                                    // console.log(stats.dom);
+                                    // document.body.appendChild(stats.dom);
+
+                                }
+
+                                function onWindowResize() {
+
+                                    camera.aspect = 1645 / 835;
+                                    camera.updateProjectionMatrix();
+
+                                    renderer.setSize(1645, 835);
+                                    // labelRenderer.setSize( window.innerWidth, window.innerHeight );
+                                }
+
+                                function animate() {
+
+                                    requestAnimationFrame(animate);
+
+                                    if (mixers.length > 0) {
+
+                                        for (var i = 0; i < mixers.length; i++) {
+
+                                            mixers[i].update(clock.getDelta());
+
+                                        }
+
+                                    }
+                                    water.material.uniforms['time'].value += 1.0 / 60.0;
+                                    water2.material.uniforms['time'].value += 1.0 / 60.0;
+                                    renderer.render(scene, camera);
+                                    // labelRenderer.render( scene, camera );
+                                    // stats.update();
+
+                                }
+
+                                function makeTextSprite(message, parameters) {
+                                    if (parameters === undefined) parameters = {};
+
+                                    var fontface = parameters.hasOwnProperty("fontface") ?
+                                        parameters["fontface"] : "Arial";
+
+                                    var fontsize = parameters.hasOwnProperty("fontsize") ?
+                                        parameters["fontsize"] : 18;
+
+                                    var borderThickness = parameters.hasOwnProperty("borderThickness") ?
+                                        parameters["borderThickness"] : 4;
+
+                                    var borderColor = parameters.hasOwnProperty("borderColor") ?
+                                        parameters["borderColor"] : {
+                                            r: 0,
+                                            g: 0,
+                                            b: 0,
+                                            a: 1.0
+                                        };
+
+                                    var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
+                                        parameters["backgroundColor"] : {
+                                            r: 255,
+                                            g: 255,
+                                            b: 255,
+                                            a: 1.0
+                                        };
+
+                                    // var spriteAlignment = THREE.SpriteAlignment.topLeft;
+
+                                    var canvas = document.createElement('canvas');
+                                    var context = canvas.getContext('2d');
+                                    context.font = "Bold " + fontsize + "px " + fontface;
+
+                                    // get size data (height depends only on font size)
+                                    var metrics = context.measureText(message);
+                                    var textWidth = metrics.width;
+
+                                    // background color
+                                    context.fillStyle = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," +
+                                        backgroundColor.b + "," + backgroundColor.a + ")";
+                                    // border color
+                                    context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," +
+                                        borderColor.b + "," + borderColor.a + ")";
+
+                                    context.lineWidth = borderThickness;
+                                    roundRect(context, borderThickness / 2, borderThickness / 2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+                                    // 1.4 is extra height factor for text below baseline: g,j,p,q.
+
+                                    // text color
+                                    context.fillStyle = "rgba(0, 0, 0, 1.0)";
+
+                                    context.fillText(message, borderThickness, fontsize + borderThickness);
+
+                                    // canvas contents will be used for a texture
+                                    var texture = new Texture(canvas);
+                                    texture.needsUpdate = true;
+
+                                    var spriteMaterial = new SpriteMaterial({
+                                        map: texture,
+                                        useScreenCoordinates: false,
+                                        // alignment: spriteAlignment
+                                    });
+                                    var sprite = new Sprite(spriteMaterial);
+                                    sprite.scale.set(100, 50, 1.0);
+                                    return sprite;
+                                }
+
+                                // 标签圆角
+                                function roundRect(ctx, x, y, w, h, r) {
+                                    ctx.beginPath();
+                                    ctx.moveTo(x + r, y);
+                                    ctx.lineTo(x + w - r, y);
+                                    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+                                    ctx.lineTo(x + w, y + h - r);
+                                    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                                    ctx.lineTo(x + r, y + h);
+                                    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+                                    ctx.lineTo(x, y + r);
+                                    ctx.quadraticCurveTo(x, y, x + r, y);
+                                    ctx.closePath();
+                                    ctx.fill();
+                                    ctx.stroke();
+                                }
+                    </script>
+                </div>
+            </div>
+
+            @*芥园水厂送水二泵站*@
+            <div class="gyt" style="display:none; padding:5px;width:100%;height:100%;" id="pid3">
+                <img style="position: absolute; width: 1660px;height:845px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/pid3.png">
+                <div id="body2" style="position:relative; width:100%;height:100%; overflow:hidden;">
+                    <div style="width: 80px; height: 20px; position: absolute; top: 221px; left: 629px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">北吸水井</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 613px; left: 820px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">南吸水井</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 160px; left: 780px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第三出场干管</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 535px; left: 1050px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第二出场干管</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 574px; left: 555px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">1#清水库</div>
+                    <div style="width: 80px; height: 20px; position: absolute; top: 228px; left: 436px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">3#清水库</div>
+
+                    <div class="tag" id="tag1" style="width: 200px; height: 100px; position: absolute; top: 200px; left: 1px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 20px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color:black;  width:90px;">三干浊度：</div>
+                            <div id="jysgzd" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.26</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">NTU</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 90px;">三干余氯：</div>
+                            <div id="jysgyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                            <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 90px; ">三干pH值：</div>
+                            <div id="jysgph" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">8.17</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 90px; ">三干氨氮：</div>
+                            <div id="jysgad" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                            <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                        </div>
+                    </div>
+
+                    <div class="tag" id="tag2" style="width: 220px; height: 80px; position: absolute; top: 600px; left: 1250px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 20px;">
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color:black;  width:90px;">瞬时流量：</div>
+                            <div id="jysgssll" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 90px;">三千管网压力：</div>
+                            <div id="jysggwyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                            <div style="color: black; width: 50px; padding-left: 10px;">Mpa</div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 220px; height: 40px; position: absolute; top: 550px; left: 1250px; background-color: #dfe9ea; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 10px;">
+                        <div style=" display:flex;">
+                            <div style="color:black;  width:90px;">瞬时流量：</div>
+                            <div id="jysgssll1" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.00</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                        </div>
+                    </div>
+
+                    <div id="" class="" style="position: absolute; clear: both; width: 100%; top:435px; left: 750px;">
+                        <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                        <div class="" id="nxsjdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                            液位：<br>
+                            2.942 m
+                        </div>
+                        <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 60%;"></div>
+                    </div>
+                    <div id="" class="" style="position: absolute; clear: both; width: 100%; top: 430px; left: 500px;">
+                        <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                        <div class="" id="bxsjdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                            液位：<br>
+                            2.500 m
+                        </div>
+                        <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 50%;"></div>
+                    </div>
+                    <div id="" class="" style="position: absolute; clear: both; width: 100%; top: 249px; left:650px;">
+                        <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                        <div class="" id="qsk1data" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                            液位：<br>
+                            2.421 m
+                        </div>
+                        <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 60%;"></div>
+                    </div>
+                    <div id="" class="" style="position: absolute; clear: both; width: 100%; top: 255px; left: 450px;">
+                        <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                        <div class="" id="qsk3data" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                            液位：<br>
+                            2.502 m
+                        </div>
+                        <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 50%;"></div>
+                    </div>
+
+                    <img id="wwz_201_1" class="jysgimg6" style="position: absolute; width: 50px; top: 198px; left: 841px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 198px; left: 864px; color: #fff; ">
+                        6#泵
+                    </div>
+                    <img id="wwz_201_1" class="jysgimg7" style="position: absolute; width: 50px; top: 225px; left: 866px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 225px; left: 889px; color: #fff; ">
+                        7#泵
+                    </div>
+                    <img id="wwz_201_1" class="jysgimg8" style="position: absolute; width: 50px; top: 255px; left: 881px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top:255px; left: 904px; color: #fff; ">
+                        8#泵
+                    </div>
+                    <img id="wwz_201_1" class="jysgimg9" style="position: absolute; width: 50px; top: 285px; left: 911px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 285px; left: 930px; color: #fff; ">
+                        9#泵
+                    </div>
+                    <img id="wwz_201_1" class="jysgimg10" style="position: absolute; width: 50px; top: 341px; left: 957px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 341px; left: 976px; color: #fff; ">
+                        10#泵
+                    </div>
+                    <img id="wwz_201_1" class="jysgimg11" style="position: absolute; width: 50px; top: 381px; left: 987px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 381px; left: 1006px; color: #fff; ">
+                        11#泵
+                    </div>
+                    <img id="wwz_201_1" class="jysgimg12" style="position: absolute; width: 50px; top:426px; left: 1025px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 426px; left: 1045px; color: #fff; ">
+                        12#泵
+                    </div>
+                    <img id="wwz_201_1" class="jysgimg13" style="position: absolute; width: 50px; top: 475px; left: 1065px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 475px; left: 1084px; color: #fff; ">
+                        13#泵
+                    </div>
+
+                    @*6*@
+                    @* <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 535px; top: 85px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">Hz</div>
+                        </div>*@
+
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 198px; left: 897px; display: flex; background-color: #f6fbfc;">
+                        <div id="jysgdata6" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 661px; top: 85px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0</div>
+                            <div style="width: 18px; margin-left: 0px; font-size: 10px;">%</div>
+                        </div>
+                        <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 714px; top: 85px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">KPa</div>
+                        </div>*@
+                    @*7*@
+                    @* <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 560px; top: 105px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">Hz</div>
+                        </div>*@
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 225px; left: 922px; display: flex; background-color: #f6fbfc;">
+                        <div id="jysgdata7" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 686px; top: 105px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0</div>
+                            <div style="width: 18px; margin-left: 0px; font-size: 10px;">%</div>
+                        </div>
+                        <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 739px; top: 105px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">KPa</div>
+                        </div>*@
+                    @*8*@
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 585px; top: 125px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">Hz</div>
+                        </div>*@
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 255px; left: 937px; display: flex; background-color: #f6fbfc;">
+                        <div id="jysgdata8" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 711px; top: 125px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0</div>
+                            <div style="width: 18px; margin-left: 0px; font-size: 10px;">%</div>
+                        </div>
+                        <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 764px; top: 125px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">KPa</div>
+                        </div>*@
+                    @*9*@
+                    @*     <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 610px; top: 145px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">Hz</div>
+                        </div>*@
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 285px; left: 963px; display: flex; background-color: #f6fbfc;">
+                        <div id="jysgdata9" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 736px; top: 145px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0</div>
+                            <div style="width: 18px; margin-left: 0px; font-size: 10px;">%</div>
+                        </div>
+                        <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 789px; top: 145px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">KPa</div>
+                        </div>*@
+                    @*10*@
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 635px; top: 165px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.61</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">Hz</div>
+                        </div>*@
+                    <!--<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 698px; top: 165px; display: flex; background-color: #f6fbfc;">
+                        <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.26</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 761px; top: 165px; display: flex; background-color: #f6fbfc;">
+                        <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0</div>
+                        <div style="width: 18px; margin-left: 0px; font-size: 10px;">%</div>
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 814px; top: 165px; display: flex; background-color: #f6fbfc;">
+                        <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.67</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">KPa</div>
+                    </div>-->
+                    @*11*@
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 660px; top: 185px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.77</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">Hz</div>
+                        </div>*@
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 341px; left: 1009px; display: flex; background-color: #f6fbfc;">
+                        <div id="jysgdata10" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.77</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 786px; top: 185px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0</div>
+                            <div style="width: 18px; margin-left: 0px; font-size: 10px;">%</div>
+                        </div>
+                        <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 839px; top: 185px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">KPa</div>
+                        </div>*@
+                    @*12*@
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 685px; top: 205px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">Hz</div>
+                        </div>*@
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 381px; left: 1039px; display: flex; background-color: #f6fbfc;">
+                        <div id="jysgdata11" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 811px; top: 205px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">100</div>
+                            <div style="width: 18px; margin-left: 0px; font-size: 10px;">%</div>
+                        </div>
+                        <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 864px; top: 205px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.67</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">KPa</div>
+                        </div>*@
+                    @*13*@
+                    @*<div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 710px; top: 225px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.77</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">Hz</div>
+                        </div>*@
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 426px; left: 1079px; display: flex; background-color: #f6fbfc;">
+                        <div id="jysgdata12" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    @*<div style="width: 50px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 836px; top: 225px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">100</div>
+                            <div style="width: 18px; margin-left: 0px; font-size: 10px;">%</div>
+                        </div>
+                        <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; left: 889px; top: 225px; display: flex; background-color: #f6fbfc;">
+                            <div style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.27</div>
+                            <div style="width: 28px; margin-left: 0px; font-size: 10px;">KPa</div>
+                        </div>*@
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 475px; left: 1117px; display: flex; background-color: #f6fbfc;">
+                        <div id="jysgdata13" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+
+                    <script type="module">
+                                //import {  } from '../../../../Areas/DataDisplay/Content/threejs/firstthreejs/balitailibs/three.js';
+                                import { MathUtils, PMREMGenerator, AnimationMixer, Clock, Color, DirectionalLight, Fog, GridHelper, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneBufferGeometry, PlaneGeometry, RepeatWrapping, Scene, Sprite, SpriteMaterial, Texture, TextureLoader, Vector3, WebGLRenderer } from '../../../../Areas/DataDisplay/Content/threejs/firstthreejs/balitailibs/three.module.js';
+                                import { OrbitControls } from '../../../../Areas/DataDisplay/Content/threejs/firstthreejs/balitailibs/OrbitControls.js';
+                                import { FBXLoader } from '../../../../Areas/DataDisplay/Content/threejs/firstthreejs/balitailibs/FBXLoader.js';
+                                import { Water } from '../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/jsm/objects/Water.js';
+                                import { Sky } from '../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/jsm/objects/Sky.js';
+
+                                var container, stats, controls;
+                                var camera, scene, renderer, light;
+                                var water, water2, water3, water4, sun, mesh;
+
+                                var clock = new Clock();
+
+                                var mixers = [];
+
+                                //init();
+                                //animate();
+
+                                function init() {
+
+                                    container = document.createElement('div');
+                                    document.getElementById("body2").appendChild(container);
+
+                                    //摄像机
+                                    camera = new PerspectiveCamera(45, 1645/835, 1, 2000);
+                                    camera.position.set(-350, 835, 850);
+                                    camera.lookAt(new Vector3());
+
+                                    //场景
+                                    scene = new Scene();
+                                    scene.background = new Color(0xa0a0a0);
+                                    scene.fog = new Fog(0xffffff, 200, 3000);
+                                    scene.width = 1645;
+                                    scene.height = 835;
+                                    // // 显示三维坐标系 20表示长度 红x绿y蓝z
+                                    //var axes = new THREE.AxesHelper(1000);
+                                    // // 添加坐标系到场景中
+                                    //scene.add(axes);
+
+                                    //添加灯源
+                                    var directionalLight1 = new DirectionalLight(0xffffff, 1.0);
+                                    directionalLight1.position.set(164, 422, 473);
+                                    var directionalLight2 = new DirectionalLight(0xffffff, 1.0);
+                                    directionalLight2.position.set(-766, 328, -286);
+                                    var directionalLight3 = new DirectionalLight(0xffffff, 1.0);
+                                    directionalLight3.position.set(143, 345, -437);
+                                    scene.add(directionalLight1);
+                                    scene.add(directionalLight2);
+                                    scene.add(directionalLight3);
+
+                                    // scene.add( new THREE.CameraHelper( light.shadow.camera ) );
+
+                                    // 地面
+                                    var mesh = new Mesh(new PlaneBufferGeometry(10000, 10000), new MeshPhongMaterial({
+                                        color: 0xffffff,
+                                        depthWrite: false
+                                    }));
+                                    mesh.rotation.x = -Math.PI / 2;
+                                    mesh.receiveShadow = true;
+                                    scene.add(mesh);
+                                    //地面网格
+                                    var grid = new GridHelper(10000, 100, 0x000000, 0x000000);
+                                    grid.material.opacity = 0.2;
+                                    grid.material.transparent = true;
+                                    scene.add(grid);
+
+
+                                    //标签
+                                    var beng1 = "1#泵";
+                                    var beng1status = "开";
+                                    var beng1Hz = "0.87";
+                                    var beng2 = "2#泵";
+                                    var beng2status = "开";
+                                    var beng2Hz = "0.57";
+                                    var beng3 = "3#泵";
+                                    var beng3status = "关";
+                                    var beng3Hz = "0.56";
+                                    var yewei = 3.589;
+                                    var spritey1 = makeTextSprite(beng1 + "\r\n" + beng1status + "\r\n" + beng1Hz + "Hz", {
+                                        fontsize: 32,
+                                        // fontface: "Georgia",
+                                        borderColor: {
+                                            r: 117,
+                                            g: 117,
+                                            b: 117,
+                                            a: 1.0
+                                        },
+                                        backgroundColor: {
+                                            r: 247,
+                                            g: 253,
+                                            b: 253,
+                                            a: 1.0
+                                        }
+                                    });
+                                    spritey1.position.set(110, 30, 175);
+                                    scene.add(spritey1);
+                                    var spritey2 = makeTextSprite(beng2 + "\r\n" + beng2status + "\r\n" + beng2Hz + "Hz", {
+                                        fontsize: 32,
+                                        // fontface: "Georgia",
+                                        borderColor: {
+                                            r: 117,
+                                            g: 117,
+                                            b: 117,
+                                            a: 1.0
+                                        },
+                                        backgroundColor: {
+                                            r: 247,
+                                            g: 253,
+                                            b: 253,
+                                            a: 1.0
+                                        }
+                                    });
+                                    spritey2.position.set(110, 30, 40);
+                                    scene.add(spritey2);
+                                    var spritey3 = makeTextSprite(beng3 + "\r\n" + beng3status + "\r\n" + beng3Hz + "Hz", {
+                                        fontsize: 32,
+                                        // fontface: "Georgia",
+                                        borderColor: {
+                                            r: 117,
+                                            g: 117,
+                                            b: 117,
+                                            a: 1.0
+                                        },
+                                        backgroundColor: {
+                                            r: 247,
+                                            g: 253,
+                                            b: 253,
+                                            a: 1.0
+                                        }
+                                    });
+                                    spritey3.position.set(110, 30, -65);
+                                    scene.add(spritey3);
+                                    var spritey4 = makeTextSprite("液位：" + "\r\n" + yewei + "m", {
+                                        fontsize: 32,
+                                        // fontface: "Georgia",
+                                        borderColor: {
+                                            r: 117,
+                                            g: 117,
+                                            b: 117,
+                                            a: 1.0
+                                        },
+                                        backgroundColor: {
+                                            r: 247,
+                                            g: 253,
+                                            b: 253,
+                                            a: 1.0
+                                        }
+                                    });
+                                    spritey4.position.set(-130, 125, 80);
+                                    scene.add(spritey4);
+
+
+                                    // model
+                                    var loader = new FBXLoader();
+                                    @*../../../../Areas/DataDisplay/Content/threejs/firstthreejs/bltimport/blt6.fbx*@
+                                    loader.load('../../../../Areas/DataDisplay/Content/threejs/firstthreejs/bltimport/第二送水泵房.fbx', function (object) {
+
+                                        object.position.set(0, 200, 0);
+                                        object.mixer = new AnimationMixer(object);
+                                        // console.log(object.mixer);
+                                        // console.log(object.animations);
+                                        mixers.push(object.mixer);
+                                        var action = object.mixer.clipAction(object.animations[0]);
+                                        action.setDuration(1).play();
+
+                                        // object.traverse(function(child) {
+                                        //     if (child.isMesh) {
+                                        //         child.castShadow = true;
+                                        //         child.receiveShadow = true;
+                                        //     }
+                                        // });
+
+                                        scene.add(object);
+
+                                    });
+
+                                    renderer = new WebGLRenderer({
+                                        antialias: true
+                                    });
+                                    renderer.setSize(1645, 835);
+                                    renderer.setPixelRatio(window.devicePixelRatio);
+                                    //renderer.setSize(window.innerWidth, window.innerHeight);
+                                    renderer.shadowMap.enabled = true;
+                                    // renderer.setPixelRatio(window.devicePixelRatio);
+                                    // renderer.context.getExtension('OES_texture_float');
+                                    // renderer.context.getExtension('OES_texture_float_linear');
+                                    document.getElementById("body2").appendChild(renderer.domElement);
+
+                                    sun = new Vector3();
+
+                                    // Water
+                                    const waterGeometry3 = new PlaneGeometry(135, 235);
+
+                                    water = new Water(
+                                        waterGeometry3,
+                                        {
+                                            textureWidth: 135,
+                                            textureHeight: 235,
+                                            waterNormals: new TextureLoader().load('../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/textures/waternormals.jpg', function (texture) {
+
+                                                texture.wrapS = texture.wrapT = RepeatWrapping;
+
+                                            }),
+                                            sunDirection: new Vector3(),
+                                            sunColor: 0xffffff,
+                                            // waterColor: 0x8f9291,
+                                            waterColor: 0x001e0f,
+                                            distortionScale: 0.7,
+                                            fog: scene.fog !== undefined
+                                        }
+                                    );
+                                    water.position.set(-155, 200, 270);
+                                    water.rotation.x = - Math.PI / 2;
+                                    scene.add(water);
+
+                                    const waterGeometry4 = new PlaneGeometry(135, 235);
+                                    water2 = new Water(
+                                        waterGeometry4,
+                                        {
+                                            textureWidth: 135,
+                                            textureHeight: 235,
+                                            waterNormals: new TextureLoader().load('../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/textures/waternormals.jpg', function (texture) {
+
+                                                texture.wrapS = texture.wrapT = RepeatWrapping;
+
+                                            }),
+                                            sunDirection: new Vector3(),
+                                            sunColor: 0xffffff,
+                                            // waterColor: 0x8f9291,
+                                            waterColor: 0x001e0f,
+                                            distortionScale: 0.7,
+                                            fog: scene.fog !== undefined
+                                        }
+                                    );
+                                    water2.position.set(-345, 200, 172);
+                                    water2.rotation.x = - Math.PI / 2;
+                                    scene.add(water2);
+
+                                    const waterGeometry5 = new PlaneGeometry(135, 235);
+                                    water3 = new Water(
+                                        waterGeometry5,
+                                        {
+                                            textureWidth: 135,
+                                            textureHeight: 235,
+                                            waterNormals: new TextureLoader().load('../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/textures/waternormals.jpg', function (texture) {
+
+                                                texture.wrapS = texture.wrapT = RepeatWrapping;
+
+                                            }),
+                                            sunDirection: new Vector3(),
+                                            sunColor: 0xffffff,
+                                            // waterColor: 0x8f9291,
+                                            waterColor: 0x001e0f,
+                                            distortionScale: 0.7,
+                                            fog: scene.fog !== undefined
+                                        }
+                                    );
+                                    water3.position.set(-155, 200, -20);
+                                    water3.rotation.x = - Math.PI / 2;
+                                    scene.add(water3);
+
+                                    const waterGeometry6 = new PlaneGeometry(135, 235);
+                                    water4 = new Water(
+                                        waterGeometry6,
+                                        {
+                                            textureWidth: 135,
+                                            textureHeight: 215,
+                                            waterNormals: new TextureLoader().load('../../../../Areas/DataDisplay/Content/threejs/three.js-dev/examples/textures/waternormals.jpg', function (texture) {
+
+                                                texture.wrapS = texture.wrapT = RepeatWrapping;
+
+                                            }),
+                                            sunDirection: new Vector3(),
+                                            sunColor: 0xffffff,
+                                            // waterColor: 0x8f9291,
+                                            waterColor: 0x001e0f,
+                                            distortionScale: 0.7,
+                                            fog: scene.fog !== undefined
+                                        }
+                                    );
+                                    water4.position.set(-345, 200, -120);
+                                    water4.rotation.x = - Math.PI / 2;
+                                    scene.add(water4);
+
+                                    // Skybox
+
+                                    const sky = new Sky();
+                                    sky.scale.setScalar(10000);
+                                    scene.add(sky);
+
+                                    const skyUniforms = sky.material.uniforms;
+
+                                    skyUniforms['turbidity'].value = 10;
+                                    skyUniforms['rayleigh'].value = 2;
+                                    skyUniforms['mieCoefficient'].value = 0.005;
+                                    skyUniforms['mieDirectionalG'].value = 0.8;
+
+                                    const parameters = {
+                                        elevation: 10,
+                                        azimuth: 180
+                                    };
+
+                                    const pmremGenerator = new PMREMGenerator(renderer);
+
+                                    function updateSun() {
+
+                                        const phi = MathUtils.degToRad(90 - parameters.elevation);
+                                        const theta = MathUtils.degToRad(parameters.azimuth);
+
+                                        sun.setFromSphericalCoords(1, phi, theta);
+
+                                        sky.material.uniforms['sunPosition'].value.copy(sun);
+                                        water.material.uniforms['sunDirection'].value.copy(sun).normalize();
+
+                                        scene.environment = pmremGenerator.fromScene(sky).texture;
+
+                                    }
+
+                                    updateSun();
+                                    //controls = new OrbitControls(camera, renderer.domElement);
+                                    //controls.target.set(0, 50, 0);
+                                    //controls.update();
+
+                                    window.addEventListener('resize', onWindowResize, false);
+
+                                    // stats
+                                    // stats = new Stats();
+                                    // console.log(stats.dom);
+                                    // document.body.appendChild(stats.dom);
+                                }
+
+                                function onWindowResize() {
+
+                                    camera.aspect = 1645 / 835;
+                                    camera.updateProjectionMatrix();
+
+                                    renderer.setSize(1645, 835);
+                                    // labelRenderer.setSize( window.innerWidth, window.innerHeight );
+                                }
+
+                                function animate() {
+
+                                    requestAnimationFrame(animate);
+
+                                    if (mixers.length > 0) {
+
+                                        for (var i = 0; i < mixers.length; i++) {
+
+                                            mixers[i].update(clock.getDelta());
+
+                                        }
+
+                                    }
+                                    water.material.uniforms['time'].value += 0.5 / 60.0;
+                                    renderer.render(scene, camera);
+                                    // labelRenderer.render( scene, camera );
+                                    // stats.update();
+
+                                }
+
+                                function makeTextSprite(message, parameters) {
+                                    if (parameters === undefined) parameters = {};
+
+                                    var fontface = parameters.hasOwnProperty("fontface") ?
+                                        parameters["fontface"] : "Arial";
+
+                                    var fontsize = parameters.hasOwnProperty("fontsize") ?
+                                        parameters["fontsize"] : 18;
+
+                                    var borderThickness = parameters.hasOwnProperty("borderThickness") ?
+                                        parameters["borderThickness"] : 4;
+
+                                    var borderColor = parameters.hasOwnProperty("borderColor") ?
+                                        parameters["borderColor"] : {
+                                            r: 0,
+                                            g: 0,
+                                            b: 0,
+                                            a: 1.0
+                                        };
+
+                                    var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
+                                        parameters["backgroundColor"] : {
+                                            r: 255,
+                                            g: 255,
+                                            b: 255,
+                                            a: 1.0
+                                        };
+
+                                    // var spriteAlignment = THREE.SpriteAlignment.topLeft;
+
+                                    var canvas = document.createElement('canvas');
+                                    var context = canvas.getContext('2d');
+                                    context.font = "Bold " + fontsize + "px " + fontface;
+
+                                    // get size data (height depends only on font size)
+                                    var metrics = context.measureText(message);
+                                    var textWidth = metrics.width;
+
+                                    // background color
+                                    context.fillStyle = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," +
+                                        backgroundColor.b + "," + backgroundColor.a + ")";
+                                    // border color
+                                    context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," +
+                                        borderColor.b + "," + borderColor.a + ")";
+
+                                    context.lineWidth = borderThickness;
+                                    roundRect(context, borderThickness / 2, borderThickness / 2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+                                    // 1.4 is extra height factor for text below baseline: g,j,p,q.
+
+                                    // text color
+                                    context.fillStyle = "rgba(0, 0, 0, 1.0)";
+
+                                    context.fillText(message, borderThickness, fontsize + borderThickness);
+
+                                    // canvas contents will be used for a texture
+                                    var texture = new Texture(canvas);
+                                    texture.needsUpdate = true;
+
+                                    var spriteMaterial = new SpriteMaterial({
+                                        map: texture,
+                                        useScreenCoordinates: false,
+                                        // alignment: spriteAlignment
+                                    });
+                                    var sprite = new Sprite(spriteMaterial);
+                                    sprite.scale.set(100, 50, 1.0);
+                                    return sprite;
+                                }
+
+                                // 标签圆角
+                                function roundRect(ctx, x, y, w, h, r) {
+                                    ctx.beginPath();
+                                    ctx.moveTo(x + r, y);
+                                    ctx.lineTo(x + w - r, y);
+                                    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+                                    ctx.lineTo(x + w, y + h - r);
+                                    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                                    ctx.lineTo(x + r, y + h);
+                                    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+                                    ctx.lineTo(x, y + r);
+                                    ctx.quadraticCurveTo(x, y, x + r, y);
+                                    ctx.closePath();
+                                    ctx.fill();
+                                    ctx.stroke();
+                                }
+                    </script>
+                </div>
+            </div>
+            @*凌庄送水泵站*@
+            <div class="gyt" style="display:none; padding:5px;width:100%;height:100%;" id="pid4">
+                <img style="position: absolute; width: 1660px;height:630px;top:100px" src="~/Areas/DataDisplay/Content/img/index/工艺图/pid4.png">
+                <div id="body3" style="position:relative; width:100%;height:100%; overflow:hidden;">
+                    @*<div style="width: 80px; height: 20px; position: absolute; top: 221px; left: 629px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">北吸水井</div>
+                        <div style="width: 80px; height: 20px; position: absolute; top: 613px; left: 820px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">南吸水井</div>
+                        <div style="width: 80px; height: 20px; position: absolute; top: 160px; left: 780px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第三出场干管</div>
+                        <div style="width: 80px; height: 20px; position: absolute; top: 535px; left: 1050px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第二出场干管</div>
+                        <div style="width: 80px; height: 20px; position: absolute; top: 574px; left: 555px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">1#清水库</div>
+                        <div style="width: 80px; height: 20px; position: absolute; top: 228px; left: 436px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">3#清水库</div>*@
+
+                    <div class="tag" id="tag1" style="width: 200px; height: 100px; position: absolute; top: 50px; left: 730px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 20px; padding-top: 7px; padding-bottom:8px;">
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color:black;  width:90px;">三干浊度：</div>
+                            <div id="lzsgzd" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.26</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">NTU</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 90px;">三干余氯：</div>
+                            <div id="lzsgyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                            <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 90px; ">三干pH值：</div>
+                            <div id="lzsgph" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">8.17</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 90px; ">三干氨氮：</div>
+                            <div id="lzsgad" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                            <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                        </div>
+                    </div>
+
+                    <div class="tag" id="tag2" style="width: 220px; height: 80px; position: absolute; top: 600px; left: 1420px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 20px;">
+                        <div style="margin-bottom: 5px; display:flex;">
+                            <div style="color:black;  width:90px;">瞬时流量：</div>
+                            <div id="lzsgssll" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                        </div>
+                        <div style="margin-bottom: 5px; display: flex;">
+                            <div style="color: black; width: 90px;">三千管网压力：</div>
+                            <div id="lzsggwyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                            <div style="color: black; width: 50px; padding-left: 10px;">Mpa</div>
+                        </div>
+                    </div>
+                    <div class="tag" id="tag2" style="width: 220px; height: 40px; position: absolute; top: 550px; left: 1420px; background-color: #dfe9ea; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 10px;">
+                        <div style=" display:flex;">
+                            <div style="color:black;  width:90px;">瞬时流量：</div>
+                            <div id="lzsgssll1" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.00</div>
+                            <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                        </div>
+                    </div>
+
+                    <div id="" class="" style="position: absolute; clear: both; width: 100%; top:180px; left: 390px;">
+                        <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                        <div class="" id="zuoywdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                            液位：<br>
+                            2.942 m
+                        </div>
+                        <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 60%;"></div>
+                    </div>
+                    <div id="" class="" style="position: absolute; clear: both; width: 100%; top: 180px; left: 1130px;">
+                        <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                        <div class="" id="youywdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                            液位：<br>
+                            2.502 m
+                        </div>
+                        <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 50%;"></div>
+                    </div>
+
+                    <img id="wwz_201_1" class="lzsgimg1" style="position: absolute; width: 50px; top: 395px; left: 160px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 395px; left: 183px; color: #fff; ">
+                        1#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 216px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata1" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg2" style="position: absolute; width: 50px; top: 395px; left: 300px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 395px; left: 323px; color: #fff; ">
+                        2#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 356px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata2" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg3" style="position: absolute; width: 50px; top: 395px; left: 440px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top:395px; left: 463px; color: #fff; ">
+                        3#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 496px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata3" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg4" style="position: absolute; width: 50px; top: 395px; left: 585px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 395px; left: 608px; color: #fff; ">
+                        4#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 640px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata4" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg5" style="position: absolute; width: 50px; top: 395px; left: 724px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 395px; left: 748px; color: #fff; ">
+                        5#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 780px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata5" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.77</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg6" style="position: absolute; width: 50px; top: 395px; left: 920px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 395px; left:943px; color: #fff; ">
+                        6#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 976px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata6" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg7" style="position: absolute; width: 50px; top:395px; left: 1064px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 395px; left: 1088px; color: #fff; ">
+                        7#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 1120px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata7" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg8" style="position: absolute; width: 50px; top: 395px; left: 1204px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 395px; left: 1227px; color: #fff; ">
+                        8#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 1259px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata8" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg9" style="position: absolute; width: 50px; top: 395px; left: 1347px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 395px; left: 1370px; color: #fff; ">
+                        9#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 1403px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata9" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                    <img id="wwz_201_1" class="lzsgimg10" style="position: absolute; width: 50px; top: 395px; left: 1489px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                    <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 395px; left: 1510px; color: #fff; ">
+                        10#泵
+                    </div>
+                    <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 395px; left: 1545px; display: flex; background-color: #f6fbfc;">
+                        <div id="lzsgdata10" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                        <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                    </div>
+                </div>
+            </div>
+            @*新开河送水一泵站*@
+        <div class="gyt" style="display:none; padding:5px;width:100%;height:100%;" id="pid5">
+            <img style="position: absolute; width: 1660px;height:845px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/pid5.png">
+            <div id="body4" style="position:relative; width:100%;height:100%; overflow:hidden;">
+                @*<div style="width: 80px; height: 20px; position: absolute; top: 221px; left: 629px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">北吸水井</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 613px; left: 820px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">南吸水井</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 160px; left: 780px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第三出场干管</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 535px; left: 1050px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第二出场干管</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 574px; left: 555px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">1#清水库</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 228px; left: 436px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">3#清水库</div>*@
+
+                <div class="tag" id="tag1" style="width: 200px; height: 100px; position: absolute; top: 300px; left: 220px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 20px; padding-top: 7px; padding-bottom:8px;">
+                    <div style="margin-bottom: 5px; display:flex;">
+                        <div style="color:black;  width:90px;">三干浊度：</div>
+                        <div id="xkh1sgzd" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.26</div>
+                        <div style="color: black; width: 50px; padding-left:10px;">NTU</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px;">三干余氯：</div>
+                        <div id="xkh1sgyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                        <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px; ">三干pH值：</div>
+                        <div id="xkh1sgph" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">8.17</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px; ">三干氨氮：</div>
+                        <div id="xkh1sgad" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                        <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                    </div>
+                </div>
+
+                <div class="tag" id="tag2" style="width: 220px; height: 80px; position: absolute; top: 650px; left: 850px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 20px;">
+                    <div style="margin-bottom: 5px; display:flex;">
+                        <div style="color:black;  width:90px;">瞬时流量：</div>
+                        <div id="xkh1sgssll" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                        <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px;">三千管网压力：</div>
+                        <div id="xkh1sggwyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                        <div style="color: black; width: 50px; padding-left: 10px;">Mpa</div>
+                    </div>
+                </div>
+                <div class="tag" id="tag2" style="width: 220px; height: 40px; position: absolute; top: 600px; left: 850px; background-color: #dfe9ea; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 10px;">
+                    <div style=" display:flex;">
+                        <div style="color:black;  width:90px;">瞬时流量：</div>
+                        <div id="xkh1sgssll1" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.00</div>
+                        <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                    </div>
+                </div>
+
+                <div id="" class="" style="position: absolute; clear: both; width: 100%; top:150px; left: 600px;">
+                    <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                    <div class="" id="xkh1zuoywdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                        液位：<br>
+                        2.942 m
+                    </div>
+                    <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 60%;"></div>
+                </div>
+                <div id="" class="" style="position: absolute; clear: both; width: 100%; top: 150px; left: 850px;">
+                    <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                    <div class="" id="xkh1youywdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                        液位：<br>
+                        2.502 m
+                    </div>
+                    <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 50%;"></div>
+                </div>
+
+                <img id="wwz_201_1" class="xkh1img1" style="position: absolute; width: 50px; top: 445px; left: 590px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 445px; left: 613px; color: #fff; ">
+                    1#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 445px; left: 640px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh1data1" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh1img2" style="position: absolute; width: 50px; top: 445px; left: 710px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 445px; left: 733px; color: #fff; ">
+                    2#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 445px; left: 760px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh1data2" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh1img3" style="position: absolute; width: 50px; top: 445px; left: 850px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top:445px; left: 873px; color: #fff; ">
+                    3#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 445px; left: 900px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh1data3" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh1img4" style="position: absolute; width: 50px; top: 445px; left: 980px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 445px; left: 1003px; color: #fff; ">
+                    4#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 445px; left: 1030px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh1data4" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+            </div>
+        </div>
+            @*新开河送水二泵站*@
+        <div class="gyt" style="display:none; padding:5px;width:100%;height:100%;" id="pid6">
+            <img style="position: absolute; width: 2158px;height:830px;left:-250px;top:-45px" src="~/Areas/DataDisplay/Content/img/index/工艺图/pid6.png">
+            <div id="body4" style="position:relative; width:100%;height:100%; overflow:hidden;">
+                @*<div style="width: 80px; height: 20px; position: absolute; top: 221px; left: 629px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">北吸水井</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 613px; left: 820px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">南吸水井</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 160px; left: 780px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第三出场干管</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 535px; left: 1050px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第二出场干管</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 574px; left: 555px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">1#清水库</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 228px; left: 436px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">3#清水库</div>*@
+
+                <div class="tag" id="tag1" style="width: 200px; height: 100px; position: absolute; top: 50px; left: 700px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 20px; padding-top: 7px; padding-bottom:8px;">
+                    <div style="margin-bottom: 5px; display:flex;">
+                        <div style="color:black;  width:90px;">三干浊度：</div>
+                        <div id="xkh2sgzd" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.26</div>
+                        <div style="color: black; width: 50px; padding-left:10px;">NTU</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px;">三干余氯：</div>
+                        <div id="xkh2sgyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                        <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px; ">三干pH值：</div>
+                        <div id="xkh2sgph" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">8.17</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px; ">三干氨氮：</div>
+                        <div id="xkh2sgad" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                        <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                    </div>
+                </div>
+
+                <div class="tag" id="tag2" style="width: 220px; height: 80px; position: absolute; top: 550px; left: 900px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 20px;">
+                    <div style="margin-bottom: 5px; display:flex;">
+                        <div style="color:black;  width:90px;">瞬时流量：</div>
+                        <div id="xkh2sgssll" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                        <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px;">三千管网压力：</div>
+                        <div id="xkh2sggwyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                        <div style="color: black; width: 50px; padding-left: 10px;">Mpa</div>
+                    </div>
+                </div>
+                <div class="tag" id="tag2" style="width: 220px; height: 40px; position: absolute; top: 500px; left: 900px; background-color: #dfe9ea; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 10px;">
+                    <div style=" display:flex;">
+                        <div style="color:black;  width:90px;">瞬时流量：</div>
+                        <div id="xkh2sgssll1" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.00</div>
+                        <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                    </div>
+                </div>
+
+                <div id="" class="" style="position: absolute; clear: both; width: 100%; top:170px; left: 370px;">
+                    <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                    <div class="" id="xkh2zuoywdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                        液位：<br>
+                        2.942 m
+                    </div>
+                    <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 60%;"></div>
+                </div>
+                <div id="" class="" style="position: absolute; clear: both; width: 100%; top: 170px; left: 1050px;">
+                    <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                    <div class="" id="xkh2youywdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                        液位：<br>
+                        2.502 m
+                    </div>
+                    <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 50%;"></div>
+                </div>
+
+                <img id="wwz_201_1" class="xkh2img1" style="position: absolute; width: 50px; top: 385px; left: 160px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 385px; left: 183px; color: #fff; ">
+                    1#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 216px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data1" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh2img2" style="position: absolute; width: 50px; top: 385px; left: 290px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 385px; left: 313px; color: #fff; ">
+                    2#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 346px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data2" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh2img3" style="position: absolute; width: 50px; top: 385px; left: 420px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top:385px; left: 443px; color: #fff; ">
+                    3#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 476px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data3" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh2img4" style="position: absolute; width: 50px; top: 385px; left: 555px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 385px; left: 578px; color: #fff; ">
+                    4#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 610px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data4" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh2img5" style="position: absolute; width: 50px; top: 385px; left: 684px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 385px; left: 708px; color: #fff; ">
+                    5#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 740px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data5" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.77</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh2img6" style="position: absolute; width: 50px; top: 385px; left: 865px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 385px; left:888px; color: #fff; ">
+                    6#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 921px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data6" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh2img7" style="position: absolute; width: 50px; top:385px; left: 994px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 385px; left: 1018px; color: #fff; ">
+                    7#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 1050px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data7" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh2img8" style="position: absolute; width: 50px; top: 385px; left: 1119px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 385px; left: 1142px; color: #fff; ">
+                    8#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 1174px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data8" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh2img9" style="position: absolute; width: 50px; top: 385px; left: 1247px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 385px; left: 1270px; color: #fff; ">
+                    9#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 1303px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data9" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="xkh2img10" style="position: absolute; width: 50px; top: 385px; left: 1374px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 385px; left: 1395px; color: #fff; ">
+                    10#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 385px; left: 1428px; display: flex; background-color: #f6fbfc;">
+                    <div id="xkh2data10" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+            </div>
+        </div>
+            @*津滨送水泵站*@
+        <div class="gyt" style="display:none; padding:5px;width:100%;height:100%;" id="pid7">
+            <img style="position: absolute; width: 1660px;height:620px;top:110px" src="~/Areas/DataDisplay/Content/img/index/工艺图/pid7.png">
+            <div id="body5" style="position:relative; width:100%;height:100%; overflow:hidden;">
+                @*<div style="width: 80px; height: 20px; position: absolute; top: 221px; left: 629px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f;  ">北吸水井</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 613px; left: 820px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">南吸水井</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 160px; left: 780px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第三出场干管</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 535px; left: 1050px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">第二出场干管</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 574px; left: 555px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">1#清水库</div>
+            <div style="width: 80px; height: 20px; position: absolute; top: 228px; left: 436px; background-color: rgba(0,0,0,0); border: 0px; font-size: 12px; color: #5e707f; ">3#清水库</div>*@
+
+                <div class="tag" id="tag1" style="width: 200px; height: 100px; position: absolute; top: 70px; left: 730px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding-left: 20px; padding-top: 7px; padding-bottom:8px;">
+                    <div style="margin-bottom: 5px; display:flex;">
+                        <div style="color:black;  width:90px;">三干浊度：</div>
+                        <div id="jbsgzd" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.26</div>
+                        <div style="color: black; width: 50px; padding-left:10px;">NTU</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px;">三干余氯：</div>
+                        <div id="jbsgyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                        <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px; ">三干pH值：</div>
+                        <div id="jbsgph" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">8.17</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px; ">三干氨氮：</div>
+                        <div id="jbsgad" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                        <div style="color: black; width: 50px; padding-left: 10px;">mg/L</div>
+                    </div>
+                </div>
+
+                <div class="tag" id="tag2" style="width: 220px; height: 80px; position: absolute; top: 560px; left: 1430px; background-color: #e8f0e3; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 20px;">
+                    <div style="margin-bottom: 5px; display:flex;">
+                        <div style="color:black;  width:90px;">瞬时流量：</div>
+                        <div id="jbsgssll" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.39</div>
+                        <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex;">
+                        <div style="color: black; width: 90px;">三千管网压力：</div>
+                        <div id="jbsggwyl" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">1.26</div>
+                        <div style="color: black; width: 50px; padding-left: 10px;">Mpa</div>
+                    </div>
+                </div>
+                <div class="tag" id="tag2" style="width: 220px; height: 40px; position: absolute; top: 510px; left: 1430px; background-color: #dfe9ea; border: 1px solid #c6cbc5; border-radius: 10px; font-size: 12px; color: black; padding: 10px;">
+                    <div style=" display:flex;">
+                        <div style="color:black;  width:90px;">瞬时流量：</div>
+                        <div id="jbsgssll1" style="color: black; width: 35px; background-color: white; align-items: center; justify-content: center; ">0.00</div>
+                        <div style="color: black; width: 50px; padding-left:10px;">m<sup>3</sup>/H</div>
+                    </div>
+                </div>
+
+                <div id="" class="" style="position: absolute; clear: both; width: 100%; top:175px; left: 340px;">
+                    <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                    <div class="" id="jbzuoywdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                        液位：<br>
+                        2.942 m
+                    </div>
+                    <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 60%;"></div>
+                </div>
+                <div id="" class="" style="position: absolute; clear: both; width: 100%; top: 175px; left: 1130px;">
+                    <img class="" style="position: relative; width: 10%;" src="~/Areas/DataDisplay/Content/img/index/工艺图/液位框.png">
+                    <div class="" id="jbyouywdata" style="position: absolute; font-size: 1rem; font-weight: bold; top: 20%; left: 4%;">
+                        液位：<br>
+                        2.502 m
+                    </div>
+                    <div id="" class="" style="width: 3.4%; bottom: 0%; left: 0%; background-color: #1efdfa; border: 0; position: absolute; height: 50%;"></div>
+                </div>
+
+                <img id="wwz_201_1" class="jbimg1" style="position: absolute; width: 50px; top: 400px; left: 130px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 400px; left: 153px; color: #fff; ">
+                    1#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 186px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata1" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="jbimg2" style="position: absolute; width: 50px; top: 400px; left: 280px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 400px; left: 303px; color: #fff; ">
+                    2#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 336px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata2" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="jbimg3" style="position: absolute; width: 50px; top: 400px; left: 430px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top:400px; left: 453px; color: #fff; ">
+                    3#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 486px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata3" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="jbimg4" style="position: absolute; width: 50px; top: 400px; left: 580px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 400px; left: 603px; color: #fff; ">
+                    4#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 635px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata4" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="jbimg5" style="position: absolute; width: 50px; top: 400px; left: 735px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 400px; left: 758px; color: #fff; ">
+                    5#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 791px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata5" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.77</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="jbimg6" style="position: absolute; width: 50px; top: 400px; left: 885px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 400px; left:908px; color: #fff; ">
+                    6#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 946px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata6" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">1.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="jbimg7" style="position: absolute; width: 50px; top:400px; left: 1035px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/关.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 400px; left: 1058px; color: #fff; ">
+                    7#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 1090px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata7" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="jbimg8" style="position: absolute; width: 50px; top: 400px; left: 1184px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 400px; left: 1207px; color: #fff; ">
+                    8#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 1239px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata8" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="jbimg9" style="position: absolute; width: 50px; top: 400px; left: 1332px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 400px; left: 1355px; color: #fff; ">
+                    9#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 1388px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata9" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+                <img id="wwz_201_1" class="jbimg10" style="position: absolute; width: 50px; top: 400px; left: 1490px;" src="~/Areas/DataDisplay/Content/img/index/工艺图/开.png">
+                <div class="" style="position: absolute; width: 100px; font-size: 10px; font-weight: bold; top: 400px; left: 1510px; color: #fff; ">
+                    10#泵
+                </div>
+                <div style="width: 60px; height: 18px; margin-right: 3px; border: 1px solid #c6cbc5; border-radius: 4px; position: absolute; top: 400px; left: 1546px; display: flex; background-color: #f6fbfc;">
+                    <div id="jbdata10" style="width: 27px; margin-left: 5px; font-size: 10px; color: #5c91ef;">0.27</div>
+                    <div style="width: 28px; margin-left: 0px; font-size: 10px;">Mpa</div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="middle2" style="height:335px; display:none;">
+            <div class="middle21" style="height:55px;">
+                <div class="middle211">
+                    <table class="middle2111">
+                        <tr class="middle21111">
+                            <th class="middle211111">泵站供水量（m<sup>3</sup>/h）</th>
+                            <td class="middle211112">2799</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="middle211">
+                    <table class="middle2111">
+                        <tr class="middle21111">
+                            <th class="middle211111">泵站供水压力（Mpa）</th>
+                            <td class="middle211112">0.326</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="middle22">
+                <div class="middle221">
+                    <table class="middle221_title">
+                        <tr class="middle2211">
+                            <th class="middle22111">序号</th>
+                            <th class="middle22111">水泵编号</th>
+                            <th class="middle22111">水泵状态</th>
+                            <th class="middle22111">流量（m<sup>3</sup>/h）</th>
+                            <th class="middle22111">压力（Mpa）</th>
+                            <th class="middle22111">调速比（%）</th>
+                            <th class="middle22111">功率（KW）</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="middle222" style="height:235px;">
+                    <table class="middle222_data">
+                        <script type="text/javascript">
+                            for (var i = 0; i < 10; i++) {
+                                document.write("<tr class='middle2221'>" +
+                                    "<td class='middle22211'>" +
+                                    "1" +
+                                    "</td>" +
+                                    "<td class='middle22211'>" +
+                                    "1期1#泵" +
+                                    "</td>" +
+                                    "<td class='middle22211'>" +
+                                    "开启" + "</td>" +
+                                    "<td class='middle22211'>" +
+                                    "620" + "</td>" +
+                                    "<td class='middle22211'>" +
+                                    "0.398" + "</td>" +
+                                    "<td class='middle22211'>" +
+                                    "8" + "</td>" +
+                                    "<td class='middle22211'>" +
+                                    "1300" + "</td>" +
+                                    "</tr>")
+                            }
+                        </script>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="right11" style="width: 150px; position: absolute; top:20px; left: 180px;" onclick="openMessage(this)">水泵基本信息</button>
+    <button class="right21" style="width:150px;position:absolute;top:630px;left:450px" onclick="instructClick(this)">下发调度指令</button>
+    <button class="right11" style="width: 150px; position: absolute; top:630px; left: 285px;" onclick="planClick(this)">生成方案</button>
+    <div style="position: absolute; top: 615px; left: 50px;height:55px">
+        <div class="middle21" style="height:55px;">
+            <div class="middle211">
+                <table class="right1231">
+                    <tr class="right12311">
+                        <th class="right123111">千吨水耗电量kWh/(km³.MPa)</th>
+                        <td class="right123112" id="qdshdl">162</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tag" id="tag2" style="width: 365px;  position: absolute; top: 0px; right: 5px; background-color: white; border: 1px solid #c6cbc5; font-size: 12px; color: black;">
+        <div class="gridPane1">
+            <table id="gridList1"></table>
+        </div>
+    </div>
+    <div id="gridPanel" class="gridPanel" style="position:absolute;top:670px;left:10px;width:700px">
+        <table id="gridList"></table>
+    </div>
+    <div class="right" style="height:845px; display:none;">
+        <div class="right1" style="height:630px;">
+            <button class="right11">生成方案</button>
+            <div class="right12" style="height:275px;">
+                <div class="right121">水泵基本信息</div>
+                <div class="right122" style="height:210px;">
+                    <div class="right1221">
+                        <table class="right1221_title">
+                            <tr class="right12211">
+                                <th class="right122111">序号</th>
+                                <th class="right122111">名称</th>
+                                <th class="right122111">规格型号</th>
+                                <th class="right122111">额定压力/mH<sub>2</sub>O</th>
+                                <th class="right122111">额定流量（m<sup>3</sup>▪h<sup>-1</sup>）</th>
+                                <th class="right122111">额定功率/KW</th>
+                                <th class="right122111">转速/（r▪min<sup>-1</sup>）</th>
+                                <th class="right122111">是否变频</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="right1222" style="height:210px;">
+                        <table class="right1222_data">
+                            <script type="text/javascript">
+                                for (var i = 0; i < 15; i++) {
+                                    document.write("<tr class='right12221'>" +
+                                        "<td class='right122211'>" +
+                                        "1" +
+                                        "</td>" +
+                                        "<td class='right122211'>" +
+                                        "1期1#" +
+                                        "</td>" +
+                                        "<td class='right122211'>" +
+                                        "6sh-6" + "</td>" +
+                                        "<td class='right122211'>" +
+                                        "70" + "</td>" +
+                                        "<td class='right122211'>" +
+                                        "198" + "</td>" +
+                                        "<td class='right122211'>" +
+                                        "55" + "</td>" +
+                                        "<td class='right122211'>" +
+                                        "2900" + "</td>" +
+                                        "<td class='right122211'>" +
+                                        "否" + "</td>" +
+                                        "</tr>")
+                                }
+                            </script>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="right12">
+                <div class="right121">水泵优化组合情况</div>
+                <div class="right122_2" style="height:225px;">
+                    <div class="right1221">
+                        <table class="right1221_title">
+                            <tr class="right12211">
+                                <th class="right122111">序号</th>
+                                <th class="right122111">水泵编号</th>
+                                <th class="right122111">水泵状态</th>
+                                <th class="right122111">调速比</th>
+                                <th class="right122111">压力（Mpa）</th>
+                                <th class="right122111">流量（m<sup>3</sup>/h）</th>
+                                <th class="right122111">效率（%）</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="right1222_2" style="height:175px;">
+                        <table class="right1222_data">
+                            <script type="text/javascript">
+                                for (var i = 0; i < 10; i++) {
+                                    document.write("<tr class='right12221'>" +
+                                        "<td class='right122211'>" +
+                                        "1" +
+                                        "</td>" +
+                                        "<td class='right122211'>" +
+                                        "1期1#泵" +
+                                        "</td>" +
+                                        "<td class='right122211'>" +
+                                        "开启" + "</td>" +
+                                        "<td class='right122211'>" +
+                                        "0.835" + "</td>" +
+                                        "<td class='right122211'>" +
+                                        "0.295" + "</td>" +
+                                        "<td class='right122211'>" +
+                                        "620" + "</td>" +
+                                        "<td class='right122211'>" +
+                                        "82.6" + "</td>" +
+                                        "</tr>")
+                                }
+                            </script>
+                        </table>
+                    </div>
+                </div>
+                <div class="right123">
+                    <table class="right1231">
+                        <tr class="right12311">
+                            <th class="right123111">千吨水耗电量（KW▪h）</th>
+                            <td class="right123112" id="qdshdl"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="right2" style="height:200px">
+            <button class="right21">下发调度指令</button>
+            <div class="right22">
+                <div class="right221">
+                    <table class="right221_title">
+                        <tr class="right2211">
+                            <th class="right22111">序号</th>
+                            <th class="right22111">水泵编号</th>
+                            <th class="right22111">状态</th>
+                            <th class="right22111">调速比（%）</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="right222" style="height:160px;">
+                    <table class="right222_data">
+                        <script type="text/javascript">
+                            for (var i = 0; i < 10; i++) {
+                                document.write("<tr class='right2221'>" +
+                                    "<td class='right22211'>" +
+                                    "1" +
+                                    "</td>" +
+                                    "<td class='right22211'>" +
+                                    "1期1#泵" +
+                                    "</td>" +
+                                    "<td class='right22211'>" +
+                                    "开启" + "</td>" +
+                                    "<td class='right22211'>" +
+                                    "0.835" + "</td>" +
+                                    "</tr>")
+                            }
+                        </script>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function onclickB1(node) {
+        @*console.log(node.innerText);*@
+        let B1_c = document.getElementById("B1_c");
+        B1_c.innerHTML = node.innerText + '<span class="caret">';
+        let gyt = document.getElementsByClassName("gyt");
+
+        for (i = 0; i < gyt.length; i++) {
+            if (gyt[i].id == node.innerText) {
+                gyt[i].style.display = "block";
+            }
+            else {
+                gyt[i].style.display = "none";
+            }
+        }
+    }
+    var psId, planId;
+    $(function () {
+        $("#ORGANIZEID").bindSelect({
+            url: "/Elaborate/Optimize/GetPumpList",
+            id: "Value",
+            text: "Name"
+        });
+        psId = $("#ORGANIZEID").val();
+        gridList1();
+    })
+    function openMessage() {
+        $.modalOpen({
+            id: "Details",
+            title: "水泵基本信息",
+            url: "/Elaborate/Optimize/Details?keyValue=" + psId,
+            width: "950px",
+            height: "500px",
+            btn: null,
+        });
+    }
+    function organizeidSelect() {
+        $("#gridList").jqGrid('clearGridData');
+        psId = $("#ORGANIZEID").val();
+        $("#pid2").css("display", "none");
+        $("#pid3").css("display", "none");
+        $("#pid4").css("display", "none");
+        $("#pid5").css("display", "none");
+        $("#pid6").css("display", "none");
+        $("#pid7").css("display", "none");
+        switch (psId) {
+            case '2':
+                $("#pid2").css("display", "");
+                break;
+            case '3':
+                $("#pid3").css("display", "");
+                break;
+            case '4':
+                $("#pid4").css("display", "");
+                break;
+            case '5':
+                $("#pid5").css("display", "");
+                break;
+            case '6':
+                $("#pid6").css("display", "");
+                break;
+            case '7':
+                $("#pid7").css("display", "");
+                break;
+        }
+        gridList1()
+    }
+    function gridList() {
+        $("#gridList").jqGrid('clearGridData');
+        var $gridList = $("#gridList");
+        $.loading(true, '生成方案计算中...');
+        $.ajax({
+            type: "GET",
+            url: "/Elaborate/Optimize/CreateOptimizePlan?psId=" + psId,
+            dataType: "json",
+            success: function (adata) {
+                
+                $gridList.dataGrid({
+                    datatype: "local",
+
+                    colModel: [
+                        { label: '水泵编号', name: 'PumpName', width: 140, align: 'center' },
+                        {
+                            label: '水泵状态', name: 'IsOpen', width: 120, align: 'center',
+                            formatter: function (cellvalue, options, rowObject) {
+                                if (cellvalue) {
+                                    return "是"
+                                } else {
+                                    return "否"
+                                }
+                            }
+                        },
+                        {
+                            label: '调速比', name: 'SpeedRatio', width: 100, align: 'center',
+                        },
+                        { label: '压力(Mpa)', name: 'Press', width: 100, align: 'center' },
+                        { label: '流量(m³/h)', name: 'Flow', width: 100, align: 'center' },
+                        { label: '效率(%)', name: 'Frequency', width: 100, align: 'center', },
+                    ],
+                    sortname: 'PumpName asc',
+                    viewrecords: true
+                });
+                for (var i = 0; i < adata[0].length; i++) {
+                     $("#gridList").jqGrid('addRowData', i + 1, adata[0][i]);
+                }
+                planId = adata[1].ID;
+                $.loading();
+                $.modalMsg("生成方案成功！", "success");
+            }
+        });
+    }
+    function gridList1() {
+        $("#gridList1").jqGrid('clearGridData');
+        var $gridList1 = $("#gridList1");
+        $.ajax({
+            type: "GET",
+            url: "/Elaborate/Optimize/GetPumpParam?psId=" + psId,
+            dataType: "json",
+            success: function (adata) {
+                $gridList1.dataGrid({
+                    datatype: "local",
+                    height: 150,
+                    colModel: [
+                        { label: '泵序号：', name: 'PumpName', width: 75 , align: 'center' },
+                        {
+                            label: '频率Hz', name: 'Frequency', width: 50, align: 'center',
+                        },
+                        {
+                            label: '开启度%', name: 'Frequency', width: 60, align: 'center',
+                        },
+                        {
+                            label: '功率KW', name: 'Power', width: 70, align: 'center',
+                        },
+                        { label: '真空值KPa', name: 'Vacuum', width: 70, align: 'center' },
+                    ],
+                    sortname: 'PumpName asc',
+                    viewrecords: true
+                });
+                for (var i = 0; i < adata[0].length; i++) {
+                    $("#gridList1").jqGrid('addRowData', i + 1, adata[0][i]);
+                }
+                $("#qdshdl").text(adata[1])
+                if (psId == 2) {
+                    $("#jyygzd").text(adata[2])
+                    $("#jyygyl").text(adata[3])
+                    $("#jyygph").text(adata[4])
+                    $("#jyygad").text(adata[5])
+                    $("#jyssll").text(adata[6])
+                    $("#jyyggwya").text(adata[7])
+                    $("#jyyw1").html("液位：" + "<br>" + adata[8] + "m")
+                    $("#jyyw2").html("液位：" + "<br>" + adata[9] + "m")
+                    $("#jykyl").text(adata[10])
+                    $("#jykad").text(adata[11])
+                    $("#jyssll2").text(adata[12])
+                    $("#jybdata1").text(adata[0][0].Press)
+                    $("#jybdata2").text(adata[0][1].Press)
+                    $("#jybdata3").text(adata[0][2].Press)
+                    $("#jybdata4").text(adata[0][3].Press)
+                    $("#jybdata5").text(adata[0][4].Press)
+                    adata[0][0].IsOpen ? $(".jybimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jybimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".jybimg2").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jybimg2").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".jybimg3").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jybimg3").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".jybimg4").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jybimg4").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][4].IsOpen ? $(".jybimg5").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jybimg5").prop("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                } else if (psId == 3) {
+                    $("#jysgzd").text(adata[2])
+                    $("#jysgyl").text(adata[3])
+                    $("#jysgph").text(adata[4])
+                    $("#jysgad").text(adata[5])
+                    $("#qsk3data").html("液位：" + "<br>" + adata[6] + "m")
+                    $("#qsk1data").html("液位：" + "<br>" + adata[7] + "m")
+                    $("#bxsjdata").html("液位：" + "<br>" + adata[8] + "m")
+                    $("#nxsjdata").html("液位：" + "<br>" + adata[9] + "m")
+                    $("#jysgssll1").text(adata[10])
+                    $("#jysgssll").text(adata[11])
+                    $("#jysggwyl").text(adata[12])
+                    adata[0][0].IsOpen ? $(".jysgimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jysgimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".jysgimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jysgimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".jysgimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jysgimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".jysgimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jysgimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][4].IsOpen ? $(".jysgimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jysgimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][5].IsOpen ? $(".jysgimg11").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jysgimg11").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][6].IsOpen ? $(".jysgimg12").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jysgimg12").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][7].IsOpen ? $(".jysgimg13").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jysgimg13").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    $("#jysgdata6").text(adata[0][0].Press)
+                    $("#jysgdata7").text(adata[0][1].Press)
+                    $("#jysgdata8").text(adata[0][2].Press)
+                    $("#jysgdata9").text(adata[0][3].Press)
+                    $("#jysgdata10").text(adata[0][4].Press)
+                    $("#jysgdata11").text(adata[0][5].Press)
+                    $("#jysgdata12").text(adata[0][6].Press)
+                    $("#jysgdata13").text(adata[0][7].Press)
+
+                } else if (psId == 4) {
+                    adata[0][0].IsOpen ? $(".lzsgimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".lzsgimg2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".lzsgimg3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".lzsgimg4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][4].IsOpen ? $(".lzsgimg5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][5].IsOpen ? $(".lzsgimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][6].IsOpen ? $(".lzsgimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][7].IsOpen ? $(".lzsgimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][8].IsOpen ? $(".lzsgimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][9].IsOpen ? $(".lzsgimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".lzsgimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    $("#lzsgdata1").text(adata[0][0].Press)
+                    $("#lzsgdata2").text(adata[0][1].Press)
+                    $("#lzsgdata3").text(adata[0][2].Press)
+                    $("#lzsgdata4").text(adata[0][3].Press)
+                    $("#lzsgdata5").text(adata[0][4].Press)
+                    $("#lzsgdata6").text(adata[0][5].Press)
+                    $("#lzsgdata7").text(adata[0][6].Press)
+                    $("#lzsgdata8").text(adata[0][7].Press)
+                    $("#lzsgdata9").text(adata[0][8].Press)
+                    $("#lzsgdata10").text(adata[0][9].Press)
+                    if (adata[2]) {
+                        $("#lzsgzd").text(adata[2])
+                        $("#lzsgyl").text(adata[3])
+                        $("#lzsgph").text(adata[4])
+                        $("#lzsgad").text(adata[5])
+                    }
+                } else if (psId == 5) {
+                    adata[0][0].IsOpen ? $(".xkh1img1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh1img1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".xkh1img2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh1img2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".xkh1img3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh1img3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".xkh1img4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh1img4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    $("#xkh1data1").text(adata[0][0].Press)
+                    $("#xkh1data2").text(adata[0][1].Press)
+                    $("#xkh1data3").text(adata[0][2].Press)
+                    $("#xkh1data4").text(adata[0][3].Press)
+                    if (adata[2]) {
+                        $("#xkh1sgzd").text(adata[2])
+                        $("#xkh1sgyl").text(adata[3])
+                        $("#xkh1sgph").text(adata[4])
+                        $("#xkh1sgad").text(adata[5])
+                    }
+                } else if (psId == 6) {
+                    adata[0][0].IsOpen ? $(".xkh2img1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".xkh2img2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".xkh2img3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".xkh2img4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][4].IsOpen ? $(".xkh2img5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][5].IsOpen ? $(".xkh2img6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][6].IsOpen ? $(".xkh2img7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][7].IsOpen ? $(".xkh2img8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][8].IsOpen ? $(".xkh2img9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][9].IsOpen ? $(".xkh2img10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".xkh2img10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    $("#xkh2data1").text(adata[0][0].Press)
+                    $("#xkh2data2").text(adata[0][1].Press)
+                    $("#xkh2data3").text(adata[0][2].Press)
+                    $("#xkh2data4").text(adata[0][3].Press)
+                    $("#xkh2data5").text(adata[0][4].Press)
+                    $("#xkh2data6").text(adata[0][5].Press)
+                    $("#xkh2data7").text(adata[0][6].Press)
+                    $("#xkh2data8").text(adata[0][7].Press)
+                    $("#xkh2data9").text(adata[0][8].Press)
+                    $("#xkh2data10").text(adata[0][9].Press)
+                    if (adata[2]) {
+                        $("#xkh2sgzd").text(adata[2])
+                        $("#xkh2sgyl").text(adata[3])
+                        $("#xkh2sgph").text(adata[4])
+                        $("#xkh2sgad").text(adata[5])
+                    }
+                } else {
+                    adata[0][0].IsOpen ? $(".jbimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg1").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][1].IsOpen ? $(".jbimg2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg2").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][2].IsOpen ? $(".jbimg3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg3").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][3].IsOpen ? $(".jbimg4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg4").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][4].IsOpen ? $(".jbimg5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg5").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][5].IsOpen ? $(".jbimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg6").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][6].IsOpen ? $(".jbimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg7").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][7].IsOpen ? $(".jbimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg8").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][8].IsOpen ? $(".jbimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg9").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    adata[0][9].IsOpen ? $(".jbimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/开.png") : $(".jbimg10").attr("src", "/Areas/DataDisplay/Content/img/index/工艺图/关.png")
+                    $("#jbdata1").text(adata[0][0].Press)
+                    $("#jbdata2").text(adata[0][1].Press)
+                    $("#jbdata3").text(adata[0][2].Press)
+                    $("#jbdata4").text(adata[0][3].Press)
+                    $("#jbdata5").text(adata[0][4].Press)
+                    $("#jbdata6").text(adata[0][5].Press)
+                    $("#jbdata7").text(adata[0][6].Press)
+                    $("#jbdata8").text(adata[0][7].Press)
+                    $("#jbdata9").text(adata[0][8].Press)
+                    $("#jbdata10").text(adata[0][9].Press)
+                    if (adata[2]) {
+                        $("#jbsgzd").text(adata[2])
+                        $("#jbsgyl").text(adata[3])
+                        $("#jbsgph").text(adata[4])
+                        $("#jbsgad").text(adata[5])
+                    }}
+            }
+        });
+    }
+
+    window.onresize = function () {
+        var mainH = 0
+        var mainW = 0
+
+        mainH = $(window).height();
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        $(".middle").height(mainH);
+        $(".middle").width(mainW);
+        $(".middle1").height(mainH-10);
+        $(".middle1").width(mainW);
+    }
+    window.onload = function () {
+        var mainH = 0
+        var mainW = 0
+
+        mainH = $(window).height()
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        $(".middle").height(mainH);
+        $(".middle").width(mainW);
+        $(".middle1").height(mainH - 10);
+        $(".middle1").width(mainW);
+        //$("#gridList").setGridHeight($(window).height() * 0.8); // grid_selector 是 DIV 的 ID
+    }
+    function planClick() {
+        gridList()
+    }
+    function instructClick() {
+        var urlLink24 = '/Elaborate/Optimize/CreatePumpOrder?planId=' + planId;
+        $.loading(true, '下发调令计算中...');
+        $.ajax({
+            type: "GET",
+            url: urlLink24,
+            dataType: "JSON",
+            success: function (adata) {
+                $.loading();
+                $.modalMsg("下发调令成功！", "success");
+            }
+        });
+    }
+</script>
+

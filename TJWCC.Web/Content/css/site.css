@@ -1,0 +1,12 @@
+﻿.box-black-blue {
+    border: 1px solid #0b2b5b;
+}
+
+    .box-black-blue .box-header {
+        color: #fff;
+        background-color: #3765aa;
+    }
+
+.bg-black-blue {
+    background: #0b2b5b;
+}

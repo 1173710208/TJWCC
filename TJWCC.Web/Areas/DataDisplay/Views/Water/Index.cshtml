@@ -1,0 +1,381 @@
+﻿
+@{
+    ViewBag.Title = "用水量分析";
+    Layout = null;
+}
+
+<body>
+    <link href="~/Content/js/bootstrap/bootstrap.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery/jquery.js"></script>
+    <script src="~/Content/js/echarts/echarts.min.js"></script>
+    <script src="~/Content/js/bootstrap/bootstrap.js"></script>
+    <link href="~/Content/js/ALTE/css/AdminLTE.min.css" rel="stylesheet" />
+    <script src="~/Content/js/ALTE/js/adminlte.js"></script>
+    <link href="~/Content/css/site.css" rel="stylesheet" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-width: 100%;
+            min-height: 100%;
+        }
+    </style>
+
+    <div class="container-fluid">
+        <!-- 总水量分析 -->
+        <div class="row">
+            <div class="box box-solid box-black-blue ">
+                <div class="box-header with-border">
+                    <h3 class="box-title all-box-title"></h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-md-2 bg-white">
+                        <div>
+                            <h3 id="TotalWater" class="text-danger" style="font-size:42px;">-</h3>
+                            <span style="font-size:18px;">NB-IoT水表总用水量（吨）</span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div id="TJWaterPie" style="height:270px;"></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div id="TJWaterChart" style="height:270px;"></div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+        <!-- 二级分公司水量分析 -->
+        <div class="row">
+            <div class="box box-solid box-black-blue ">
+                <div class="box-header  ">
+                    <h3 class="box-title second-box-title"></h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <!--二级分公司-->
+                        <div id="EJWaterChart" style="height:270px;"></div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+        <!-- 三级分公司水量分析 -->
+        <div class="row">
+            <div class="box box-solid box-black-blue ">
+                <div class="box-header  ">
+                    <h3 class="box-title three-box-title"></h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <div id="SJWaterChart" style="height:270px;"></div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    //水务公司用水量占比
+    var TJWaterPie = echarts.init(document.getElementById('TJWaterPie')); //饼图
+    var TJWaterChart = echarts.init(document.getElementById('TJWaterChart'));//总用水图表
+    var EJWaterChart = echarts.init(document.getElementById('EJWaterChart')); //二级分公司图表
+    var SJWaterChart = echarts.init(document.getElementById('SJWaterChart'));//三级分公司图表
+
+
+
+
+    $(function () {
+        ///水务公司总用水量
+        $.ajax({
+            url: "/DataDisplay/Water/GetTotalWater",
+            type: "get",
+            async: true,
+            success: function (data) {
+                $("#TotalWater").text(data);
+            }
+        });
+
+
+        //水务公司用水量占比
+        var dataWater = [];
+        $.ajax({
+            url: "/DataDisplay/Water/GetWaterRation",
+            type: "get",
+            async: false,
+            success: function (data) {
+                var JsonData = JSON.parse(data);
+                $.each(JsonData, function (i, ele) {
+                    var cvalue = new Array();
+                    $.each(ele.Children, function (j, wele) {
+                        var child = {
+                            name: wele.Name,
+                            value: wele.Value
+                        }
+                        cvalue.push(child);
+                    });
+
+                    var FistLevel = {
+                        name: ele.Name,
+                        children: cvalue
+                    }
+                    dataWater.push(FistLevel);
+                });
+            }
+        });
+        TJWaterPie.setOption({
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}: {c}吨"
+            },
+            color: ["#3fdec3", "#feae5b", "#8989f3", "#FF7F24", "#CD6839", "#B2DFEE", "#9BCD9B", "#98F5FF", "#90EE90", "#76EE00", "#4F94CD", "#4876FF", "#8B3626", "#8968CD"],
+            series: {
+                radius: [0, '90%'],
+                type: 'sunburst',
+                itemStyle: {
+                    borderWidth: 1
+                },
+                emphasis: {
+                    itemStyle: {
+                        opacity: 0.8
+                    }
+                },
+                sort: null,
+                data: dataWater
+            }
+        }, true);
+
+
+        //水务公司总用水量趋势
+        var waterChartTitle = "";
+        var waterlegendData = [], HourWaterData = [];
+        $.ajax({
+            url: "/DataDisplay/Water/GetHourWaterTJ",
+            type: "get",
+            async: false,
+            success: function (data) {
+                var JsonData = JSON.parse(data);
+                waterChartTitle = JsonData["Title"];//用水量图表标题
+                $.each(JsonData["Series"], function (i, ele) {
+                    waterlegendData.push(ele.Name);
+                    HourWaterData[i] = new Array();
+                    $.each(ele.Data, function (j, wele) {
+                        HourWaterData[i].push(wele);
+                    });
+                });
+                $(".all-box-title").text(waterChartTitle); //修改图表标题
+            }
+        });
+        TJWaterChart.setOption({
+            toolbox: {
+                feature: {
+                    //saveAsImage: {}
+                }
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+                left: '3%',
+                right: '3%',
+                bottom: '5%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+            },
+
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} 吨'
+                }
+            },
+            color: ["#3fdec3", "#feae5b", "#8989f3", "#FF7F24", "#CD6839", "#B2DFEE", "#9BCD9B", "#98F5FF", "#90EE90", "#76EE00", "#4F94CD", "#4876FF", "#8B3626", "#8968CD"],
+            series: [
+                {
+                    name: waterlegendData[0],
+                    type: 'line',
+                    data: HourWaterData[0],
+                    smooth: true,
+
+                }
+            ]
+        }, true);
+
+
+        //二级公司用水量趋势
+        var EJwaterChartTitle = ""; //图表标题
+        var EJwaterlegendData = [], EJHourWaterData = [];
+        $.ajax({
+            url: "/DataDisplay/Water/GetSecondaryHourWater",
+            type: "get",
+            async: false,
+            success: function (data) {
+                var JsonData = JSON.parse(data);
+                EJwaterChartTitle = JsonData["Title"];//用水量图表标题
+                $.each(JsonData["Series"], function (i, ele) {
+                    EJwaterlegendData.push(ele.Name);
+                    EJHourWaterData[i] = new Array();
+                    $.each(ele.Data, function (j, wele) {
+                        EJHourWaterData[i].push(wele);
+                    });
+                });
+                $(".second-box-title").text(EJwaterChartTitle); //修改图表标题
+            }
+        });
+        EJWaterChart.setOption({
+            toolbox: {
+                feature: {
+
+                }
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+                left: '3%',
+                right: '3%',
+                bottom: '5%',
+                containLabel: true
+            },
+            legend: {
+                data: EJwaterlegendData,
+            },
+            xAxis: {
+                type: 'category',
+                data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} 吨'
+                }
+            },
+            color: ["#3fdec3", "#feae5b", "#8989f3", "#FF7F24", "#CD6839", "#B2DFEE", "#9BCD9B", "#98F5FF", "#90EE90", "#76EE00", "#4F94CD", "#4876FF", "#8B3626", "#8968CD"],
+            series: [
+                {
+                    name: EJwaterlegendData[0],
+                    //type: 'line',
+                    type: 'bar',
+                    barGap: 0,  //柱状图间距
+                    data: EJHourWaterData[0],
+                    smooth: true,
+                },
+                {
+                    name: EJwaterlegendData[1],
+                    //type: 'line',
+                    type: 'bar',
+                    barGap: 0,  //柱状图间距
+                    data: EJHourWaterData[1],
+                    smooth: true,
+                },
+                {
+                    name: EJwaterlegendData[2],
+                    //type: 'line',
+                    type: 'bar',
+                    barGap: 0,  //柱状图间距
+                    data: EJHourWaterData[2],
+                    smooth: true,
+                },
+
+            ]
+        }, true);
+
+        //三级公司用水量趋势
+        var SJwaterChartTitle = "";
+        var SJLegendSelected ={}; //三级用水趋势图例控制显示
+        var SJwaterlegendData = [], SJSeriesWaterData = [], SJHourWaterData = [];
+        $.ajax({
+            url: "/DataDisplay/Water/GetThreeLevelHourWater",
+            type: "get",
+            async: false,
+            success: function (data) {
+                var JsonData = JSON.parse(data);
+                SJwaterChartTitle = JsonData["Title"];//用水量图表标题
+                $.each(JsonData["Series"], function (i, ele) {
+
+                    SJwaterlegendData.push(ele.Name);
+                    SJHourWaterData[i] = new Array();
+                    $.each(ele.Data, function (j, wele) {
+                        SJHourWaterData[i].push(wele);
+                    });
+
+                    var series = {
+                        name: ele.Name,
+                        type: 'line',
+                        data: SJHourWaterData[i],
+                        smooth: true,
+
+                    }
+                    SJSeriesWaterData.push(series);
+                });
+                $(".three-box-title").text(SJwaterChartTitle); //修改图表标题
+            }
+        }); 
+        //图例控制(立即执行函数)第一次加载只显示前三个
+        (function (){
+            for(let i = 0;i<SJwaterlegendData.length;i++){
+                if(i>2){
+                    var key = SJwaterlegendData[i];
+                    SJLegendSelected[key] = false;
+                    //SJLegendSelected.SJwaterlegendData[i]:false;
+                }
+            }
+        }());
+        //图表绘制
+        SJWaterChart.setOption({
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+                left: '3%',
+                right: '3%',
+                bottom: '5%',
+                top: '20%',
+                containLabel: true
+            },
+            legend: {
+                data: SJwaterlegendData,
+                right: 60,
+                top: "10%",
+                selected:SJLegendSelected
+            },
+            color: ["#3fdec3", "#feae5b", "#8989f3", "#FF7F24", "#CD6839", "#B2DFEE", "#9BCD9B", "#98F5FF", "#90EE90", "#76EE00", "#4F94CD", "#4876FF", "#8B3626", "#8968CD"],
+            xAxis: {
+                type: 'category',
+                data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} 吨'
+                }
+            },
+            series: SJSeriesWaterData
+        }, true);
+        //图列点击事件
+        //SJWaterChart.on('legendselectchanged',function(e){
+            //遍历对象
+            //for(var changeLegend in e.selected){
+                //if(e.selected[changeLegend] == true){
+                   // e.selected[changeLegend] = false
+                //}
+            //}
+        //})
+
+    })
+    window.onresize = function () {
+        TJWaterPie.resize();
+        TJWaterChart.resize();
+        EJWaterChart.resize();
+        SJWaterChart.resize();
+    }
+</script>
+

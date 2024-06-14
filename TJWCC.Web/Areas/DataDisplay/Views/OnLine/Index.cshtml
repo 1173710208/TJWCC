@@ -1,0 +1,600 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+
+<style>
+    .progress-chart .progress-value {
+        height: 24px;
+        border-radius: 12px;
+    }
+
+    .text-tj {
+        color: #fd9e46;
+    }
+
+    .text-wly {
+        color: #3cd2c7;
+    }
+
+    .text-bh {
+        color: #8893f5;
+    }
+
+    .progress .progress-bar-bh {
+        background-color: #8893f5;
+    }
+    .online-header{
+        text-align: center;
+    }
+    .text-danger{
+        font-size:32px;
+        font-weight: bold;
+    }
+</style>
+<body>
+    <link href="~/Content/js/bootstrap/bootstrap.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery/jquery.js"></script>
+    <script src="~/Content/js/echarts/echarts.min.js"></script>
+    <script src="~/Content/js/bootstrap/bootstrap.js"></script>
+    <link href="~/Content/js/ALTE/css/AdminLTE.min.css" rel="stylesheet" />
+    <script src="~/Content/js/ALTE/js/adminlte.js"></script>
+    <link href="~/Content/css/site.css" rel="stylesheet" /> 
+
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="box box-solid box-black-blue" style="height:800px;">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">NB-IoT水表上线分析占比</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <div class="col-md-4 bg-white" style="height:200px;">
+                                <div class="online-header">
+                                    <h3 id="AllInstallAmount" class="text-danger">-</h3>
+                                    <span style="font-size:18px;">安装数量（具）</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 bg-white" style="height:200px;">
+                                <div class="online-header">
+                                    <h3 id="OnlineAmount" class="text-danger">-</h3>
+                                    <span style="font-size:18px;">上线数量（具）</span>
+                                </div>
+                            </div><div class="col-md-4 bg-white" style="height:200px;">
+                                <div class="online-header">
+                                    <h3 id="OnlineRate" class="text-danger">-</h3>
+                                    <span style="font-size:18px;">上线率（%）</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div id="OfflineDayChartPie" style="height:500px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="box box-solid box-black-blue" style="height:800px;">
+                    <div class="box-header with-border">
+                        <h3 class="box-title select-box-title"></h3>
+                    </div>
+                    <!-- 仪表盘下方进度条 -->
+                    <div class="box-body">
+                        <div class="row">
+                            <!-- 仪表盘1 -->
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div id="meter1" style="height:280px;"></div>
+                                </div>
+                                <div class="col-md-offset-1 col-md-10">
+                                    <div class="row">
+                                        <h5 class="pull-right"><span class="text-tj">上线数量</span> / <span>安装数量</span></h5>
+                                    </div>
+                                    <!-- 分公司柱状图 -->
+                                    <div id="meter1-bar" style="height:465px;"></div>
+                                </div>
+                            </div>
+                            <!-- 仪表盘2 -->
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div id="meter2" style="height:280px;"></div>
+                                </div>
+                                <div class="col-md-offset-1 col-md-10">
+                                    <div class="row">
+                                        <h5 class="pull-right"><span class="text-green">上线数量</span> / <span>安装数量</span></h5>
+                                    </div>
+                                    <!-- 分公司柱状图 -->
+                                    <div id="meter2-bar" style="height:465px;"></div>
+                                </div>
+                            </div>
+                            <!-- 仪表盘3 -->
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div id="meter3" style="height:280px;"></div>
+                                </div>
+                                <div class="col-md-offset-1 col-md-10">
+                                    <div class="row">
+                                        <h5 class="pull-right"><span class="text-bh">上线数量</span> / <span>安装数量</span></h5>
+                                    </div>
+                                    <!-- 分公司柱状图 -->
+                                    <div id="meter3-bar" style="height:465px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+    ///水表安装总数量
+    $.ajax({
+        url: "/DataDisplay/OnLine/GetAllInstallAmount",
+        type: "get",
+        async: true,
+        success: function (data) {
+            $("#AllInstallAmount").text(data);
+        }
+    });
+
+    ///总在线数量
+    $.ajax({
+        url: "/DataDisplay/OnLine/GetOnlineAmount",
+        type: "get",
+        async: true,
+        success: function (data) {
+            $("#OnlineAmount").text(data);
+        }
+    });
+
+    ///在线率
+    $.ajax({
+        url: "/DataDisplay/OnLine/GetOnlineRate",
+        type: "get",
+        async: true,
+        success: function (data) {
+            $("#OnlineRate").text(data);
+        }
+    });
+
+    //更新水务公司名称
+    //$.ajax({
+    //    url: "/DataDisplay/Main/GetCompanyName",
+    //    type: "get",
+    //    async: true,
+    //    success: function (data) {
+    //        $(".companyname").text(data + "NB-IoT水表上线分析占比");
+    //    }
+    //});
+
+
+    //饼图 离线天数区间对比
+    var offLineChartPie = echarts.init(document.getElementById('OfflineDayChartPie'));
+
+
+    ///离线天数对比
+    var offLineChartPieTitle = "";
+    var offLineChartPielegendData = [], offLineChartPieData = [];
+    $.ajax({
+        url: "/DataDisplay/OnLine/GetOffLineInfo",
+        type: "get",
+        async: false,
+        success: function (data) {
+            var JsonData = JSON.parse(data);
+            offLineChartPieTitle = JsonData["Title"];//报警饼图标题
+            offLineChartPieData = JSON.parse(JSON.stringify(JsonData["Series"]).toLowerCase());
+        }
+    });
+
+    offLineChartPie.setOption({
+        title: {
+            text: offLineChartPieTitle
+        },
+        color: ['#f39d77', '#3dceed', '#4466f4', '#d7abea'],
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        series: [
+            {
+                type: 'pie',
+                radius: ['20%', '50%'],
+                center: ['50%', '50%'],//移动位置
+                selectedMode: 'single',
+                data: offLineChartPieData,//饼图数据
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)',
+                    },
+                    normal: {
+                        label: {
+                            textStyle: {
+                                fontSize: 20,
+                                color: ['black'],
+                            }
+                        }
+                    },
+
+                },
+                textStyle: {
+                    fontSize: 25,
+                },
+            }
+        ]
+    });
+
+    //在线率统计    
+    var myChartM1 = echarts.init(document.getElementById('meter1'));
+    var myChartM2 = echarts.init(document.getElementById('meter2'));
+    var myChartM3 = echarts.init(document.getElementById('meter3'));
+    $.ajax({
+        url: "/DataDisplay/OnLine/GetBranchCompanyOnlineRate",
+        type: "get",
+        async: false,
+        success: function (data) {
+            var JsonData = JSON.parse(data);  
+            $(".select-box-title").text(JsonData.Title)
+            //在线率计算
+            let onlineRate0 = JsonData.Series[0].OnLine/JsonData.Series[0].Install;
+            let onlineRate1 = JsonData.Series[1].OnLine/JsonData.Series[1].Install;
+            let onlineRate2 = JsonData.Series[2].OnLine/JsonData.Series[2].Install;
+            //仪表盘1
+            myChartM1.setOption({
+                title: {
+                    text: JsonData.Series[0].Name, //标题文本内容
+                    left:'center'
+                }, pointer: {
+                    show: false,
+                    length: '100%',
+                    width: 0,
+                },
+                grid: {
+                    left: '3%',
+                    right: '5%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                tooltip: {
+                    formatter: "{a} <br/>{b} : {c}%",
+                    textStyle: {
+                        fontSize: 10
+                    },
+                },
+
+                series: [{
+                    name: '分公司一在线率统计',
+                    type: 'gauge',
+                    radius: '100%',
+                    startAngle: 180,
+                    endAngle: 0,
+                    center: ['50%', '75%'],
+                    detail: { formatter: '{value}%' },
+                    pointer: {
+                        show: false,
+                        length: '90%',
+                    },
+                    detail: {
+                        show: true,
+                        offsetCenter: [0, '-10%'],
+                        formatter: '{value}%',
+                        color:'#fd9e46',
+                        textStyle: {
+                            fontSize: 30
+                        }
+                    },
+                    axisLine: {
+                        show: true,
+                        // 属性lineStyle控制线条样式
+                        lineStyle: {
+                            color: [[onlineRate0, '#fd9e46'], [1, '#ccc']] //0.7是仪表盘刻度
+                        }
+                    },
+                    data: [{ value: toPercent(onlineRate0), name: '在线率' }],  //50是显示百分比
+
+                }]
+
+            }); 
+
+            //仪表盘2
+            myChartM2.setOption({
+                title: {
+                    text: JsonData.Series[1].Name, //标题文本内容
+                    left:'center'
+                },
+                grid: {
+                    left: '3%',
+                    right: '5%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                tooltip: { //弹窗组件
+                    formatter: "{a} <br/>{b} : {c}%",
+                    textStyle: {
+                        fontSize: 10
+                    },
+                },
+                pointer: {
+                    show: false,
+                    length: '90%',
+                },
+                detail: {
+                    show: true,
+                    offsetCenter: [0, '-10%'],
+                    formatter: '{value}%',
+                    textStyle: {
+                        fontSize: 30
+                    }
+                },
+                series: [{
+                    name: '分公司一在线率统计',
+                    type: 'gauge',
+                    radius: '90%',
+                    startAngle: 180,
+                    endAngle: 0,
+                    center: ['50%', '75%'],
+                    detail: { formatter: '{value}%' },
+                    pointer: {
+                        show: false,
+                        length: '90%',
+                    },
+                    detail: {
+                        show: true,
+                        offsetCenter: [0, '-10%'],
+                        formatter: '{value}%',                            
+                        color:"#00a65a",
+                        textStyle: {
+                            fontSize: 30,
+
+                        }
+                    },
+                    axisLine: {
+                        show: true,
+                        // 属性lineStyle控制线条样式
+                        lineStyle: {
+                            color: [[onlineRate1,'#00a65a'], [1, '#ccc']]
+                        }
+                    },
+                    data: [{ value: toPercent(onlineRate1), name: '在线率' }],
+
+                }]
+
+            }); 
+
+            //仪表盘3
+            myChartM3.setOption({
+                title: {
+                    text: JsonData.Series[2].Name, //标题文本内容
+                    left:'center'
+                },
+                grid: {
+                    left: '3%',
+                    right: '5%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                tooltip: { //弹窗组件
+                    formatter: "{a} <br/>{b} : {c}%",
+                    textStyle: {
+                        fontSize: 10
+                    },
+                },
+                pointer: {
+                    show: false,
+                    length: '90%',
+                },
+                detail: {
+                    show: true,
+                    offsetCenter: [0, '-10%'],
+                    formatter: '{value}%',
+                    textStyle: {
+                        fontSize: 30
+                    }
+                },
+                series: [{
+                    name: '分公司一在线率统计',
+                    type: 'gauge',
+                    radius: '90%',
+                    startAngle: 180,
+                    endAngle: 0,
+                    center: ['50%', '75%'],
+                    detail: { formatter: '{value}%' },
+                    pointer: {
+                        show: false,
+                        length: '90%',
+                    },
+                    detail: {
+                        show: true,
+                        offsetCenter: [0, '-10%'],
+                        formatter: '{value}%',
+                        textStyle: {
+                            fontSize: 30
+                        }
+                    },
+                    min: 0,
+                    max: 100,
+                    axisLine: {
+                        show: true,
+                        // 属性lineStyle控制线条样式
+                        lineStyle: {
+                            color: [[onlineRate2, '#8893f5'], [1, '#ccc']]
+                        }
+                    },
+                    data: [{ value: toPercent(onlineRate2), name: '在线率' }],
+
+                }]
+
+            });
+        }
+    });    
+
+    //仪表盘下方，分公司柱状图
+    /**
+    问题：缺少接口，数据格式不明确
+    需要：营销分公司名称，上线数量 ，安装数量
+    按照之前的显示方式，行销分公司应分成3组，即3组数据
+    */
+    var myBarM1 = echarts.init(document.getElementById('meter1-bar'));
+    var myBarM2 = echarts.init(document.getElementById('meter2-bar'));
+    var myBarM3 = echarts.init(document.getElementById('meter3-bar'));
+    //图表绘制方法
+    function drawBarM(num,barColor){   // e 图表数据
+        var datas11 = []; //在线数量
+        var datas12 = []; //安装数量
+        var datasName = []; //公司名
+        var showOnline = [];//上线数量 / 安装数量文字显示
+        $.ajax({
+            url: '/DataDisplay/Main/GetInstallAndOnlineAmount', //数据接口待更换
+            type: "get",
+            async: false,
+            success: function (data) {
+                var JsonData = JSON.parse(data)[num].Series.reverse();
+                JsonData.forEach(function(item,index){
+                    datas11.push(item.OnLine)
+                    datas12.push(item.Install)
+                    datasName.push(item.Name)
+                    showOnline.push(item.OnLine+"/"+item.Install)
+                })
+            }
+        });   
+        var barData =  {
+            xAxis: [{
+                gridIndex: 0,
+                show: false,
+            }, {
+                gridIndex: 1,
+                show: false,
+            }],
+            yAxis: [
+                {
+                    gridIndex: 0,
+                    splitLine: 'none',
+                    axisTick: 'none',
+                    axisLine: 'none',
+                    axisLabel: {
+                        verticalAlign: 'bottom',
+                        align: 'left',
+                        padding: [0, 0, 25, 8],
+                        textStyle: {
+                            color: '#333',
+                            fontSize: '14',
+                        }
+                    },
+                    data: datasName
+                }, 
+                {
+                    gridIndex: 0,
+                    splitLine: 'none',
+                    axisTick: 'none',
+                    axisLine: 'none',
+                    data: showOnline,
+                    axisLabel: {
+                        show: true,
+                        verticalAlign: 'bottom',
+                        align: 'right',
+                        padding: [0, 0, 25, 0],
+                        textStyle: {
+                            color: '#333',
+                            fontSize: '14',
+                        },
+                    },
+                }, 
+                {
+                    gridIndex: 0,
+                    splitLine: 'none',
+                    axisTick: 'none',
+                    axisLine: 'none',
+                    data: []
+                },
+            ],
+            series: [
+                {
+                    name: '值',
+                    type: 'bar',
+                    xAxisIndex: 0,
+                    yAxisIndex: 0,
+                    data: datas11,
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'right',
+                            verticalAlign: 'bottom',
+                            offset: [0, -10],
+                            color: barColor,
+                            fontSize: '14',
+                            fontFamily: 'arial',
+                            formatter: function(item) {
+                                return (item.value / datas12[item.dataIndex] * 100).toFixed(2) + '%'
+                            }
+                        }
+                    },
+                    barWidth: 12,
+                    itemStyle: {
+                        normal: {
+                            color:barColor,
+                            barBorderRadius: 5,
+                        }
+                    },
+                    z: 2
+                },
+                {
+                    name: '外框',
+                    type: 'bar',
+                    xAxisIndex: 0,
+                    yAxisIndex: 2,
+                    barGap: '-100%',
+                    data: datas12,
+                    barWidth: 12,
+                    itemStyle: {
+                        normal: {
+                            color: '#333',
+                            opacity: .1,
+                            barBorderRadius: 5,
+                        }
+                    },
+                    z: 0
+                },
+            ]
+        }
+        return barData;
+    }
+    
+    myBarM1.setOption(drawBarM(0,"#fd9e46"))
+    myBarM2.setOption(drawBarM(1,"#00a65a"))
+    myBarM3.setOption(drawBarM(2,"#8893f5"))
+         
+
+
+
+    //setInterval(function () {
+    //    optionM3.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
+    //    myChartM3.setOption(optionM3, true);
+    //}, 10000);
+
+    function toPercent(point){
+        var str=Number(point*100).toFixed(2);
+        return str;
+    } 
+
+    window.onresize = function () {
+        offLineChartPie.resize();
+        myChartM1.resize();
+        myChartM2.resize();
+        myChartM3.resize();
+        myBarM1.resize();
+        myBarM2.resize();
+        myBarM3.resize();
+    }
+</script>

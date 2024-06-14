@@ -1,0 +1,662 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/js/select2/select2.min.css" rel="stylesheet" />
+<script src="~/Content/js/select2/select2.min.js"></script>
+<script src="~/Content/js/datepicker/WdatePicker.js"></script>
+<style>
+    .right11 {
+        height: 30px;
+        width: 90px;
+        border: 0;
+        border-radius: 10px;
+        margin-right: 5px;
+        color: #758ecc;
+    }
+
+/*    .right1121 {
+        height: 27px;
+        width: 120px;
+        background-color: #216fed;
+        color: #fff;
+        border: 0;
+        border-radius: 10px;
+        margin-left: 5px;
+        margin-right: 10px
+    }*/
+
+    #ORGANIZEID > option {
+        background-color: #fff;
+        color: #000;
+    }
+
+    #AREATYPEO > option {
+        background-color: #fff;
+        color: #000;
+    }
+
+    #AREATYPET > option {
+        background-color: #fff;
+        color: #000;
+    }
+
+    #changeDU > option {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #ccc;
+    }
+</style>
+<div id="show1" style="position:absolute;top:40px;left:0px;background-color:#fff;width:450px;height:25px;border:#000 solid 1px;text-align:center;z-index:1000;display:none;vertical-align:middle">提示:<span style="font-size:16px">[ </span>开始日期(年-月-日 时:分:秒),结束日期(年-月-日  时:分:秒)<span style="font-size:16px">] </span></div>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" onclick="$.reload()"> <span class="glyphicon glyphicon-refresh"> </span> </a>
+        </div>
+        <div class="btn-group">
+            <a id="TJ-add " class="btn btn-primary dropdown-text warnSet" onclick="warnSet(this)" style="background-color:#fc4201; border: 0px;"> 报警设置</a>
+        </div>
+        <div class="btn-group">
+            <a id="TJ-add " class="btn btn-primary dropdown-text warnRecord" onclick="warnRecord(this)" style="border: 0px;"> 报警记录</a>
+        </div>
+        @*<div class="operate showCRUD">
+            <ul class="nav nav-pills">
+                <li class="first"> 已选中<span> 1</span> 项</li>
+                <li> <a id="TJ-edit" authorize="yes" onclick="btn_edit()"> <i class="fa fa-pencil-square-o"> </i> 修改信息</a> </li>
+                <li> <a id="TJ-delete" authorize="yes" onclick="btn_delete()"> <i class="fa fa-trash-o"> </i> 删除信息</a> </li>
+                <li> <a id="TJ-Details" authorize="yes" onclick="btn_details()"> <i class="fa fa-search-plus"> </i> 查看信息</a> </li>
+                <li class="split"> </li>
+                <li> <a id="TJ-disabled" authorize="yes" onclick="btn_disabled()"> <i class="fa fa-stop-circle"> </i> 隐藏</a> </li>
+                <li> <a id="TJ-enabled" authorize="yes" onclick="btn_enabled()"> <i class="fa fa-play-circle"> </i> 显示</a> </li>
+            </ul>
+            <a href="javascript:;" class="close"> </a>
+        </div>*@
+        <script>$('.toolbar').authorizeButton()</script>
+    </div>
+    <div class="search" style="display:flex;">
+
+        <div class="top-bar-data recordWarn">
+            <div class="font18 topcontent1" onmouseover="controlShow1(this)" onmouseout="controlfide1(this)">报警时间日期:</div>
+        </div>
+        <input id="ssDate" name="sDate" type="text" class="form-control input-wdatepicker  recordWarn" style="margin-right: 5px; height: 25px; width: 160px; margin-top: 12px " autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+        <div class="top-bar1 recordWarn" style="width:30px;">
+            <div class="font18 topcontent1" style="width: 30px; ">到</div>
+        </div>
+        <input id="eeDate" name="eDate" type="text" class="form-control input-wdatepicker  recordWarn" style="margin-right: 5px; height: 25px; width: 160px; margin-top:12px" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+        <div class="dropdown right11 " style="width:230px">
+            <select id="ORGANIZEID" name="ORGANIZEID" class="form-control right1121 " onchange="organizeidSelect(this)">
+                <option value="">请选择</option>
+            </select>
+        </div>
+        <div class="dropdown right11 " style="width:90px">
+            <select id="AREATYPEO" name="AREATYPEO" class="form-control right1121 " onchange="onclickarea1(this)" style="margin-top:11px;height:30px;border-radius:0;border-width:1px">
+                <option value="" selected>请选择</option>
+            </select>
+        </div>
+        <div class="dropdown right11 " style="width:200px">
+            <select id="AREATYPET" name="AREATYPET" class="form-control right1121 " onchange="onclickarea2(this)" style="margin-top: 11px; height: 30px; border-radius: 0; border-width: 1px ">
+                <option value="all" selected> 全部节点</option>
+            </select>
+        </div>
+        <div id="srk" style="margin-top: 11px; width: 340px; height: 30px; color: black; border: 1px solid #ccc; margin-left: 0px; overflow-y: auto; display: flex; flex-wrap: wrap; margin-bottom: 2px;line-height:0!important">
+        </div>
+        <span id="btn_search" class="glyphicon glyphicon-search right1421" aria-hidden="true" style="margin-left:10px;margin-top:19px"></span>
+        <span id="btn_search1" class="glyphicon glyphicon-search right1421" aria-hidden="true" style="margin-left:10px;margin-top:19px;display:none"></span>
+        <div class="dropdown setWarn">
+            <select class="form-control CHANGESXX" style="margin-top:12px;height:30px;margin-left:50px;border-radius:0">
+                <option value="1" selected> 超上限</option>
+                <option value="2"> 超下限</option>
+                <option value="3"> 上限</option>
+                <option value="4"> 下限</option>
+            </select>
+        </div>
+        <div class="dropdown setWarn"><input id="changeDU" style="width: 100px; height: 30px; border: 1px solid #ccc;margin-left:60px;margin-top:12px" /></div>
+        <div class="btn-group setWarn">
+            <a id="affirmChange" class="btn btn-primary dropdown-text" onclick="" style="border: 0px;margin-left:10px;margin-top:10px"> 确认修改</a>
+        </div>
+        <div class="btn-group setRead" style="display:none">
+            <a id="readChange" class="btn btn-primary dropdown-text" onclick="" style="border: 0px;margin-left:10px;margin-top:10px;"> 全部已读</a>
+        </div>
+    </div>
+</div>
+<div class="gridPanel">
+    <table id="gridList"> </table>
+    <div id="gridPager"> </div>
+</div>
+<div class="gridPanel1" style="display:none">
+    <table id="gridList1"> </table>
+    <div id="gridPager1"> </div>
+</div>
+<script>
+    var selected_sks = [];
+    var selected_sks_name = [];
+    var sks = [];
+    var sks_name = [];
+    var flage = 1;
+    //报警设置菜单
+    function initControl() {
+        $("#ORGANIZEID").bindSelect({
+            url: "/SystemManage/SysDic/GetTreeSelectJson",
+        })
+    }
+    var right_area1_id ;
+    var Rareajiekouid ;
+    var Rarealength;
+    var Rareajiekouid2 ;
+    function organizeidSelect() {
+        selected_sks = [];
+        selected_sks_name = [];
+        document.getElementById("srk").innerHTML = "";
+        $("#AREATYPEO").find("option").remove();
+        $("#AREATYPEO")[0].innerHTML=""
+        $("#AREATYPET").find("option").remove();
+        $("#AREATYPET").append('<option value="all" selected>全部节点</option>');
+        right_area1_id = $("#ORGANIZEID").val();
+        jiekou1_area()
+        jiekou1_area2()
+    }
+        
+
+    //完成接口5.6 获取数据清洗中数据类型下拉列表
+    function jiekou1_area() {
+        right_area1_id = $("#ORGANIZEID").val();
+        $("#AREATYPEO").bindSelect({
+            url: "/SystemManage/DataClean/GetDataTypeList?areaId=" + right_area1_id,
+            text: "Name",
+            id: "Value",
+        })
+        Rareajiekouid = $("#AREATYPEO").val()
+    }
+    //完成接口5.7数据清洗中监测点下拉列表
+    function jiekou1_area2() {
+        $("#AREATYPET").bindSelect({
+            url: "/SystemManage/DataClean/GetPointList?areaId=" + right_area1_id + "&type=" + Rareajiekouid,
+            text: "Name",
+            id: "Value",
+            search: true
+        })
+        $.ajax({
+            type: "GET",
+            url: "/SystemManage/DataClean/GetPointList?areaId=" + right_area1_id + "&type=" + Rareajiekouid,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata)
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+            }
+        });
+    }
+    function onclickarea1(node) {
+        $("#AREATYPET").find("option").remove();
+        $("#AREATYPET").append('<option value="all" selected>全部节点</option>');
+        Rareajiekouid = $("#AREATYPEO").val();
+        srk.innerHTML = ""
+        selected_sks = []
+        selected_sks_name = []
+        jiekou1_area2();
+    }
+    function onclickarea2(node) {
+        let srk = document.getElementById("srk");
+        if ($("#AREATYPET option:selected").text() != "全部节点") {
+            let ls_selectedid = $("#AREATYPET option:selected").val();
+            if (selected_sks.indexOf(ls_selectedid) != -1) {
+                $.modalAlert("系统提示", "请勿重复添加同一节点！", "errer");
+            }
+            else {
+                if (selected_sks_name.indexOf("全部节点") != -1) {
+                    srk.innerHTML = ""
+                    selected_sks = []
+                    selected_sks_name = []
+                    selected_sks.push($("#AREATYPET option:selected").val());
+                    selected_sks_name.push($("#AREATYPET option:selected").text());
+                    srk.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                        + $("#AREATYPET option:selected").text() + '<button id="' + $("#AREATYPET option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                } else {
+                    selected_sks.push($("#AREATYPET option:selected").val());
+                    selected_sks_name.push($("#AREATYPET option:selected").text());
+                    srk.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                        + $("#AREATYPET option:selected").text() + '<button id="' + $("#AREATYPET option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                }
+            }
+        } else if ($("#AREATYPET option:selected").text() == "全部节点") {
+            srk.innerHTML = ""
+            selected_sks = []
+            selected_sks_name = ['全部节点']
+            srk.innerHTML +=
+                '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                + $("#AREATYPET option:selected").text() + '<button id="' + $("#AREATYPET option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                + '</div>'
+        }
+        Rareajiekouid2 = $("#AREATYPET").val();
+
+    }
+    function onclickdelete(node) {
+        for (let i = 0; i < selected_sks.length; i++) {
+            if (selected_sks[i] == node.id) {
+                selected_sks.splice(i, 1);
+                selected_sks_name.splice(i, 1);
+            }
+        }
+        let srk = document.getElementById("srk");
+        srk.innerHTML = '';
+        for (let j = 0; j < selected_sks.length; j++) {
+            srk.innerHTML +=
+                '<div class="" style="height: 20px;width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                + selected_sks_name[j] + '<button id="' + selected_sks[j] + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                + '</div>'
+        }
+    }
+    let warnSets = document.querySelector(".warnSet")
+    let warnRecords = document.querySelector(".warnRecord")
+    async function warnSet(node) {
+        selected_sks = [];
+        selected_sks_name = [];
+        sks = [];
+        sks_name = [];
+        warnSets.style.backgroundColor = "#fc4201"
+        warnRecords.style.backgroundColor = "#337ab7"
+        $(".gridPanel").css("display", "block")
+        $(".gridPanel1").css("display", "none")
+        $(".setWarn").css("display", "block")
+        $(".setRead").css("display", "none")
+        $(".recordWarn").css("display", "none")
+        $("#btn_search").css("display", "block")
+        $("#btn_search1").css("display", "none")
+        $(".showCRUD").css("display", "block")
+        $(".close").click()
+        $("#ORGANIZEID").find("option").remove();
+        $("#ORGANIZEID")[0].innerHTML = ""
+        $("#ORGANIZEID")[0].innerHTML += " <option value='' selected>请选择</option>"
+        initControl()
+        document.getElementById("srk").innerHTML = "";
+        $("#AREATYPEO")[0].innerHTML = ""
+        $("#AREATYPEO").find("option").remove();
+        $("#AREATYPEO").append('<option value="" selected>请选择</option>');
+        document.getElementById("srk").innerHTML = "";
+        $("#AREATYPET").find("option").remove();
+        $("#AREATYPET").append('<option value="all" selected>全部节点</option>');
+        await gridList()
+        $("#btn_search").click()
+        jiekou1_area()
+        jiekou1_area2()
+    }
+    function warnRecord(node) {
+        selected_sks = [];
+        selected_sks_name = [];
+        sks = [];
+        sks_name = [];
+        warnRecords.style.backgroundColor = "#fc4201"
+        warnSets.style.backgroundColor = "#337ab7"
+        $(".gridPanel1").css("display", "block")
+        $(".gridPanel").css("display", "none")
+        $(".setWarn").css("display", "none")
+        $(".setRead").css("display", "block")
+        $(".recordWarn").css("display", "block")
+        $("#btn_search1").css("display", "block")
+        $("#btn_search").css("display", "none")
+        $(".showCRUD").css("display", "none")
+        $("#ORGANIZEID").find("option").remove();
+        $("#ORGANIZEID")[0].innerHTML = ""
+        $("#ORGANIZEID")[0].innerHTML += " <option value='' selected>请选择</option>"
+        initControl()
+        document.getElementById("srk").innerHTML = "";
+        $("#AREATYPEO")[0].innerHTML = ""
+        $("#AREATYPEO").find("option").remove();
+        $("#AREATYPEO").append('<option value="" selected>请选择</option>');
+        document.getElementById("srk").innerHTML = "";
+        $("#AREATYPET").find("option").remove();
+        $("#AREATYPET").append('<option value="all" selected>全部节点</option>');
+        gridList1()
+        $("#btn_search1").click()
+        jiekou1_area()
+        jiekou1_area2()
+    }
+    $(function () {
+        initControl();
+        jiekou1_area();
+        jiekou1_area2();
+        $(".recordWarn").css("display", "none")
+        gridList()
+    })
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.jqGrid("clearGridData");
+        $gridList.dataGrid({
+            url: "/SystemManage/Alarm/GetGridJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: '主键', name: 'ID', hidden: true },
+                { label: '名称', name: 'Meter_Name', width: 260, align: 'center' },
+                { label: '表号', name: 'Station_Key', width: 100, align: 'left' },
+                {
+                    label: '所在分区', name: 'MeasureAreaId', width: 200, align: 'left',
+                    formatter: function (cellvalue, options, rowObject) {
+                        let tmp = top.clients.areaTree[cellvalue];
+                        return tmp == null ? "" : tmp;
+                    }
+                },
+                { label: '型号', name: 'Explain', width: 80, align: 'left' },
+                { label: '超上限', name: 'PHUp', width: 60, align: 'left' },
+                { label: '上限', name: 'PressureUp', width: 60, align: 'left' },
+                { label: '下限', name: 'PressureDown', width: 60, align: 'left' },
+                { label: '超下限', name: 'PHDown', width: 60, align: 'left' },
+                { label: '单位', name: 'Flow_Image', width: 50, align: 'left' },
+                {
+                    label: '安装位置', name: 'MeasureAreaId', width: 300, align: 'left',
+                    formatter: function (cellvalue, options, rowObject) {
+                        let tmp = top.clients.areaTree[cellvalue];
+                        return tmp == null ? "" : tmp;
+                    }
+                },
+                {
+                    label: "允许显示", name: "Display", width: 100, align: "center",
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 1) {
+                            return '<span class=\"label label-success\">显示</span>';
+                        } else if (cellvalue == 0) {
+                            return '<span class=\"label label-default\">隐藏</span>';
+                        }
+                    }
+                },
+                { label: '备注', name: 'Remark', width: 295, align: 'left' }
+            ],
+            pager: "#gridPager",
+            sortname: 'Station_Key asc',
+            viewrecords: true,
+            //multiselect: true,
+            //sortable: true
+        });
+        $("#btn_search").click(function () {
+            
+            var $gridList = $("#gridList");
+            Rareajiekouid2 = ""
+            if ($("#AREATYPET option:selected").val() == "all") {
+
+                for (let i = 0; i < sks.length; i++) {
+
+                    if (i != (sks.length - 1)) {
+                        Rareajiekouid2 += sks[i] + ",";
+                    }
+                    else {
+                        Rareajiekouid2 += sks[i];
+                    }
+                }
+            }
+            else {
+                for (let i = 0; i < selected_sks.length; i++) {
+                    if (i != (selected_sks.length - 1)) {
+                        Rareajiekouid2 += selected_sks[i] + ",";
+                    }
+                    else {
+                        Rareajiekouid2 += selected_sks[i];
+                    }
+                }
+            }
+            if ($("#AREATYPET option:selected").val() != "all" && selected_sks.length == 0) {
+                //console.log("1");
+                $.modalAlert("系统提示", "请选择节点进行查询", "errer");
+            }
+            else {
+                console.log(Rareajiekouid2)
+                $gridList.jqGrid('setGridParam', {
+                    postData: {
+                        keyWord: Rareajiekouid2,
+
+                    },
+                }).trigger('reloadGrid');
+            }
+        });
+    }
+    $("#affirmChange").click(function () {
+        var $gridList = $("#gridList");
+        Rareajiekouid2 = ""
+        if ($("#AREATYPET option:selected").val() == "all") {
+
+            for (let i = 0; i < sks.length; i++) {
+
+                if (i != (sks.length - 1)) {
+                    Rareajiekouid2 += sks[i] + ",";
+                }
+                else {
+                    Rareajiekouid2 += sks[i];
+                }
+            }
+        }
+        else {
+            for (let i = 0; i < selected_sks.length; i++) {
+                if (i != (selected_sks.length - 1)) {
+                    Rareajiekouid2 += selected_sks[i] + ",";
+                }
+                else {
+                    Rareajiekouid2 += selected_sks[i];
+                }
+            }
+        }
+        if ($("#AREATYPET option:selected").val() != "all" && selected_sks.length == 0) {
+            //console.log("1");
+            $.modalAlert("系统提示", "请选择节点进行查询", "errer");
+        }
+        else {
+            if ($("#changeDU").val()) {
+                $.loading("阈值修改中");
+                $.ajax({
+                    type: "POST",
+                    url: "/SystemManage/Alarm/AllChange"  ,
+                    data: { keyword: Rareajiekouid2, type: $(".CHANGESXX option:selected").val(), value: $("#changeDU").val() },
+                    dataType: "JSON",
+                    success: function (adata) {
+                        console.log(Rareajiekouid2)
+                        $gridList.jqGrid('setGridParam', {
+                            postData: {
+                                keyWord: Rareajiekouid2,
+
+                            },
+                        }).trigger('reloadGrid');
+                        $.modalMsg(adata.message, "success");
+                    }
+                });
+                $("#changeDU").val("")
+                //$("#btn_search").click()
+                $.loading();
+            } else {
+                $.modalMsg("修改的值不能为空！", "warning");
+            }
+        }
+
+
+    });
+    $("#readChange").click(function () {
+        $.loading("已读状态设置中");
+        $.ajax({
+            type: "GET",
+            url: "/SystemManage/Alarm/AllRead",
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata)
+            }
+        });
+        $("#btn_search1").click()
+        $.loading();
+        $.modalMsg("修改成功！", "success");
+
+    });
+    function gridList1() {
+        var $gridList1 = $("#gridList1");
+        $gridList1.jqGrid("clearGridData");
+        $gridList1.dataGrid({
+            url: "/SystemManage/Alarm/GetAlarmGridJson",
+            height: $(window).height() - 128,
+            colModel: [
+
+                { label: '报警类型', name: 'Information', width: 100, align: 'center' },
+                { label: '监测点名称', name: 'StationName', width: 300, align: 'center' },
+                { label: '报警时间', name: 'StartTime', width: 150, align: 'center' },
+                { label: '报警数值', name: 'Value', width: 133, align: 'center' },
+                {
+                    label: "是否报警", name: "IsActive", width: 200, align: "center",
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == true) {
+                            return '<span class=\"label label-warning\">正在报警</span>';
+                        } else {
+                            return '<span class=\"label label-success\">结束报警</span>';
+                        }
+                    }
+                },
+                {
+                    label: "是否已读", name: "IsRead", width: 200, align: "center",
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == true) {
+                            return '<span class=\"label label-success\">已读</span>';
+                        } else {
+                            return '<span class=\"label label-warning\">未读</span>';
+                        }
+                    }
+                },
+                { label: '报警内容', name: 'Remark', width: 500, align: 'center' }
+            ],
+            pager: "#gridPager1",
+            sortname: 'IsRead asc,StartTime desc',
+        });
+        $("#btn_search1").click(function () {
+            Rareajiekouid2 = ""
+            if ($("#AREATYPET option:selected").val() == "all") {
+                for (let i = 0; i < sks.length; i++) {
+
+                    if (i != (sks.length - 1)) {
+                        Rareajiekouid2 += sks[i] + ",";
+                    }
+                    else {
+                        Rareajiekouid2 += sks[i];
+                    }
+                }
+            }
+            else {
+                for (let i = 0; i < selected_sks.length; i++) {
+                    if (i != (selected_sks.length - 1)) {
+                        Rareajiekouid2 += selected_sks[i] + ",";
+                    }
+                    else {
+                        Rareajiekouid2 += selected_sks[i];
+                    }
+                }
+            }
+            if ($("#AREATYPET option:selected").val() != "all" && selected_sks.length == 0) {
+                //console.log("1");
+                $.modalAlert("系统提示", "请选择节点进行查询", "error");
+            }
+            else {
+                $gridList1.jqGrid('setGridParam', {
+                    postData: {
+                        keyWord: Rareajiekouid2,
+                        sDate: $("#ssDate").val(),
+                        eDate: $("#eeDate").val()
+                    },
+                }).trigger('reloadGrid');
+            }
+
+        });
+    }
+    function btn_add() {
+        $.modalOpen({
+            id: "Form",
+            title: "新增信息",
+            url: "/SystemManage/Alarm/Form",
+            width: "800px",
+            height: "510px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    function btn_edit() {
+        var keyValue = $("#gridList").jqGridRowValue().ID;
+        $.modalOpen({
+            id: "Form",
+            title: "修改信息",
+            url: "/SystemManage/Alarm/Form?keyValue=" + keyValue,
+            width: "800px",
+            height: "510px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    function btn_delete() {
+        $.deleteForm({
+            url: "/SystemManage/Alarm/DeleteForm",
+            param: { keyValue: $("#gridList").jqGridRowValue().ID },
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+    function btn_details() {
+        var keyValue = $("#gridList").jqGridRowValue().ID;
+        console.log(keyValue)
+        $.modalOpen({
+            id: "Details",
+            title: "查看信息",
+            url: "/SystemManage/Alarm/Details?keyValue=" + keyValue,
+            width: "700px",
+            height: "550px",
+            btn: null,
+        });
+    }
+    function btn_disabled() {
+        var keyValue = $("#gridList").jqGridRowValue().ID;
+        $.modalConfirm("注：您确定要【隐藏】该项信息吗？", function (r) {
+            if (r) {
+                $.submitForm({
+                    url: "/SystemManage/Alarm/DisabledAccount",
+                    param: { keyValue: keyValue },
+                    success: function () {
+                        $.currentWindow().$("#gridList").trigger("reloadGrid");
+                    }
+                })
+            }
+        });
+    }
+    function btn_enabled() {
+        var keyValue = $("#gridList").jqGridRowValue().ID;
+        $.modalConfirm("注：您确定要【显示】该项信息吗？", function (r) {
+            if (r) {
+                $.submitForm({
+                    url: "/SystemManage/Alarm/EnabledAccount",
+                    param: { keyValue: keyValue },
+                    success: function () {
+                        $.currentWindow().$("#gridList").trigger("reloadGrid");
+                    }
+                })
+            }
+        });
+    }
+    function controlShow1() {
+        $("#show1").css("display", "block")
+    }
+    function controlfide1() {
+        $("#show1").css("display", "none")
+    }
+    window.onload = function () {
+        let data = $.request("data");
+        if (data == '1') warnRecord(data);
+    }
+    $(window).resize(function () {
+        // 宽度自动适应
+        /* $("#gridList").setGridWidth($(window).width() - 30);*/
+        // 高度自动适应
+        $(window).unbind("onresize");
+        $("#gridList").setGridHeight($(window).height() * 0.85); // grid_selector 是 DIV 的 ID
+        $("#gridList1").setGridHeight($(window).height() * 0.85); // grid_selector 是 DIV 的 ID
+        $(window).bind("onresize", this);
+    });
+</script>

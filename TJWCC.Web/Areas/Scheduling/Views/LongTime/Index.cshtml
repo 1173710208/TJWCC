@@ -1,0 +1,638 @@
+﻿
+@{
+    ViewBag.Title = "中长期预测";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+
+<script src="~/Areas/DataDisplay/Content/js/main.js"></script>
+
+<script src="~/Areas/DataDisplay/Content/js/echarts.min.js"></script>
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/WaterPrediction.css" rel="stylesheet" />
+
+<style>
+    html {
+        overflow-y: hidden !important;
+    }
+
+    body {
+        overflow-y: hidden !important;
+    }
+</style>
+<div class="main-container" style="height:860px;">
+    <div class="right1">
+        <div class="right11">
+            <button class="font10 right111" onclick="monthsData(this)" id="selectColor1">三个月</button>
+            <button class="font10 right111" onclick="quarterData(this)" id="selectColor2">三个季度</button>
+            <button class="font10 right111" onclick="yearData(this)" id="selectColor3">两年</button>
+        </div>
+        <div class="right133" id="yearShow">
+            @*<button class="font10 right111" style="width: 160px; background-color: #216fed;color:#fff" onclick="GDPclick(this)">录入人口/GDP历史数据</button>*@
+            <strong class="font10" style="height: 26px; width: 205px; line-height: 100%; outline: none; margin-top: 17px;margin-right:10px" id="personAdd">预测水量增长率(%):</strong>
+            <strong class="font10" style="height: 26px; width: 205px; line-height: 100%; outline: none; margin-top: 17px;margin-right:10px" id="personAdd2">预测水量增长率(%):</strong>
+            @*<input id="personAdd" class="right111" style="width: 70px; background-color: #ccc; color: #fff; margin-left: 0;text-align:center" type="text" disabled />*@
+            <strong class="font10" style="height: 26px; width: 140px; line-height: 100%; outline: none; margin-top:17px">修正水量增长率(%):</strong>
+            <input id="addGdp" class="right111" style="width: 70px; background-color: #40b4d9!important; color: #fff; margin-left: 0; text-align: center" type="text" />
+        </div>
+        <div class="right12" style="width:80px" id="yuceShow">
+            <button class="font10 right121" style="background-color: #fc5402;width:70px;margin-left:0" onclick="calculateClick(1)">预测</button>
+        </div>
+        <div class="right12">
+            <button class="font10 right121" onclick="ycbgClick(this)">预测报告</button>
+        </div>
+
+
+    </div>
+
+    <div class="right2" >
+        <div class="dropdown font10 ">
+            <select id="ORGANIZEID" name="ORGANIZEID" class="form-control right1121 " style="display: inline;margin-left:820px;width:150px" onchange="organizeidSelect(this)"></select>
+        </div>
+        <div id="echarts_bottom" style="width:100%;height:90%"></div>
+    </div>
+</div>
+
+<script>
+    var R1jiekouid=0;
+    var R1length;
+    var areaName
+    var select1_type = document.getElementsByClassName("select1_type");
+    function organizeidSelect() {
+        R1jiekouid = $("#ORGANIZEID").val()
+        areaName = jQuery("#ORGANIZEID  option:selected").text()
+        myChart.clear()
+        getLeftDate2();
+    }
+    var selectColor1 = document.getElementById("selectColor1")
+    var selectColor2 = document.getElementById("selectColor2")
+    var selectColor3 = document.getElementById("selectColor3")
+    var R2jiekouid = "6";
+    let yearShow = document.querySelector("#yearShow")
+    let yuceShow = document.querySelector("#yuceShow")
+    function monthsData() {
+        selectColor1.style.backgroundColor = "#216fed"
+        selectColor2.style.backgroundColor = "#fff"
+        selectColor3.style.backgroundColor = "#fff"
+        yearShow.style.visibility = "hidden"
+        yuceShow.style.visibility = "hidden"
+        selectColor1.style.color = "#fff"
+        selectColor2.style.color = "#000"
+        selectColor3.style.color = "#000"
+        R2jiekouid = 4
+        R1jiekouid
+        myChart.clear()
+        getLeftDate2();
+    }
+    function quarterData() {
+        selectColor2.style.backgroundColor = "#216fed"
+        selectColor1.style.backgroundColor = "#fff"
+        selectColor3.style.backgroundColor = "#fff"
+        yearShow.style.visibility = "hidden"
+        yuceShow.style.visibility = "hidden"
+        selectColor2.style.color = "#fff"
+        selectColor1.style.color = "#000"
+        selectColor3.style.color = "#000"
+        R2jiekouid = 5
+        R1jiekouid
+        myChart.clear()
+        getLeftDate2();
+
+    }
+    function yearData() {
+        selectColor3.style.backgroundColor = "#216fed"
+        selectColor2.style.backgroundColor = "#fff"
+        selectColor1.style.backgroundColor = "#fff"
+        yearShow.style.visibility = "visible"
+        yuceShow.style.visibility = "visible"
+        selectColor3.style.color = "#fff"
+        selectColor1.style.color = "#000"
+        selectColor2.style.color = "#000"
+        R2jiekouid = 6
+        R1jiekouid
+        myChart.clear()
+        getLeftDate2();
+    }
+
+    var maxData;
+    var minData;
+    var maxdeviation;
+    var mindeviation;
+    var dataShu1 = [];
+    var xdataShu1 = [];
+    var dataShu2 = [];
+    var xdataShu2 = [];
+    var dataShu3 = [];
+    var xdataShu3 = [];
+    var dataShu4 = [];
+    var xdataShu4 = [];
+    var dataShu5;
+    var dataShu6;
+    var personData;
+    var GdpData;
+    var personAdd = document.querySelector("#personAdd")
+    var personAdd2 = document.querySelector("#personAdd2")
+
+    var addGdp = document.querySelector("#addGdp")
+    function getLeftDate2(val) {
+        let jieKou1 = '/Scheduling/LongTime/DemandPrediction?areaId='
+        maxData = 0;
+        minData = 0;
+        maxdeviation = 0;
+        mindeviation = 0;
+        dataShu1 = [];
+        xdataShu1 = [];
+        dataShu2 = [];
+        xdataShu2 = [];
+        dataShu3 = [];
+        xdataShu3 = [];
+        dataShu4 = [];
+        xdataShu4 = [];
+        dataShu5 = 0;
+        dataShu6 = 0;
+        $("#personAdd")[0].innerText = "预测水量增长率（%）: "
+        $("#personAdd2")[0].innerText = "预测水量增长率（%）: "
+
+        $.ajax({
+            type: 'GET',
+            url: jieKou1 + R1jiekouid + '&type=' + R2jiekouid,
+            dataType: 'JSON',
+            success: function (adata) {
+                if (R2jiekouid == 6) {
+                    //console.log(adata)
+                    for (let i = 0; i < adata[0].length; i++) {
+                        dataShu1.push(adata[0][i][1])
+                        xdataShu1.push(adata[0][i][0])
+                    }
+                    for (let i = 0; i < adata[1].length; i++) {
+                        dataShu2.push(adata[1][i][1])
+                        xdataShu2.push(adata[1][i][0])
+                    }
+                    for (let i = 0; i < adata[2].length; i++) {
+                        dataShu3.push(adata[2][i][1])
+                        xdataShu3.push(adata[2][i][0])
+                    }
+                    for (let i = 0; i < adata[3].length; i++) {
+                        dataShu4.push(adata[3][i][1])
+                        xdataShu4.push(adata[3][i][0])
+                    }
+                    dataShu5 = adata[8][2]
+                    dataShu5 = adata[8][3]
+                    var yearArr = [...xdataShu1, ...xdataShu4];
+                    $("#personAdd")[0].innerText += adata[8][2];
+                    $("#personAdd2")[0].innerText += adata[8][4];
+                    //在年预测增长率和预测年份关联 第一年
+                    $("#personAdd")[0].innerText = yearArr[yearArr.length - 2] + $("#personAdd")[0].innerText;
+                       //在年预测增长率和预测年份关联 第二年
+                    $("#personAdd2")[0].innerText = yearArr[yearArr.length - 1] +$("#personAdd2")[0].innerText;
+                    //addGdp.value = adata[8][3];
+                    //option.yAxis[0].interval = 20000000
+                    //option.yAxis[1].interval = 0.1
+                    maxData = adata[4]
+                    minData = 0
+                    maxdeviation = adata[6];
+                    mindeviation = adata[7];
+                    //console.log(mindeviation);
+                    personData = adata[8][0]
+                    GdpData = adata[8][1]
+                   
+                    option.tooltip.formatter = function (params) {
+                        let str = '<strong style="color:#000">' + params[0].axisValue + ":" + '中长期水量预测' + '</strong>' + "<br />";
+                        params.forEach((item) => {
+
+                            if (item.data) {
+                                if (item.seriesName == "误差率") {
+                                    str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "%" + '</strong>' + "<br />";
+                                } else { str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "(10⁴m³)" + '</strong>' + "<br />"; }
+                            }
+                        });
+                        return str;
+                    }
+                    option.yAxis[0].name = '(10⁴m³)'
+                }
+                if (R2jiekouid == 5) {
+                    for (let i = 0; i < adata[0].length; i++) {
+                        dataShu1.push(adata[0][i][1])
+                        xdataShu1.push(adata[0][i][0])
+                    }
+                    for (let i = 0; i < adata[1].length; i++) {
+                        dataShu2.push(adata[1][i][1])
+
+                    }
+                    for (let i = 0; i < adata[2].length; i++) {
+                        dataShu3.push(adata[2][i][1])
+
+                    }
+                    for (let i = 0; i < adata[3].length; i++) {
+                        dataShu4.push(adata[3][i][1])
+                        xdataShu4.push(adata[3][i][0])
+                    }
+                    //option.yAxis[0].interval = 10000000
+                    //option.yAxis[1].interval = 0.2
+                    maxData = adata[4]
+                    minData = adata[5]
+                    maxdeviation = adata[6];
+                    mindeviation = adata[7];
+                    option.tooltip.formatter = function (params) {
+                        let str = '<strong style="color:#000">' + params[0].axisValue + ":" + '中长期水量预测' + '</strong>' + "<br />";
+                        params.forEach((item) => {
+
+                            if (item.data) {
+                                if (item.seriesName == "误差率") {
+                                    str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "%" + '</strong>' + "<br />";
+                                } else { str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "(10⁴m³)" + '</strong>' + "<br />"; }
+                            }
+                        });
+                        return str;
+                    }
+                    option.yAxis[0].name = '(10⁴m³)'
+                }
+                if (R2jiekouid == 4) {
+                    for (let i = 0; i < adata[0].length; i++) {
+                        dataShu1.push(adata[0][i][1])
+                      
+                        xdataShu1.push(adata[0][i][0])
+                    }
+                    for (let i = 0; i < adata[1].length; i++) {
+                        if (adata[1][i][1]) {
+                            dataShu2.push(adata[1][i][1])
+                        } else {
+                            dataShu2.push(adata[1][i][1])
+                        }
+                    }
+                    for (let i = 0; i < adata[2].length; i++) {
+                        dataShu3.push(adata[2][i][1])
+                    }
+                    for (let i = 0; i < adata[3].length; i++) {
+                        dataShu4.push(adata[3][i][1])
+                       
+                            xdataShu4.push(adata[3][i][0])
+
+                    }
+                    //option.yAxis[0].interval = 2000000
+                    //option.yAxis[1].interval = 0.2
+                    maxData = adata[4]
+                    minData = adata[5]
+                    maxdeviation = adata[6];
+                    mindeviation = adata[7];
+                    option.tooltip.formatter = function (params) {
+                        let str = '<strong style="color:#000">' + params[0].axisValue + ":" + '中长期水量预测' + '</strong>' + "<br />";
+                        params.forEach((item) => {
+
+                            if (item.data) {
+                                if (item.seriesName == "误差率") {
+                                    str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "%" + '</strong>' + "<br />";
+                                } else { str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "(10⁴m³)" + '</strong>' + "<br />"; }
+                            }
+                        });
+                        return str;
+                    }
+                    option.yAxis[0].name = '(10⁴m³)'     
+                }
+                option.series[0].data = dataShu1
+                //option.series[1].data = dataShu2
+                for (let i = 0; i < dataShu2.length; i++) {
+                    dataShu4.unshift("")
+                }
+                if (val && val == 1) {
+                    dataShu4[dataShu4.length - 2] = Number(parseInt(dataShu1[dataShu1.length - 1] * addGdp.value/100)) + Number(parseInt(dataShu1[dataShu1.length - 1]))
+                    dataShu4[dataShu4.length - 1] = Number(parseInt(dataShu4[dataShu4.length - 2] * addGdp.value / 100)) + Number(parseInt(dataShu4[dataShu4.length - 2]))
+                    option.series[1].data = dataShu4
+                } else {
+                    option.series[1].data = dataShu4
+                }
+                //option.series[3].data = dataShu3
+                option.xAxis[0].data = [...xdataShu1, ...xdataShu4]
+                if (dataShu4[dataShu4.length - 1] >= maxData) {
+                    maxData = dataShu4[dataShu4.length - 1]
+                }
+                option.yAxis[0].max = maxData
+                option.yAxis[0].min = minData
+                //option.yAxis[1].max = maxdeviation
+                //option.yAxis[1].min = mindeviation
+                option && myChart.setOption(option);
+            }
+        })
+    }
+    function getquarter(val) {
+        if (val == 1) {
+            return "第一季度"
+        } else if (val == 4) {
+            return "第二季度"
+        } else if (val == 7) {
+            return "第三季度"
+        } else if (val = 10) {
+            return "第四季度"
+        }
+    }
+
+    function inits() {
+        getLeftDate2()
+        selectColor3.style.backgroundColor = "#216fed"
+    }
+    function GDPclick() {
+        var keyValue = [];
+        //keyValue.push(xdataShu4-1)
+        keyValue.push(personData)
+        keyValue.push(GdpData)
+        $.modalOpen({
+            id: "Form",
+            title: "录入人口/GDP历史数据",
+            url: "/Scheduling/LongTime/Details?keyValue=" + keyValue,
+            width: "500px",
+            height: "300px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+                getLeftDate2()
+            }
+        });
+    }
+    var originalVal;
+    function ycbgClick() {
+        var picBase64Info = myChart.getDataURL();
+        $.ajax({
+            url: "/Scheduling/ShortTime/CreatePDF",
+            data: { areaId: R1jiekouid, name: areaName, type: R2jiekouid, base64Info: picBase64Info, gRate: $("#addGdp").val() },
+            type: "POST",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                originalVal = data
+            }
+
+        });
+        let title = '中长期预测：';
+        if (R2jiekouid == 4) {
+            title = title + '三个月预测报告'
+        } else if (R2jiekouid == 5) {
+            title = title + '三个季预测报告'
+        } else {
+            title = title + '当前年预测报告'
+        }
+
+        $.modalOpen({
+            id: "Details",
+            title: title,
+            url: "/Scheduling/LongTime/Form?originalVal=" + originalVal,
+            width: "1100px",
+            height: "780px",
+            btn: null,
+        });
+    }
+    function getDate(val) {
+        var jieKou = "/Scheduling/LongTime/DemandPredictionBut?areaId="
+        myChart.clear()
+        maxData = 0;
+        minData = 0;
+        maxdeviation = 0;
+        mindeviation = 0;
+        dataShu1 = [];
+        xdataShu1 = [];
+        dataShu2 = [];
+        xdataShu2 = [];
+        dataShu3 = [];
+        xdataShu3 = [];
+        dataShu4 = [];
+        xdataShu4 = [];
+        dataShu5 = 0;
+        dataShu6 = 0;
+        $("#personAdd")[0].innerText = "预测水量增长率1（%）: "
+        $("#personAdd2")[0].innerText = "预测水量增长率2（%）: "
+
+        $.ajax({
+            type: 'GET',
+            url: jieKou + R1jiekouid + '&pRate=' +0 + '&gRate=' + addGdp.value,
+            dataType: 'JSON',
+            success: function (adata) {
+                //console.log(adata)
+                for (let i = 0; i < adata[0].length; i++) {
+                    dataShu1.push(adata[0][i][1])
+                    xdataShu1.push(new Date(adata[0][i][0]).getFullYear())
+                }
+                for (let i = 0; i < adata[1].length; i++) {
+                    dataShu2.push(adata[1][i][1])
+                    xdataShu2.push(new Date(adata[1][i][0]).getFullYear())
+                }
+                for (let i = 0; i < adata[2].length; i++) {
+                    dataShu3.push(adata[2][i][1])
+                    xdataShu3.push(new Date(adata[2][i][0]).getFullYear())
+                }
+                for (let i = 0; i < adata[3].length; i++) {
+                    dataShu4.push(adata[3][i][1])
+                    xdataShu4.push(new Date(adata[3][i][0]).getFullYear())
+                }
+                for (let i = 0; i < dataShu2.length; i++) {
+                    dataShu4.unshift("")
+                }
+                dataShu5 = adata[8][2];
+                dataShu6 = adata[8][3];
+                $("#personAdd")[0].innerText += dataShu5;
+                $("#personAdd2")[0].innerText += adata[8][4];
+
+                //addGdp.innerHTML = dataShu6;
+                maxData = adata[4]
+                minData = adata[5]
+                maxdeviation = adata[6];
+                mindeviation = adata[7];
+                //console.log(mindeviation);
+
+                option.series[0].data = dataShu1
+                //option.series[1].data = dataShu2
+                if (val && val == 1) {
+                  
+                    option.series[1].data = dataShu1[dataShu1.length - 1] * addGdp + dataShu1[dataShu1.length - 1]
+                } else {
+                    option.series[1].data = dataShu4
+                }
+                option.series[1].data = dataShu4
+                //option.series[3].data = dataShu3
+                option.xAxis[0].data = [...xdataShu1, ...xdataShu4]
+                option.tooltip.formatter = function (params) {
+                    let str = '<strong style="color:#000">' + params[0].axisValue + ":" + '中长期水量预测' + '</strong>' + "<br />";
+                    params.forEach((item) => {
+
+                        if (item.data) {
+                            if (item.seriesName == "误差率") {
+                                str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "%" + '</strong>' + "<br />";
+                            } else { str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "(10⁴m³)" + '</strong>' + "<br />"; }
+                        }
+                    });
+                    return str;
+                }
+                option.yAxis[0].max = maxData
+                option.yAxis[0].min = minData
+                //option.yAxis[1].max = maxdeviation
+                //option.yAxis[1].min = mindeviation
+                option && myChart.setOption(option);
+            }
+        })
+    }
+    function calculateClick(val) {
+        myChart.clear()
+        getLeftDate2(val)
+    }
+    window.onload = inits();
+    var chartDom = document.querySelector('#echarts_bottom');
+    var myChart = echarts.init(chartDom);
+    var option;
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            formatter: function (params) {
+                let str = '<strong style="color:#000">' + params[0].axisValue + ":" + '中长期水量预测' + '</strong>' + "<br />";
+                params.forEach((item) => {
+
+                    if (item.data) {
+                        if (item.seriesName == "误差率") {
+                            str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "%" + '</strong>' + "<br />";
+                        } else { str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "10⁴m³" + '</strong>' + "<br />"; }
+                    }
+                });
+                return str;
+            }
+        },
+
+        legend: {
+            data: ['实际水量', '预测水量', '预测未来水量', '误差率'],
+            left: 50,
+            top: 0
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                axisPointer: {
+                    type: 'shadow'
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                name: '水量(10⁴m³)',
+                //min: 0,
+                //max: 0,
+                //interval: 80000,
+
+            },
+            //{
+            //    type: 'value',
+            //    name: '误差率（%）',
+            //    //min: 0,
+            //    //max: 0,
+            //    //interval: 2.5,
+
+            //}
+        ],
+        series: [
+            {
+                name: '实际水量',
+                type: 'bar',
+                barWidth: 55,
+                barMaxWidth: 60,
+                barMinWidth: 50,
+                tooltip: {
+                    valueFormatter: function (value) {
+                        return value + '10⁴m³';
+                    }
+                },
+                barWidth: 25,
+                itemStyle: {
+                    color: "#7cb5ec"
+                },
+                label: {
+                    show: true,
+                    position: 'top'
+                },
+                data: [
+                    2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
+                ]
+            },
+            //{
+            //    name: '预测水量',
+            //    type: 'scatter',
+            //    tooltip: {
+            //        valueFormatter: function (value) {
+            //            return value + 'm³';
+            //        }
+            //    },
+            //    itemStyle: {
+            //        color: "#31fddc"
+            //    },
+            //    symbolSize: 20,
+            //    data: [
+            //        2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3
+            //    ]
+            //},
+            {
+                name: '预测未来水量',
+                type: 'bar',
+                barWidth: 55,
+                barMaxWidth: 60,
+                barMinWidth: 50,
+                tooltip: {
+                    valueFormatter: function (value) {
+                        return value + '10⁴m³';
+                    }
+                },
+                itemStyle: {
+                    color: "#fb9503",
+                    type: 'dotted'
+                },
+                symbol: 'rect',
+                symbolSize: 20,
+                label: {
+                    show: true,
+                    position: 'top'
+                },
+                data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+            },
+            //{
+            //    name: '误差率',
+            //    type: 'scatter',
+            //    symbolSize: 20,
+            //    yAxisIndex: 1,
+            //    tooltip: {
+            //        valueFormatter: function (value) {
+            //            return value + '%';
+            //        }
+            //    },
+            //    data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
+            //    itemStyle: {
+            //        color: "#3d28e7"
+            //    },
+            //}
+        ]
+    };
+    option && myChart.setOption(option);
+    $(function () {
+        $("#ORGANIZEID").bindSelect({
+            url: "/Scheduling/LongTime/GetAreaList",
+            id: "Value",
+            text: "Name"
+        });
+        R1jiekouid = $("#ORGANIZEID").val()
+        areaName = jQuery("#ORGANIZEID  option:selected").text()
+    })
+    window.onresize = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height();
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        myChart.resize();
+
+    }
+    window.onload = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height()
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        myChart.resize();
+        selectColor3.style.color = "#fff"
+    }
+</script>
+
+

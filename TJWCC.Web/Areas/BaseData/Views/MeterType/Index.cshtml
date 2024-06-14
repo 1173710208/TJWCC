@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = "水表类型";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script>
+    $(function () {
+        gridList();
+    })
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/BaseData/MeterType/GetMeterTypeInfoJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: "水表型号编号", name: "TYPEID", hidden: false, key: true },
+                { label: '型号名称', name: 'TYPENAME', width: 200, align: 'left' },
+                { label: '水表供应商', name: 'MAKERID', width: 150, align: 'left' },
+                { label: '管径(mm)', name: 'DIAMETER', width: 300, align: 'left' },
+                { label: '水表材质', name: 'MATERIAL', width: 200, align: 'left' },
+                { label: '计量等级', name: 'GRADE', width: 150, align: 'left' }, 
+                { label: '备注', name: 'REMARK', width: 300, align: 'left' }
+            ],
+            pager: "#gridPager",
+            sortname: 'TYPENAME asc',
+            viewrecords: true
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: { meterTypeName: $("#txt_keyword").val() },
+            }).trigger('reloadGrid');
+        });
+    }
+    function btn_add() {
+        $.modalOpen({
+            id: "Form",
+            title: "新增水表型号",
+            url: "/BaseData/MeterType/Form",
+            width: "700px",
+            height: "480px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    function btn_edit() {
+        var keyValue = $("#gridList").jqGridRowValue().TYPEID; 
+        $.modalOpen({
+            id: "Form",
+            title: "修改水表型号",
+            url: "/BaseData/MeterType/Form?keyValue=" + keyValue,
+            width: "700px",
+            height: "480px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    function btn_delete() {
+        $.deleteForm({
+            url: "/BaseData/MeterType/DeleteForm",
+            param: { TypeID: $("#gridList").jqGridRowValue().TYPEID },
+            success: function () {
+                $.currentWindow().$("#gridList").resetSelection();
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+    function btn_details() {
+        var keyValue = $("#gridList").jqGridRowValue().TYPEID;
+        $.modalOpen({
+            id: "Details",
+            title: "查看水表型号",
+            url: "/BaseData/MeterType/Details?keyValue=" + keyValue,
+            width: "700px",
+            height: "560px",
+            btn: null,
+        });
+    }
+</script>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+        </div>
+        <div class="btn-group">
+            <a id="TJ-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus"></i>新建水表型号</a>
+        </div>
+        <div class="operate">
+            <ul class="nav nav-pills">
+                <li class="first">已选中<span>1</span>项</li>
+                <li><a id="TJ-edit" authorize="yes" onclick="btn_edit()"><i class="fa fa-pencil-square-o"></i>修改水表型号</a></li>
+                <li><a id="TJ-delete" authorize="yes" onclick="btn_delete()"><i class="fa fa-trash-o"></i>删除水表型号</a></li>
+                <li><a id="TJ-Details" authorize="yes" onclick="btn_details()"><i class="fa fa-search-plus"></i>查看水表型号</a></li>
+            </ul>
+            <a href="javascript:;" class="close"></a>
+        </div>
+        <script>$('.toolbar').authorizeButton()</script>
+    </div>
+    <div class="search">
+        <table>
+            <tr>
+                <td>
+                    <div class="input-group">
+                        <input id="txt_keyword" type="text" class="form-control" placeholder="请输入水表型号名称" style="width: 200px;">
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="gridPanel">
+    <table id="gridList"></table>
+    <div id="gridPager"></div>
+</div>
+

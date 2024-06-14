@@ -1,0 +1,869 @@
+﻿.esriPopup .titlePane{
+    background: transparent;
+}
+.esriPopup .esriPopupWrapper {
+    z-index: 10;
+    box-shadow: 0 0 0 #fff;
+    -webkit-box-shadow: 0 0 0 #fff;
+    background: #fff;
+}
+.actionsPane{
+    display: none;
+}
+.esriPopup .contentPane{
+    padding: 0;
+}
+.esriPopupWrapper .panel-body{
+    border-width: 1px;
+}
+/* 弹框 */
+.messager-window{
+    padding: 5px;
+}
+.messager-window .panel-tool,.messager-body .panel-tool{
+    position: absolute;
+}
+.messager-window .window-header{
+    border: 0;
+}
+.panel-title{
+    height: 20px;
+    line-height: 20px;
+}
+.esriPopup .titlePane{
+    color: #444;
+    font-weight: bold;
+}
+.esriPopup .titleButton {
+    background: url(/Content/myImage/popup.png) no-repeat;
+}
+/* 供水路径 */
+#hidden_img{
+    height:13px;
+    margin: 0 auto;
+    left: 50%;
+    text-align: center;
+    border-bottom: 1px solid #deecfa;
+    background: transparent;
+}
+.map_sw_bottom{
+    border: 0;
+    background: transparent;
+}
+.map_sw_bottom_left{
+    padding: 0;
+    border: 0;
+    border-radius: inherit;
+    background: #fff;
+}
+.map_sw_bottom_left_info div:nth-child(odd){
+    background-color: transparent;
+}
+/* 按钮 */
+.map-others1{
+    padding: 0;
+}
+.map-others1{
+    margin: 0;
+}
+.win_btn{
+    position: relative;
+    float: left;
+    padding: 0;
+    margin-right: 10px;
+    border-radius: 7px;
+    overflow: -webkit-paged-x;
+}
+.map_search{
+    position: relative;
+    left: -1px;
+    top:2px;
+    width: 76px;
+}
+.map_elevation_bottom,.map_status_bottom{
+    margin-top: 2px;
+}
+.win_btn>div{
+    border: 0px;
+}
+/* 如果表格内容改变随主题改变 */
+.contentPane{
+    background-color: transparent !important;
+}
+/* 上下按钮样式修改 */
+.map_sw_bottom_close{
+    text-align: center;
+    line-height: 10px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+}
+.map_sw_bottom_close:hover{
+    background: transparent;
+}
+#mapbottom img[sign="sign"]{
+    transform:rotate(180deg);
+    -ms-transform:rotate(180deg); 
+    -moz-transform:rotate(180deg); 	
+    -webkit-transform:rotate(180deg); 
+    -o-transform:rotate(180deg); 
+}
+.esriPopupWrapper{
+    overflow: visible;
+}
+/* 箭头在上 */
+.esriPopup .pointer.top{
+    background: transparent;
+    display: block;
+    left: 50%;
+    top: -8px;
+    margin-left: -8px;
+    border-top: 8px solid #fff;
+    border-left: 8px solid #fff;
+    border-bottom: 8px solid transparent;
+    width: 0;
+    height: 0;
+    border-right: 8px solid transparent;
+    box-shadow: -2px -2px 4px 0px #7777;
+}
+/* 箭头在下 */
+.esriPopup .pointer.bottom{
+    display: block;
+    left: 50%;
+    margin-left: -8px;
+    bottom: -7px;
+    background: transparent;
+    border-top: 8px solid transparent;
+    border-left: 8px solid transparent;
+    border-bottom: 8px solid #fff;
+    width: 0;
+    height: 0;
+    border-right: 8px solid #fff;
+    box-shadow: 2px 2px 4px 0px #7777;
+}
+/* 箭头在左上 */
+.esriPopup .pointer.topLeft{
+    background: transparent;
+    display: block;
+    left: 13px;
+    top: -9px;
+    margin-left: -8px;
+    border-top: 8px solid #fff;
+    border-left: 8px solid #fff;
+    border-bottom: 8px solid transparent;
+    width: 0;
+    height: 0;
+}
+/* 箭头在左下 */
+.esriPopup .pointer.bottomLeft{
+    left: 12px;
+    bottom: -9px;
+    background: transparent;
+    display: block;
+    margin-left: -8px;
+    border-bottom: 8px solid #fff;
+    border-right: 8px solid #fff;
+    border-top: 8px solid transparent;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    box-shadow: 2px 2px 1px 0px #777;
+}
+
+/* 消音按钮位置 */
+#silencing{
+    right: 1px;
+    position: relative;
+}
+#silencing span.l-btn-text{
+    line-height: 24px;
+}
+/* 报警信息闪烁 */
+.accordion .accordion-header[police="police"]{
+    animation:myfirst 2s infinite linear;
+    -moz-animation:myfirst 2s infinite linear; /* Firefox */
+    -webkit-animation:myfirst 2s infinite linear; /* Safari and Chrome */
+    -o-animation:myfirst 2s infinite linear; /* Opera */
+}
+@keyframes myfirst
+{
+    0% {background: #ffe48d;}
+    25%  {background:red;}
+    75%  {background:yellow;}
+    100% {background: #ffe48d}
+}
+
+@-moz-keyframes myfirst /* Firefox */
+{
+    0% {background: #ffe48d;}
+    25%  {background:red;}
+    75%  {background:yellow;}
+    100%  {background: #ffe48d}
+}
+
+@-webkit-keyframes myfirst /* Safari and Chrome */
+{
+    0% {background: #ffe48d;}
+    25%  {background:red;}
+    75%  {background:yellow;}
+    100% {background: #ffe48d}
+}
+
+@-o-keyframes myfirst /* Opera */
+{
+    0% {background: #ffe48d;}
+    25% {background:red;}
+    75% {background:yellow;}
+    100% {background: #ffe48d}
+}
+/* 爆管显示 */
+#resultDivBoxBackBut{
+    background: transparent;
+    border: 0;
+}
+/* 爆管显示 */
+#blast_close{
+    background: transparent;
+    border: 0;
+    float: right;
+}
+#resultDivBoxBackBut .l-btn-text,#blast_close .l-btn-text{
+    font-size: 24px;
+    color: #333;
+}
+.tubeBurst-stitle-no{
+    text-align: center;
+    margin-right: 5px;
+    line-height: 30px;
+    min-width: 30px;
+    background: rgb(149,184,231);
+    border-radius: 50% 50%;
+}
+.tubeBurst-pipes-index,.tubeBurst-valves-index{
+    padding: 5px 0;
+}
+.tubeBurst-pipes-index-no,.tubeBurst-valves-index-no{
+    line-height: 15px;
+}
+#tbamm2,#tbamm3,#tbamm1{
+    position: relative;
+    top: -4px;
+    right: -11px;
+}
+.tubeBurst-operate{
+    margin-bottom: 5px;
+}
+/* 爆管影响 */
+.tubeBurst-operate{
+    text-align: center;
+    width: 33.33%;
+    background: transparent;
+}
+.tubeBurst-index-no{
+    padding: 0;
+    line-height: auto;
+    width: 100%;
+    color: #cc1818;
+    font-size: 32px;
+    float: inherit;
+    line-height: 39px;
+    height: 39px;
+    font-weight: bold;
+}
+.tubeBurst-index-info{
+    font-size: 10px;
+    color: #0e0e0e;
+    padding-top: 7px;
+    padding-bottom: 1px;
+}
+.tubeBurst-operate:hover{
+    background: transparent;    
+}
+.tubeBurst-index{
+    border: 0;
+}
+.tubeBurst-title{
+    background: rgba(224, 236, 255, .5);
+    position: relative;
+    top: -3px;
+    font-size: 13px;
+    padding: 10px 10px 30px 10px;
+    margin: 0 8px;
+    color: #0e0e0e;
+    cursor: default;
+}
+.tubeBurst-title>span{
+    font-size: 22px;
+    color: #0c0c0c;
+    float: right;
+}
+#tubeBurst-topline{
+    width: calc(100% - 16px);
+    height: 3px;
+    border-top: 3px solid #ddd;
+    border-left: 8px solid #ddd;
+    border-right: 8px solid #ddd;
+    border-radius: 10px;
+}
+#tubeBurst-bottomline{
+    position: relative;
+    top: -23px;
+    color: #c1d5f7;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    cursor: default;
+}
+#dbsPressInfoWin .display-div{
+    margin-top: 10px;
+}
+/* 查询 */
+.DBS-outside{
+    border-top: 0;
+}
+.DBS-float{
+    height: 30px;
+}
+.DBS-Close{
+    color: #333;
+    font-size: 22px;
+}
+#DBSStatic>img{
+    margin-top: 6px;
+}
+.DBS-Close:hover,.DBS-float:hover{
+    background: transparent !important;
+}
+#DBSTitle{
+    color: #333;
+    font-weight: bold;
+}
+#DBSStatic img[title = "固定"]{
+    transform: rotate(45deg);
+}
+.DBS-outside{
+    width: 254px;
+}
+.DBS-Left{
+    width: 32px;
+}
+/* 导航条调整 */
+.map_elevation,.map_gj{
+    margin-left: 0;
+}
+.nav-warp{
+    display: inline-block;
+}
+.nav-warp, .nav-cont>div{
+    border-right:0;
+}
+.nav-title{
+    display: inline-block;
+}
+.nav-title>div{
+    display: flex;
+    align-items: Center;  
+    background:#e0edff;
+    top: 0;
+    padding: 10px 20px;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #a0a0a0;
+    border-right: 0;
+}
+.nav-title>div.nav-check{
+    background: #fff;
+    top: 0px;
+}
+.nav-cont{
+    display: none;
+    position: absolute;
+}
+.nav-cont>div{
+    border: 0;
+    background: transparent;
+    font-family: 微软雅黑;
+    font-weight: 500;
+    background: #fff;
+    border-radius: 0;
+    min-width: 58px;
+    padding: 5px;
+    border: 1px solid #a0a0a0;
+    margin-right: 2px;
+    margin-top: 2px;
+}
+.nav-cont>div:hover{
+    background: rgb(75, 119, 190) !important;
+    color: #fff !important;
+
+}
+.map_slfx_botton{
+    width: auto;
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 2px;
+}
+#myTree{
+    color: #333;
+    padding: 0 !important;
+}
+#myTree>li{
+    padding: 5px;
+}
+#nav-second .nav-title>div{
+    left: -4px;
+}
+#nav-three .nav-title>div{
+    border-right:1px solid #a0a0a0;
+    left: -7px;
+}
+
+/* 按条件查询 */
+#onlyvalue-go{
+    margin-top: 2px;
+    margin-left: 2px;
+}
+#onlyvalue-go>.l-btn-left{
+    height: 20px;
+    position: relative;
+    top: -3px;
+}
+#calculation-button>div{
+    margin-bottom: 5px;
+}
+.criteria_query_page_line1_2{
+    margin-top: 3px;
+}
+.list-style:hover{
+    background: rgb(224,236,255);
+    color: #333;
+}
+/* 其他调整 */
+#DemandPredictionContainer,.datagrid .panel-body{
+    background: #fff;
+}
+.panel-tool a:hover{
+    opacity: 1;
+    background-color: transparent;
+}
+#tab-tools{
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: Center;
+}
+.tabs li a.tabs-inner{
+    border-radius: 0;
+}
+#rollingPointResult>div:first-child{
+    margin: 5px 0px 0px 8px;
+}
+.rollingP_top{
+    margin-left: 8px;
+}
+#rollingPointResult>div.display-div{
+    width: 200px !important;
+    margin-top: 9px;
+}
+.l-btn{
+    border-radius: 0;
+}
+.followMouseInfoR{
+    padding: 1px 7px;
+}
+.showpressdata{
+    background: #fff;
+}
+#mapCenterInfo .slider-h{
+    margin-top: 100px !important;
+}
+.l-btn-text{
+    line-height: 24px;
+}
+#tb11{
+    padding: 5px;
+}
+#tb11>div{
+    margin-left: 0 !important;
+    padding-left: 10px;
+}
+.datagrid-wrap{
+    border: 0;
+}
+.panel-body-noborder>.easyui-fluid>.panel-header,
+.panel-body-noborder>div>.easyui-fluid>.panel-header,
+.panel-body-noborder>div>.panel-header{
+    border-width: 0 0 1px 0;
+}
+/* 网络驯化 */
+.validatebox-invalid{
+    border-width: 1px;
+    border-style: solid;
+}
+/* 阀值报警信息 */
+.textbox{
+    line-height: 18px;
+}
+.textbox[name="searchpressWisName"]{
+    top: -1px;
+}
+/* 图例关闭 */
+.legendClose{
+    font-size: 18px;
+    top: -1px;
+    left: 1px;
+    position: relative;
+    border:0;
+    line-height: 26px;
+}
+.legendClose:hover{
+    background: transparent;
+}
+/* 左侧选中 调整*/
+.combobox-item-selected,.DBS-second:hover{
+    background:rgb(149,184,231);
+}
+/* 实时信息设置 */
+#real-time-set .tabs-header,#real-time-set .tabs-panels{
+    border-left: 0;
+    border-right:0;
+}
+#real-time-set{
+    height:calc(100% - 32px);
+    overflow: hidden;
+}
+.eastRollingcontent{
+    background: #fff;
+}
+/* 滚动条 */
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar
+{
+    width: 5px;
+    height: 5px;
+    background-color: #F5F5F5;
+}
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #b9b8b8;
+}
+#widthimp>div{
+    width: 100% !important;
+}
+
+
+/* 2019.10.9  样式统一 */
+/* 样式统一 --> 上边头部 */
+.Zlayout-top{
+    background: #134a8a;
+    color: #fff;
+}
+.ghpf{
+    display: none;
+}
+.top-username{
+    color: #fff;
+    top: 15px;
+}
+
+/*样式统一 --> 左侧目录 */
+#mainMenu .panel-with-icon{
+    padding-left: 25px;
+}
+
+.layout-split-west{
+    border: 0px;
+}
+.layout-split-west>div:first-child{
+    border: 0;
+    padding-top: 15px;
+}
+.layout-split-west>div:first-child .panel-tool{
+    right: 15px;
+    top: 24px;
+}
+.layout-split-west>div:nth-child(2){
+    border-right: 0;
+    border-left: 0;
+}
+.panel-header>div.panel-title{
+    text-align: center;
+    font-size: 18px;
+    color: #343434;
+    font-family: 微软雅黑;
+}
+#mainMenu .panel-header{
+    padding: 7px 5px;
+}
+#mainMenu .panel-title{
+    text-align: left;
+    font-size: 14px;
+}
+#mainMenu>div:first-child{
+    border-top:1px solid #3d5b77;
+}
+#mainMenu>div:first-child>div.accordion-header{
+    border-bottom: 0;
+}
+#mainMenu>div:first-child>div.accordion-body{
+    padding-top: 7 !important;
+    padding-bottom: 0 !important;
+    background: #dce0f3;
+    border: 0;
+}
+.panel-header,.accordion .accordion-header{
+    background: #fff;
+}
+.panel-header, .panel-body{
+    border-color: #3d5b77;
+}
+.fqgl-add{
+    margin-right: 5px;
+    color: #676767;
+}
+.fqgl-add[sign='sign']{
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg);     /* IE 9 */
+    -moz-transform:rotate(90deg);    /* Firefox */
+    -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+    -o-transform:rotate(90deg);  /* Opera */
+}
+.Z-left-system-operate,.Z-left-system-operate-bg{
+    background: #ddeeff;
+    margin-top: 3px;
+}
+.Z-left-system-operate:hover,.Z-left-system-operate-bg:hover{
+    background: #bbd6f1;
+}
+.DBS-second,.pp-l2,.pp-l1{
+    background:#eef2fe;
+    border-bottom:0 !important;
+    border-top: 1px solid #fff;
+}
+#yingyebiaoxxSon2>div.pp-l2{
+    background: #fff;
+    border-bottom: 1px solid #ddd !important;
+}
+#yingyebiaoxxSon2>div.pp-l2:hover{
+    border: 1px solid #ddd;
+    border-top:0;
+}
+#yingyebiaoxxSon2>div.pp-l2:last-child{
+    border-bottom: 0 !important;
+}
+.DBS-second:hover,.pp-l2:hover,.pp-l1:hover{
+    background: #dbe3fb;
+    color:#333;
+}
+.Z-left-system-operate-next{
+    border-bottom: 0;
+    background: #eef2fe;
+}
+/* 左侧 --> 管网运行状况 */
+#run-status-switch,
+#police-status-switch,
+#min-flow-switch{
+    display: flex;  
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 13px;
+    margin-bottom: 5px;
+}
+#run-status-switch span,
+#police-status-switch span,
+#min-flow-switch span{
+    padding: 5px 10px;
+    border: 1px solid #286ba0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#run-status-switch span:first-child,#police-status-switch span:first-child{
+    margin-right: 10px;
+}
+#run-status-switch span:last-child,#police-status-switch span:last-child{
+    margin-left: 10px;
+}
+.rs-divlable{
+    border: 0;
+}
+.rs-now,.rs-nian{
+    padding: 2px 0;
+}
+#showpressdata>table,#showflowdata>table{
+    border-spacing: 0;
+    padding: 0 10px;
+    padding-top: 5px;
+}
+.rs-table1,.rs-table2{
+    background: #fff;
+    padding: 0;
+}
+.rs-table1>td,.rs-table2>td{
+    border-bottom: 1px solid #1b2968;
+    text-align: center;
+}
+.rs-table1>td:first-child,.rs-table2>td:first-child{
+    padding-left: 10px;
+    text-align: left;
+}
+.rs-table1>td:last-child,.rs-table2>td:last-child{
+    padding-right: 10px;
+    text-align: right;
+}
+.sign-gw,
+.police-sign,
+#min-flow-switch span[sign='sign']{
+    border: 1px solid #b27928 !important;
+    color:#b27928;
+}
+/* 左侧 --> 报警信息 */
+#police-btn-box{
+    margin: 10px 0;
+}
+.warm-click-button{
+    background-color: #fff;
+    width:auto;
+    height:auto;
+    padding: 0;
+    color: #333;
+    margin: 0;
+    border-radius: 0;
+    line-height: inherit;
+    margin-left: 24px;
+}
+#signalrLineW,#silencing{
+    display: inline-block;
+    font-size: 14px;
+}
+.police-history,#warningText{
+    display: inline-block;
+    color: #25699f;
+    font-size: 14px;
+}
+.police-history{
+    width: calc(100% - 149px);
+}
+.police-history>span{
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+    width: 56px;
+    cursor: pointer;
+}
+#silencing{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background: url(/Content/myImage/voice0.png) no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+    float: right;
+    margin-right: 15px;
+}
+#silencing[sign='sign']{
+    background: url(/Content/myImage/voice1.png) no-repeat;
+    background-size: 100% 100%;
+}
+.divlable{
+    margin-top: 10px;
+    padding: 5px 0;
+}
+.time-switch-warp{
+    display: flex;  
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: space-around;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    padding: 5px 0;
+}
+.time-switch-box{
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50% 50%;
+    border:1px solid #333;
+    text-align: center;
+    position: relative;
+    top: 2px;
+}
+.time-switch-box[sign='sign']>span{
+    width: 10px;
+    height: 10px;
+    background: #333;
+    border-radius: 50% 50%;
+    display: inline-block;
+    margin-bottom: 3px;
+}
+#ylWtoday,#ylWafter,#sjWafter,#sjWtoday{
+    font-size: 14px;
+    cursor: pointer;
+}
+#divWRight .datagrid-view2{
+    border: 1px solid #ddd;
+}
+#ylwarning,#szwarning{
+    padding:5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*样式统一 --> 右侧滚动数据*/
+.layout-split-east{
+    border: 0;
+}
+.layout-split-east>div:first-child{
+    border: 0;
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+.layout-split-east>div:first-child .panel-tool{
+    right: 20px;
+    top: 24px;
+}
+.layout-split-east>div:nth-child(2){
+    border-right: 0;
+    border-left: 0;
+}
+.eastRollingBanner{
+    border: 0;
+    padding: 10px 0;
+}
+#eastPressRolling .eastRollingBanner{
+    color: #d98f00;
+    border-top: 1px solid #3d5b77;
+}
+#eastFlowRolling .eastRollingBanner{
+    color: #298908;
+}
+.eastRollingcontent-a1,.eastRollingcontent-a2{
+    background: #ebedf8;
+}
+.eastRollingcontent-a1 tr td:first-child,.eastRollingcontent-a2 tr td:first-child{
+    padding-left: 24px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.eastRollingcontent-a1 tr td:nth-child(2),.eastRollingcontent-a2 tr td:nth-child(2){
+    padding-right: 24px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}

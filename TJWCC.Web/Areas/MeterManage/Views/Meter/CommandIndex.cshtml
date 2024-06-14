@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "指令下发";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script>
+    $(function () {
+        gridList();
+    })
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/MeterManage/Meter/GetMeterInfoJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: "主键", name: "NBMETERID", hidden: true, key: true },
+                { label: 'IMEI', name: 'IMEI', width: 130, align: 'left' },
+                { label: '用户ID', name: 'USERID', width: 80, align: 'center' },
+                //{ label: '仪表类型', name: 'TYPECODE', width: 150, align: 'left' },
+                //{ label: '协议版本号', name: 'PROTOCOLVER', width: 150, align: 'left' },
+                {
+                    label: '安装日期', name: 'INSTALLDATE', width: 90, align: 'left',
+                    formatter: "date", formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
+                },
+                { label: '所属运营商', name: 'COMMID', width: 80, align: 'center' },
+                { label: '所属水务公司', name: 'COMPANYID', width: 90, align: 'center' },
+                { label: '所属营销公司', name: 'BUSINESSID', width: 90, align: 'center' },
+                //{ label: '所属营销分公司', name: 'SUBBUSIID', width: 150, align: 'left' },
+                //{ label: '数据中心注册号', name: 'SBZCH', width: 150, align: 'left' },
+                { label: '水表型号', name: 'TYPEID', width: 60, align: 'center' },
+                { label: '水表厂商', name: 'MAKERID', width: 60, align: 'center' },
+                { label: '初始水量', name: 'INICOUNT', width: 60, align: 'center' },
+                //{ label: '当前累计水量', name: 'CURCOUNT', width: 150, align: 'left' },
+                //{ label: '采集累计水量时间', name: 'CURTIME', width: 150, align: 'left' },
+                //{ label: '报警状态', name: 'ALARM', width: 150, align: 'left' },
+                //{ label: '电池电压', name: 'VOLTAGE', width: 150, align: 'left' },
+                //{ label: '信号强度', name: 'RSRP', width: 150, align: 'left' },
+                //{ label: '信噪比', name: 'SNR', width: 150, align: 'left' },
+                //{ label: '覆盖等级', name: 'COVLEVEL', width: 150, align: 'left' },
+                //{ label: '小区ID', name: 'CELLID', width: 150, align: 'left' },
+                //{ label: 'IMSI', name: 'IMSI', width: 150, align: 'left' },
+                //{ label: '表身号', name: 'METERCODE', width: 150, align: 'left' },
+                //{ label: '厂商代码', name: 'MAKERCODE', width: 150, align: 'left' },
+                //{ label: '终端与平台时间差', name: 'TIMEDIFF', width: 150, align: 'left' },
+                //{ label: '终端运行时间', name: 'RUNDAYS', width: 150, align: 'left' },
+                //{ label: '终端软件版本', name: 'TVERSION', width: 150, align: 'left' },
+                //{ label: 'PSK', name: 'PSK', width: 260, align: 'left' },
+                { label: '水表使用状态', name: 'ISACTIVE', width: 100, align: 'center' },
+                { label: '注册日期', name: 'CREATEDATE', width: 150, align: 'left' },
+                //{ label: '注册操作员ID', name: 'CREATERID', width: 150, align: 'left' },
+                { label: 'OC平台设备ID', name: 'EQUIPID', width: 270, align: 'left' },
+                { label: '备注', name: 'REMARK', width: 200, align: 'left' }
+            ],
+            pager: "#gridPager",
+            sortname: 'IMEI asc',
+            viewrecords: true
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: { imei: $("#txt_keyword").val() },
+            }).trigger('reloadGrid');
+        });
+    }
+    function btn_queryCommand() {
+        $.modalOpen({
+            id: "QueryCommandForm",
+            title: "水表查询指令",
+            url: "/MeterManage/Meter/QueryCommandForm",
+            width: "450px",
+            height: "280px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    function btn_setCommand() {
+        $.modalOpen({
+            id: "SetCommandForm",
+            title: "水表设置指令",
+            url: "/MeterManage/Meter/SetCommandForm",
+            width: "850px",
+            height: "460px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+</script>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+        </div>
+        <div class="btn-group">
+            <a id="TJ-query" class="btn btn-primary dropdown-text" onclick="btn_queryCommand()"><i class="fa fa-search"></i>水表查询指令</a>
+        </div>
+        <div class="btn-group">
+            <a id="TJ-set" class="btn btn-primary dropdown-text" onclick="btn_setCommand()"><i class="fa fa-anchor"></i>水表设置指令</a>
+        </div>
+        <script>$('.toolbar').authorizeButton()</script>
+    </div>
+    <div class="search">
+        <table>
+            <tr>
+                <td>
+                    <div class="input-group">
+                        <input id="txt_keyword" type="text" class="form-control" placeholder="请输入IMEI号" style="width: 200px;">
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="gridPanel">
+    <table id="gridList"></table>
+    <div id="gridPager"></div>
+</div>

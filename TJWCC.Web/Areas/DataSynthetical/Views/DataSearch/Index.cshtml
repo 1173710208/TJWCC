@@ -1,0 +1,2929 @@
+﻿
+@{
+    ViewBag.Title = "数据查询";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script src="~/Content/js/datepicker/WdatePicker.js"></script>
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<script src="~/Areas/DataDisplay/Content/js/main.js"></script>
+<script src="~/Areas/DataDisplay/Content/js/echarts.min.js"></script>
+<link href="~/Areas/DataDisplay/Content/css/DataStatistics.css" rel="stylesheet" />
+<link href="~/Content/js/select2/select2.min.css" rel="stylesheet" />
+<script src="~/Content/js/select2/select2.min.js"></script>
+
+<div class="main-container" style="overflow-y: hidden !important; overflow: hidden">
+    <!-- 头部 -->
+    <div class="right1">
+        <button id="Tab1" class="font13 right11" onclick="clickTab1(this)">列表查询</button>
+        <button id="Tab2" class="font13 right12" onclick="clickTab2(this)">图表分析</button>
+        <div class="sumShow" style="width:600px;margin-left:10px;height:50px;display:flex;justify-content:space-around;margin-top:22px">
+            <div class="lists">
+                <input type="checkbox" name="sum" style="height:18px" onchange="sumChange(this)">
+                <strong  style="height: 26px; width: 40px;  outline: none;display:inline-block;line-height:26px">求和:</strong>
+                <span id="sumNum" class="right111" style=""> </span>
+            </div>
+
+            <div class="lists">
+                <input type="checkbox" name="max" style="height: 18px" onchange="maxChange(this)">
+                <strong style="height: 26px; width: 50px; outline: none; display: inline-block; line-height: 26px ">最大值:</strong>
+                <span id="maxNum" class="right111" style=""> </span>
+            </div>
+
+            <div class="lists">
+                <input type="checkbox" name="min" style="height: 18px" onchange="minChange(this)">
+                <strong style="height: 26px; width: 50px; outline: none; display: inline-block; line-height: 26px ">最小值:</strong>
+                <span id="minNum" class="right111" style=""> </span>
+            </div>
+        </div>
+    </div>
+    <!-- 头部 -->
+    <!-- 条件设置 -->
+    <div class="right2" id="right2" style="height: 40px; border: 0; border-radius: 10px; background-color: #edf2f6; display: flex;">
+
+
+        <div class="" style="margin-left: 0px; height: 26px; width: 230px; margin-top: 6px; margin-bottom: 0px; margin-right: 0px; display: flex; align-items: center;">
+            <select id="Region" name="Region" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 210px; background-color: #fff; margin-left: 5px;">
+                <option value="none">请选择</option>
+            </select>
+        </div>
+        <div class="" style="margin-left: 0px; height: 26px; width: 100px; margin-top: 6px; margin-bottom: 0px; margin-left: 5px; margin-right: 0px; display: flex; align-items: center;">
+            <select id="GetDataTypeList" name="GetDataTypeList" class="form-control right1121" style=" height: 30px; width: 90px; background-color: #fff;   margin-left: 5px; border-radius:0">
+                <option value="none" selected>请选择</option>
+            </select>
+        </div>
+        <div class="" style="margin-left: 0px; height: 26px; width: 150px; margin-top: 6px; margin-bottom: 0px; margin-left: 5px; margin-right: 0px; display: flex; align-items: center;">
+            <select id="GetPointList" name="GetPointList" class="form-control right1121" style=" height: 30px; width: 160px; background-color: #fff; margin-left: 5px; border-radius: 0">
+                <option value="all" selected>全部节点</option>
+            </select>
+        </div>
+        <div id="hide1" class="" style="margin-left: 0px; height: 26px; width: 110px; margin-top: 6px; margin-bottom: 0px; margin-left: 5px; margin-right: 0px; display: none; align-items: center;">
+            <select id="GetSWaterList" name="GetSWaterList" class="form-control" style="margin-left: 0px; height: 30px; width: 100px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 5px;">
+                <option value="none" selected>请选择</option>
+            </select>
+        </div>
+        <div id="hide2" class="" style="margin-left: 0px; height: 26px; width: 110px; margin-top: 6px; margin-bottom: 0px; margin-left: 5px; margin-right: 0px; display: none; align-items: center;">
+            <select id="GetSPList" name="GetSPList" class="form-control" style="margin-left: 0px; height: 30px; width: 100px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 5px;">
+                <option value="none" selected>请选择</option>
+            </select>
+        </div>
+
+        <div id="srk" style="width: 249px; height: 30px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; overflow-y: auto; display: flex; flex-wrap: wrap; margin-top: 4px; margin-left: 10px; ">
+        </div>
+        <div id="show1" style="position:absolute;top:80px;left:720px;background-color:#fff;width:450px;height:25px;border:#000 solid 1px;text-align:center;z-index:1000;display:none ">提示:<span style="font-size:16px">[ </span>开始日期(年-月-日 00:00:00),结束日期(年-月-日 23:59:59)<span style="font-size:16px">] </span></div>
+        <div class="right223" style="width: 300px; margin-top: 7px; margin-left:7px;margin-right:5px">
+            <div class="right2231" onmouseover="controlShow1(this)" onmouseout="controlfide1(this)">日期: &nbsp;</div>
+            <input id="sDate1" type="text" class="form-control input-wdatepicker right1121" style="margin-right:5px; height:25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd '})" />
+            <div class="right2231"> 到 &nbsp; </div>
+            <input id="eDate1" type="text" class="form-control input-wdatepicker right1121" style="margin-right: 5px; height: 25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd '})" />
+        </div>
+        <div id="show2" style="position:absolute;top:80px;left:1080px;background-color:#fff;width:290px;height:25px;border:#000 solid 1px;text-align:center;z-index:1000;display:none ">提示:<span style="font-size:16px">[ </span>开始时间,结束时间<span style="font-size:16px">] </span></div>
+        <div class="right223" style="width: 249px; margin-top: 7px; margin-right: 5px">
+            <div class="right2231" onmouseover="controlShow2(this)" onmouseout="controlfide2(this)">时间: &nbsp;</div>
+            <input id="sTime1" type="text" class="form-control input-wdatepicker right1121" style="padding-right:0px; height: 25px; width: 80px; border-radius: 10px; border: 1px solid #c0cdd6;" onfocus="WdatePicker({dateFmt:'HH:mm:ss'})" />
+            <div class="right2231">&nbsp;到&nbsp;</div>
+            <input id="eTime1" type="text" class="form-control input-wdatepicker right1121" style="padding-right:0px; height: 25px; width: 80px; border-radius: 10px; border: 1px solid #c0cdd6;" onfocus="WdatePicker({dateFmt:'HH:mm:ss'})" />
+        </div>
+        <div id="show3" style="position:absolute;top:80px;left:1430px;background-color:#fff;width:200px;height:25px;border:#000 solid 1px;text-align:center;z-index:1000;display:none ">提示:<span style="font-size:16px">[ </span>最小值,最大值<span style="font-size:16px">] </span></div>
+        <div class="right224" style="width: 249px; margin-top: 7px; ">
+            <div class="right2231" onmouseover="controlShow3(this)" onmouseout="controlfide3(this)">数值范围: &nbsp;</div>
+            <input id="min1" type='number' class="form-control input-wdatepicker right1121" style="padding-right:0px; height: 25px; width: 70px; border-radius: 10px; border: 1px solid #c0cdd6;" />
+            <div class="right2231">&nbsp;到&nbsp;</div>
+            <input id="max1" type='number' class="form-control input-wdatepicker right1121" style="padding-right:0px; height: 25px; width: 70px; border-radius: 10px; border: 1px solid #c0cdd6;" />
+        </div>
+
+        <div class="right15" style="width: 20px; margin-top: 10px; margin-left: 10px; margin-right: 10px; background-color: #edf2f6;">
+            <div class="right152" style="background-color: #edf2f6;">
+                <span id="btn_search" class="glyphicon glyphicon-search right1421" aria-hidden="true"></span>
+            </div>
+        </div>
+
+        <button id="btn_download" class="right16" style="position:absolute;  right:15px; top:5px; display:flex; margin-top: 5px; margin-left: 5px; height: 26px; line-height:26px; width: 100px; border: 0; border-radius: 10px; background-color: #f87d06; color: #fff; font-weight: bold;">
+            <span class="glyphicon glyphicon-folder-close right161" style="color: #fff; height: 26px; padding-top:4px; margin-left:2px; margin-right:2px;">    </span>
+            导出Excel
+        </button>
+    </div>
+    <!-- 条件设置 -->
+    <!-- 数据 -->
+    <div class="right3" id="right3" style="display: block; height: 750px; border:0 ">
+        <div class="right2_record" style="height:700px; margin-top:0px; ">
+            <div id="gridPanel" class="gridPanel" style="height:660px;">
+                <table id="gridList"></table>
+                <div id="gridPager"></div>
+            </div>
+        </div>
+    </div>
+    <!-- 数据 -->
+    @*图表分析*@
+    <div class="right4" id="right4" style="display:none">
+        <div class="right4_buttonlist_1" style="height: 40px; border: 0; background-color: #edf2f6; display: flex;justify-content:space-between">
+            <div style=" height: 40px; border: 0; background-color: #edf2f6; display: flex;">
+                <div class="" style="margin-left: 0px; height: 26px; width: 220px; margin-top: 6px; margin-bottom: 0px; margin-right: 0px; display: flex; align-items: center;">
+                    <select id="Region2" name="Region2" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 210px; background-color: #fff; margin-left: 5px; border-radius: 0">
+                        <option value="none">请选择</option>
+                    </select>
+                </div>
+                <div class="" style="margin-left: 0px; height: 26px; width: 130px; margin-top: 6px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: flex; align-items: center;">
+                    <select id="GetDataTypeList2" name="GetDataTypeList2" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 120px; background-color: #fff; margin-left: 5px; border-radius: 0">
+                        <option value="none" selected>请选择</option>
+                    </select>
+                </div>
+                <div class="" style="margin-left: 0px; height: 26px; width: 170px; margin-top: 6px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: flex; align-items: center;">
+                    <select id="GetPointList2" name="GetPointList2" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 160px; background-color: #fff; margin-left: 5px; border-radius: 0">
+                        @*<option value=""></option>*@
+                        @*<option value="none" selected disabled hidden>全部节点</option>*@
+                        <option value="all" selected>前五个节点</option>
+                    </select>
+                </div>
+                <div id="hide12" class="" style="margin-left: 0px; height: 26px; width: 110px; margin-top: 6px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: none; align-items: center;">
+                    <select id="GetSWaterList2" name="GetSWaterList2" class="form-control" style="margin-left: 0px; height: 30px; width: 100px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 5px;">
+                        <option value="none" selected>请选择</option>
+                    </select>
+                </div>
+                <div id="hide22" class="" style="margin-left: 0px; height: 26px; width: 110px; margin-top: 6px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: none; align-items: center;">
+                    <select id="GetSPList2" name="GetSPList2" class="form-control" style="margin-left: 0px; height: 30px; width: 100px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 5px;">
+                        <option value="none" selected>请选择</option>
+                    </select>
+                </div>
+                <div id="srk1" style="width: 350px; height: 30px; color: black;  background-color:#fff; border: 1px solid #ddd; border-radius: 0px; overflow-y: auto; display: flex; flex-wrap: wrap; margin-top: 4px; margin-left: 10px; ">
+                </div>
+                <div id="show4" style="position:absolute;top:80px;left:800px;background-color:#fff;width:550px;height:25px;border:#000 solid 1px;text-align:center;z-index:1000;display:none ">提示:<span style="font-size:16px">[ </span>开始日期(年-月-日 00:00:00),结束日期(年-月-日 23:59:59)<span style="font-size:16px">] </span></div>
+                <div class="right223" style="width: 300px; margin-top: 7px; margin-left:7px;">
+                    <div class="right2231" onmouseover="controlShow4(this)" onmouseout="controlfide4(this)"> 日期： </div>
+                    <input id="sDate2" type="text" class="form-control input-wdatepicker right1121" style="margin-right:5px; height:25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker()" />
+                    <div class="right2231"> &emsp;到&emsp; </div>
+                    <input id="eDate2" type="text" class="form-control input-wdatepicker right1121" style="margin-right: 5px; height: 25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker()" />
+                </div>
+
+                <div class="right15" style="width: 20px; margin-top: 10px; margin-left: 10px; margin-right: 10px; background-color: #edf2f6;">
+                    <div class="right152" style="background-color: #edf2f6;">
+                        <span id="btn_search2" class="glyphicon glyphicon-search right1421" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </div>
+            <button id="btn_download2" class="right16" style=" margin-top: 5px; height: 26px; line-height: 26px; width: 100px; border: 0; border-radius: 10px; background-color: #f87d06; color: #fff; font-weight: bold;">
+                <span class="glyphicon glyphicon-folder-close right161" style="color: #fff; height: 26px; padding-top:4px; margin-left:10px; margin-right:2px;">    </span>
+                明细表
+            </button>
+
+        </div>
+
+        <div class="right41" style="height: 45%; width: 1655px;  border: 0px; display: flex; margin-top: 0px; margin-left: 0px; margin-right: 0px; background-color: #edf2f6; ">
+            <div id="right411" class="" style="margin-right: 10px; height: 100%; width: 445px; background-color: white; border: 0px; border-radius: 10px;">
+                <div id="right411_ename" style="font-size: 16px; height:30px; line-height:30px; margin-left: 5px; font-weight: 600;">
+                    占比分析
+                </div>
+                <div style="font-size: 13px; height:30px; line-height:30px; margin-left: 10px; display:flex;">
+                    <div id="right411_hgl" style="width:150px;">
+                        @*合格率：100%*@
+                    </div>
+                    <div id="right411_button_container" style="margin-left: 0px; height: 30px; width: 120px; margin-top: 3px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: flex; align-items: center;">
+                        <select id="Region4" name="Region4" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 210px; background-color: #216fed; color: #fff; border: 0; border-radius: 10px; margin-left: 5px;" onchange="changeRegion4(this)">
+                            @*<option value="" style="background-color:white; color:black;">暂无日期</option>*@
+
+                        </select>
+                    </div>
+                </div>
+                <div id="right411_echarts" style="height:80%; width: 445px; margin-top:15px;">
+
+                </div>
+            </div>
+            <div id="right412" class="" style="margin-right: 0px; height: 100%; width: 100%; background-color: white; border: 0px; border-radius: 10px;">
+                <div id="right412_ename" style="font-size: 16px; height:30px; line-height:30px; margin-left: 5px; font-weight: 600;">
+                    占比趋势分析
+                </div>
+                <div id="right412_echarts" style="height: 90%; width: 100%; margin-top: 10px; ">
+
+                </div>
+            </div>
+        </div>
+        <div class="right1">
+            <button id="Tab3" class="font13 right11" style="margin-top:5px;border-radius:0" onclick="clickTab3(this)">最值趋势</button>
+            <button id="Tab4" class="font13 right12" style="margin-right: 5px; margin-top: 5px;border-radius:0" onclick="clickTab4(this)">同期对比</button>
+        </div>
+        <div class="right4_buttonlist_2" style="height: 40px; border: 0; background-color: #edf2f6; display: flex;justify-content:space-between">
+            <div style="height: 40px; border: 0; background-color: #edf2f6; display: flex;">
+                <div class="" style="margin-left: 0px; height: 26px; width: 220px; margin-top: 6px; margin-bottom: 0px; margin-right: 0px; display: flex; align-items: center;">
+                    <select id="Region3" name="Region2" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 210px; background-color: #fff; margin-left: 5px; border-radius: 0">
+                        <option value="none">请选择</option>
+                    </select>
+                </div>
+                <div class="" style="margin-left: 0px; height: 26px; width: 130px; margin-top: 6px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: flex; align-items: center;">
+                    <select id="GetDataTypeList3" name="GetDataTypeList3" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 120px; background-color: #fff; margin-left: 5px; border-radius: 0">
+                        <option value="none">请选择</option>
+                    </select>
+                </div>
+                <div class="" style="margin-left: 0px; height: 26px; width: 170px; margin-top: 6px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: flex; align-items: center;">
+                    <select id="GetPointList3" name="GetPointList2" class="form-control right1121" style="margin-left: 0px; height: 30px; width: 160px; background-color: #fff; margin-left: 5px; border-radius: 0">
+                        @*<option value=""></option>*@
+                        @*<option value="none" selected disabled hidden>全部节点</option>*@
+                        <option value="all" selected>全部节点</option>
+                    </select>
+                </div>
+                <div id="hide13" class="" style="margin-left: 0px; height: 26px; width: 110px; margin-top: 6px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: none; align-items: center;">
+                    <select id="GetSWaterList3" name="GetSWaterList2" class="form-control" style="margin-left: 0px; height: 30px; width: 100px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 5px;">
+                        <option value="none" selected>请选择</option>
+                    </select>
+                </div>
+                <div id="hide23" class="" style="margin-left: 0px; height: 26px; width: 110px; margin-top: 6px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: none; align-items: center;">
+                    <select id="GetSPList3" name="GetSPList2" class="form-control" style="margin-left: 0px; height: 30px; width: 100px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 5px;">
+                        <option value="none" selected>请选择</option>
+                    </select>
+                </div>
+                <div id="srk2" style="width: 300px; height: 30px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; overflow-y: auto; display: flex; flex-wrap: wrap; margin-top: 4px; margin-left: 10px; ">
+                </div>
+                <div class="dateTypes" style="margin-left: 0px; height: 26px; width: 100px; margin-top: 6px; margin-bottom: 0px; margin-left: 10px; margin-right: 0px; display: flex; display:none;align-items: center;">
+
+                    <select id="dateType" name="dateType" class="form-control" style="margin-left: 0px; height: 30px; width: 100px; color: black; background-color: #fff; border: 1px solid #ddd; border-radius: 0px; margin-left: 5px;margin-top:4px">
+                    </select>
+                </div>
+                <div id="show5" style="position:absolute;top:470px;left:840px;background-color:#fff;width:450px;height:25px;border:#000 solid 1px;text-align:center;z-index:1000;display:none ">提示:<span style='font-size:16px'>[ </span>开始日期(年-月-日 时:分:秒),结束日期(年-月-日 时:分:秒)<span style='font-size:16px'>] </span></div>
+
+                <div id="right223" class="right223" style="width: 300px; margin-top: 7px; margin-left:7px;">
+                    <div class="right2231" onmouseover="controlShow5(this)" onmouseout="controlfide5(this)"> 日期： </div>
+                    <input id="sDate3" type="text" class="form-control input-wdatepicker right1121" style="margin-right:5px; height:25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker()" />
+                    <div class="right2231"> &emsp;到&emsp; </div>
+                    <input id="eDate3" type="text" class="form-control input-wdatepicker right1121" style="margin-right: 5px; height: 25px; width: 100px; border-radius: 10px;" autocomplete="off" onfocus="WdatePicker()" />
+                </div>
+
+                <div class="right15" style="width: 20px; margin-top: 10px; margin-left: 8px; margin-right: 10px; background-color: #edf2f6;">
+                    <div class="right152" style="background-color: #edf2f6;">
+                        <span id="btn_search3" class="glyphicon glyphicon-search right1421" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </div>
+            <button id="btn_download3" class="right16" style=" margin-top: 5px; height: 26px; line-height:26px; width: 100px; border: 0; border-radius: 10px; background-color: #f87d06; color: #fff; font-weight: bold;">
+                <span class="glyphicon glyphicon-folder-close right161" style="color: #fff; height: 26px; padding-top:4px; margin-left:10px; margin-right:2px;">    </span>
+                明细表
+            </button>
+
+        </div>
+
+        <div id="right42" class="right42" style=" width: 1655px; background-color: #f0f5f9; border: 0px;  margin-top: 0px; margin-left: 0px; margin-right: 0px; background-color: #fff; border: 0; border-radius: 10px;display:flex;flex-direction:column">
+            <div id="right421 " class="downData" style="font-size: 16px; height:30px; line-height:30px; margin-left: 5px; font-weight: 600;">
+
+            </div>
+            <div id="right421_echarts" style="height:90%; width: 1655px; margin-top: 10px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var url_2_3 = "";
+    var url_2_32 = "";
+    var url_2_33 = "";
+    var url_2_4 = "";
+    var areaId = "";
+    var type = "";
+    var sks = [];
+    var sks_name = [];
+    var sks2 = [];
+    var sks_name2 = [];
+    var sks3 = [];
+    var sks_name3 = [];
+    var selected_sks = [];
+    var selected_sks_name = [];
+    var selected_sks1 = [];
+    var selected_sks_name1 = [];
+    var selected_sks2 = [];
+    var selected_sks_name2 = [];
+    var Rareajiekouid = ''
+    var Rareajiekouid2 = ''
+    var Rareajiekouid3 = ''
+    var dateTypes = $(".dateTypes")
+    $(function () {
+
+        $("#Region").bindSelect({
+            url: "/SystemManage/SysDic/GetTreeSelectJson",
+        });
+        //$("#GetDataTypeList").bindSelect({
+        //    url: "/DataSynthetical/CurrentData/GetDataTypeList?areaId=" + $("#Region option:selected").val(),
+        //    text: "Name",
+        //    id: "Value"
+        //});
+        //if ($("#GetDataTypeList option:selected").val() == undefined) {
+        //    url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        //}
+        //else {
+        //    url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+        //    if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+        //        url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+        //    } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+        //        url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+        //    } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+        //        url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+        //    }
+        //}
+        //$("#GetPointList").bindSelect({
+        //    url: url_2_3,
+        //    text: "Name",
+        //    id: "Value",
+        //    search: true
+        //    //multiple: true
+        //});
+        ////console.log($("#GetPointList option:selected").val());
+        //$.ajax({
+        //    type: "GET",
+        //    url: url_2_3,
+        //    dataType: "JSON",
+        //    async: false,
+        //    success: function (adata) {
+        //        //console.log(adata);
+        //        //Data24length = adata.length;
+        //        //console.log(Data24length);
+
+        //        sks = [];
+        //        sks_name = [];
+        //        for (let i = 0; i < adata.length; i++) {
+        //            sks.push(adata[i].Value);
+        //            sks_name.push(adata[i].Name);
+        //        }
+        //        //console.log(datadetail);
+        //        //console.log(sks);
+        //        //onclicknewsearch();
+        //    }
+        //});
+        $("#GetSPList").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetSPList",
+            text: "Name",
+            id: "Value"
+        });
+        $("#GetSWaterList").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetSWaterList",
+            text: "Name",
+            id: "Value"
+        });
+        var Region = $("#Region").select();
+        Region.val("56").trigger("change");
+        Region.change();
+        //console.log($("#Region option:selected").val());
+        //$("#Region option[value='56']").attr("selected", "selected");
+        //$("#Region").val("56");
+        //console.log(document.getElementById("Region"));
+        //console.log($("#Region option:selected").val());
+
+        @* $("#GetDataTypeList").bindSelect({
+            url: "/DataSynthetical/CurrentData/GetDataTypeList?areaId=" + $("#Region option:selected").val(),
+            text: "Name",
+            id: "Value"
+        });*@
+        var GetDataTypeList = $("#GetDataTypeList").select();
+        GetDataTypeList.val("2").trigger("change");
+        GetDataTypeList.change();
+
+
+        gridList();
+        $("#gridList").jqGrid('clearGridData');
+
+        $("#Region2").bindSelect({
+            url: "/SystemManage/SysDic/GetTreeSelectJson",
+        });
+        //$("#GetDataTypeList2").bindSelect({
+        //    url: "/DataSynthetical/DataSearch/GetDataTypeList?areaId=" + $("#Region2 option:selected").val(),
+        //    text: "Name",
+        //    id: "Value"
+        //});
+        //if ($("#GetDataTypeList2 option:selected").val() == undefined) {
+        //    url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val();
+        //}
+        //else {
+        //    url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val() + "&type=" + $("#GetDataTypeList2 option:selected").val();
+        //    if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() != "none") {
+        //        url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val() + "&sWater=" + $("#GetSWaterList2 option:selected").val();
+        //    } else if ($("#GetSWaterList2 option:selected").val() == "none" && $("#GetSPList2 option:selected").val() != "none") {
+        //        url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val();
+        //    } else if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() == "none") {
+        //        url_2_32 += "&sWater=" + $("#GetSWaterList2 option:selected").val();
+        //    }
+        //}
+        //$("#GetPointList2").bindSelect({
+        //    url: url_2_32,
+        //    text: "Name",
+        //    id: "Value"
+        //    //search: true
+        //    //multiple: true
+        //});
+        ////console.log($("#GetPointList option:selected").val());
+        //$.ajax({
+        //    type: "GET",
+        //    url: url_2_32,
+        //    dataType: "JSON",
+        //    async: false,
+        //    success: function (adata) {
+        //        //console.log(adata);
+        //        //Data24length = adata.length;
+        //        //console.log(Data24length);
+        //        sks2 = [];
+        //        sks_name2 = [];
+        //        for (let i = 0; i < adata.length; i++) {
+        //            sks2.push(adata[i].Value);
+        //            sks_name2.push(adata[i].Name);
+        //        }
+        //        //console.log(datadetail);
+        //        //console.log(sks2);
+        //        //onclicknewsearch();
+        //    }
+        //});
+        $("#GetSPList2").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetSPList",
+            text: "Name",
+            id: "Value"
+        });
+        $("#GetSWaterList2").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetSWaterList",
+            text: "Name",
+            id: "Value"
+        });
+
+
+        $("#Region3").bindSelect({
+            url: "/SystemManage/SysDic/GetTreeSelectJson",
+        });
+        //$("#GetDataTypeList3").bindSelect({
+        //    url: "/DataSynthetical/CurrentData/GetDataTypeList?areaId=" + $("#Region3 option:selected").val(),
+        //    text: "Name",
+        //    id: "Value"
+        //});
+        //if ($("#GetDataTypeList3 option:selected").val() == undefined) {
+        //    url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val();
+        //}
+        //else {
+        //    url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val() + "&type=" + $("#GetDataTypeList3 option:selected").val();
+        //    if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() != "none") {
+        //        url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val() + "&sWater=" + $("#GetSWaterList3 option:selected").val();
+        //    } else if ($("#GetSWaterList3 option:selected").val() == "none" && $("#GetSPList3 option:selected").val() != "none") {
+        //        url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val();
+        //    } else if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() == "none") {
+        //        url_2_33 += "&sWater=" + $("#GetSWaterList3 option:selected").val();
+        //    }
+        //}
+        //$("#GetPointList3").bindSelect({
+        //    url: url_2_33,
+        //    text: "Name",
+        //    id: "Value"
+        //    //search: true
+        //    //multiple: true
+        //});
+        ////console.log($("#GetPointList option:selected").val());
+        //$.ajax({
+        //    type: "GET",
+        //    url: url_2_33,
+        //    dataType: "JSON",
+        //    async: false,
+        //    success: function (adata) {
+        //        //console.log(adata);
+        //        //Data24length = adata.length;
+        //        //console.log(Data24length);
+        //        sks3 = [];
+        //        sks_name3 = [];
+        //        for (let i = 0; i < adata.length; i++) {
+        //            sks3.push(adata[i].Value);
+        //            sks_name3.push(adata[i].Name);
+        //        }
+        //        //console.log(datadetail);
+        //        //console.log(sks3);
+        //        //onclicknewsearch();
+        //    }
+        //});
+        $("#GetSPList3").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetSPList",
+            text: "Name",
+            id: "Value"
+        });
+        $("#GetSWaterList3").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetSWaterList",
+            text: "Name",
+            id: "Value"
+        });
+        $("#dateType").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetCycleList",
+            text: "Name",
+            id: "Value"
+        });
+        //loadchart1();
+        //loadchart2();
+        //loadchart3();
+        //clickTab3();
+        /*console.log(sks, sks2, sks3)*/
+        //proportionData();
+        //$("#gridList").jqGrid('setCell', rowId, 'column', '&nbsp');
+
+
+    })
+
+
+    var chartDom1 = document.querySelector('#right411_echarts');
+    var myChart1 = echarts.init(chartDom1);
+    var option1;
+    option1 = {
+        tooltip: {
+            trigger: 'item',
+            position: function (point, params, dom, rect, size) {
+                // 鼠标坐标和提示框位置的参考坐标系是：以外层div的左上角那一点为原点，x轴向右，y轴向下
+                // 提示框位置
+                var x = 0; // x坐标位置
+                var y = 0; // y坐标位置
+
+                // 当前鼠标位置
+                var pointX = point[0];
+                var pointY = point[1];
+
+                // 外层div大小
+                // var viewWidth = size.viewSize[0];
+                // var viewHeight = size.viewSize[1];
+
+                // 提示框大小
+                var boxWidth = size.contentSize[0];
+                var boxHeight = size.contentSize[1];
+
+                // boxWidth > pointX 说明鼠标左边放不下提示框
+                if (boxWidth > pointX) {
+                    x = 5;
+                } else { // 左边放的下
+                    x = pointX - boxWidth;
+                }
+
+                // boxHeight > pointY 说明鼠标上边放不下提示框
+                if (boxHeight > pointY) {
+                    y = 5;
+                } else { // 上边放得下
+                    y = pointY - boxHeight;
+                }
+
+                return [x, y];
+            }
+        },
+        legend: {
+            show: false,
+            orient: 'vertical',
+            left: 'left'
+        },
+        toolbox: {
+            show: true,
+            right: 18,
+            feature: {
+                //restore: { show: true },
+                saveAsImage: { show: true }
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '14%',
+            containLabel: true,
+            height: '65%',
+
+        },
+        series: [
+            {
+                name: 'Access From',
+                type: 'pie',
+                radius: '50%',
+                data: [
+                    { value: 0, name: 'null' },
+                    { value: 0, name: 'null1' },
+                    { value: 0, name: 'null2' }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    //option1 && myChart1.setOption(option1);
+    var chartDom2 = document.querySelector('#right412_echarts');
+    var myChart2 = echarts.init(chartDom2);
+    var option2;
+    option2 = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                // Use axis to trigger tooltip
+                //type: 'shadow',// 'shadow' as default; can also be 'line' or 'shadow',
+                confine: true,
+                enterable: true,
+                position: function (point, params, dom, rect, size) {
+                    var x = 0; // x坐标位置
+                    var y = 0; // y坐标位置
+                    // 当前鼠标位置
+                    var pointX = point[0];
+                    var pointY = point[1];
+                    // 提示框大小
+                    var boxWidth = size.contentSize[0];
+                    var boxHeight = size.contentSize[1];
+
+                    // boxWidth > pointX 说明鼠标左边放不下提示框
+                    if (boxWidth > pointX) {
+                        x = pointX + 10;
+                    } else { // 左边放的下
+                        x = pointX - boxWidth - 10;
+                    }
+
+                    // boxHeight > pointY 说明鼠标上边放不下提示框
+                    if (boxHeight > pointY) {
+                        y = 5;
+                    } else { // 上边放得下
+                        y = pointY - boxHeight;
+                    }
+                    return [x, y];
+                }
+            },
+        },
+        legend: {
+            left: '3%'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '14%',
+            containLabel: true,
+            height: '60%'
+
+        },
+        toolbox: {
+            show: true,
+            right: 18,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: 'none'
+                },
+                saveAsImage: {}
+            }
+        },
+        dataZoom: [
+            {
+                backgroundColor: "rgba(245, 1, 50, 0)",
+                show: true,
+                type: 'slider',
+                bottom: "7%",
+                height: 15
+            }
+        ],
+        yAxis: {
+            type: 'value',
+            name: '百分比 (%)',
+            min: 0,
+            max:100
+        },
+        xAxis: {
+            type: 'category',
+            data: ['nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate']
+        },
+        series: [
+            {
+                name: 'null0',
+                type: 'bar',
+                stack: 'total',
+                //label: {
+                //    show: true
+                //},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [32, 30, 31, 34, 90, 30, 32, 34, 39, 33, 20, 34, 90, 30, 20]
+            },
+            {
+                name: 'null1',
+                type: 'bar',
+                stack: 'total',
+                //label: {
+                //    show: true
+                //},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [12, 13, 10, 34, 90, 30, 21, 13, 90, 23, 21, 13, 90, 23, 10]
+            },
+            {
+                name: 'null3',
+                type: 'bar',
+                stack: 'total',
+                //label: {
+                //    show: true
+                //},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [80, 32, 91, 94, 10, 10, 13, 94, 90, 13, 20, 94, 12, 30, 10]
+            }
+        ]
+    };
+    option2 && myChart2.setOption(option2);
+    let series_arr = []
+    let series_date = []
+    let series_arr1=[]
+    function proportionData() {
+        myChart2.clear()
+        Rareajiekouid2 = ""
+
+        if ($("#GetPointList2 option:selected").val() == "all" || $("#GetPointList2 option:selected").val() == "") {
+            //console.log("onclicknewsearch");
+            for (let i = 0; i < sks2.length; i++) {
+                if (i != (sks2.length - 1)) {
+                    Rareajiekouid2 += sks2[i] + ",";
+                }
+                else {
+                    Rareajiekouid2 += sks2[i];
+                }
+            }
+        }
+        else {
+            for (let i = 0; i < selected_sks1.length; i++) {
+                if (i != (selected_sks1.length - 1)) {
+                    Rareajiekouid2 += selected_sks1[i] + ",";
+                }
+                else {
+                    Rareajiekouid2 += selected_sks1[i] + ",";
+                }
+            }
+        }
+        $.loading("图表加载中");
+        let link = "/DataSynthetical/DataSearch/GetFlowRateData"
+        let Region4 = document.querySelector("#Region4")
+        Region4.innerHTML=""
+        series_arr = []
+        series_date = []
+        series_arr1 = []
+        //console.log(Rareajiekouid2)
+        $.ajax({
+            type: "POST",
+            url: link,
+            data: { areaId: Rareajiekouid2, type: $("#GetDataTypeList2").val(), startDate: $("#sDate2").val(), endDate: $("#eDate2").val() },
+            dataType: "JSON",
+            success: function (adata) {
+                series_date = adata[1]
+                option2.xAxis.data = adata[1]
+                for (let i = 0; i < adata[0].length; i++) {
+                    series_arr.push({
+                        name: adata[2][i],
+                        type: 'bar',
+                        stack: 'total',
+                        //label: {
+                        //    show: true
+                        //},
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: adata[0][i]
+                    })
+                }
+                for (let j = 0; j < adata[1].length; j++) {
+                    Region4.innerHTML += "<option value='" + j + "' >" + adata[1][j] + "</option>"
+                }
+                series_arr1 = adata[3]
+                option2.dataZoom[0].start = (100 - adata[4])
+                option2.series = series_arr
+                option2 && myChart2.setOption(option2);
+                $.loading();
+                $.modalMsg("图表加载成功！", "success");
+                changeRegion4();
+            }
+        });
+    }
+    function changeRegion4 () {
+        myChart1.clear()
+        let id = $("#Region4").val()
+        option1.series[0].data=[]
+        for (let i = 0; i < series_arr1[id].length; i++) {
+            //console.log(series_arr1[id][i].value)
+
+            option1.series[0].data.push({
+                value: series_arr1[id][i].value,
+                name: series_arr1[id][i].name
+            })
+
+        }
+
+        option1.series[0].name = series_date[id]
+        option1 && myChart1.setOption(option1,true);
+    }
+    var chartDom3 = document.querySelector('#right421_echarts');
+    var myChart3 = echarts.init(chartDom3);
+    var option3;
+    var chartDom4 = document.querySelector('#right421_echarts');
+    var myChart4 = echarts.init(chartDom4);
+    var option4;
+    var downData = document.querySelector(".downData")
+
+        option3 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    // Use axis to trigger tooltip
+                    type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+                }
+            },
+            legend: {
+                left: '3%'
+            },
+            grid: {
+                left: 'center',
+
+                bottom: '15%',
+                height: '55%',
+                width: '90%'
+            },
+            toolbox: {
+                right: 18,
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+
+                    saveAsImage: {}
+                }
+            },
+            dataZoom: [
+                {
+                    backgroundColor: "rgba(245, 1, 50, 0)",
+                    show: true,
+                    type: 'slider',
+                    bottom: "3%",
+                    height: 15
+                }
+            ],
+            yAxis: {
+                type: 'value',
+                name: '流量 (m³)',
+
+            },
+            xAxis: {
+                type: 'category',
+
+            },
+            series: [
+                {
+                    name: '最高值',
+                    type: 'bar',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data:[],
+
+                },
+                {
+                    name: '最低值',
+                    type: 'bar',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [],
+                }
+            ]
+        };
+        option3 && myChart3.setOption(option3);
+
+    function loadchart4() {
+
+
+        option4 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    // Use axis to trigger tooltip
+                    type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+                }
+            },
+            legend: {
+                left: '3%'
+            },
+            grid: {
+                left: 'center',
+                bottom: '15%',
+                height: '63%',
+                width:'90%'
+            },
+            toolbox: {
+                right: 18,
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+
+                    saveAsImage: {}
+                }
+            },
+            dataZoom: [
+                {
+                    backgroundColor: "rgba(245, 1, 50, 0)",
+                    show: true,
+                    type: 'slider',
+                    bottom: "3%",
+                    height: 15
+                }
+            ],
+            yAxis: {
+                type: 'value',
+                name: '流量 (m³)'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate', 'nulldate']
+            },
+            series: [
+                {
+                    name: '2019年',
+                    type: 'bar',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [0.320, 0.302, 0.301, 0.334, 0.390, 0.330, 0.320, 0.560, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130, 0.320, 0.302, 0.301, 0.334, 0.390, 0.330, 0.320, 0.560, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130, 0.320, 0.302, 0.301, 0.334, 0.390, 0.330, 0.320, 0.560, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130, 0.320, 0.302, 0.301, 0.334, 0.390, 0.330, 0.320, 0.560, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130],
+                    itemStyle: {
+                        color: "#0303fa"
+                    }
+                },
+                {
+                    name: '2020年',
+                    type: 'bar',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130, 0.123, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130, 0.320, 0.302, 0.301, 0.334, 0.390, 0.330, 0.320, 0.560, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130, 0.320, 0.302, 0.301, 0.334, 0.390, 0.330, 0.320, 0.560, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130, 0.320, 0.302, 0.301, 0.334, 0.390, 0.330, 0.320, 0.560, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130],
+                    itemStyle: {
+                        color: "#03fa09"
+                    }
+                },
+                {
+                    name: '2021年',
+                    type: 'bar',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [0.456, 0.546, 0.651, 0.734, 0.765, 0.800, 0.450, 0.500, 0.703, 0.603, 0.403, 0.605, 0.589, 0.903, 0.840, 0.501, 0.480, 0.762, 0.050, 0.888, 0.330, 0.320, 0.560, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130, 0.320, 0.302, 0.301, 0.334, 0.390, 0.330, 0.320, 0.560, 0.820, 0.832, 0.901, 0.934, 0.129, 0.133, 0.130, 0.320, 0.302, 0.301, 0.334, 0.390, 0.468, 0.320, 0.560, 0.820, 0.462, 0.901, 0.658, 0.129, 0.133, 0.130],
+                    itemStyle: {
+                        color: "#fa03c3"
+                    }
+                }
+            ]
+        };
+
+        option4 && myChart4.setOption(option4);
+    }
+
+    $("#Region").change(function () {
+        sks = [];
+        sks_name = [];
+        selected_sks=[]
+        $("#GetDataTypeList").find("option").remove();
+        document.getElementById("srk").innerHTML = "";
+        $("#GetPointList").append('<option value="all" selected>全部节点</option>');
+        //console.log($("#Region option:selected").val());
+        $("#GetDataTypeList").bindSelect({
+            url: "/DataSynthetical/CurrentData/GetDataTypeList?areaId=" + $("#Region option:selected").val(),
+            text: "Name",
+            id: "Value"
+        });
+
+        if ($("#GetDataTypeList option:selected").val() == undefined) {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        }
+        else {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+            if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+                url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+            }
+        }
+
+        //console.log(url_2_3);
+        $("#GetPointList").find("option").remove();
+        $("#GetPointList").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList").bindSelect({
+            url: url_2_3,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+        $.ajax({
+            type: "GET",
+            url: url_2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+        //selected_sks = [];
+        //selected_sks_name = [];
+        //document.getElementById("srk").innerHTML = "";
+        //console.log($("#Region option:selected").val());
+        let checkVal = $("#GetDataTypeList option:selected").val()
+        //console.log($("#Region option:selected").val());
+        let hide1 = document.getElementById("hide1");
+        let hide2 = document.getElementById("hide2");
+        if (checkVal == 2 || checkVal == 3 || checkVal == 4) {
+            hide1.style.display = "flex";
+            hide2.style.display = "flex";
+        }
+        else if (checkVal == 1 || checkVal == 9) {
+            hide1.style.display = "flex";
+            hide2.style.display = "none";
+        }
+        else {
+            hide1.style.display = "none";
+            hide2.style.display = "none";
+        }
+
+    })
+
+    $("#GetDataTypeList").change(function () {
+        let checkVal = $("#GetDataTypeList option:selected").val()
+        //console.log($("#Region option:selected").val());
+        let hide1 = document.getElementById("hide1");
+        let hide2 = document.getElementById("hide2");
+        if (checkVal == 2 || checkVal == 3 || checkVal == 4) {
+            hide1.style.display = "flex";
+            hide2.style.display = "flex";
+        }
+        else if (checkVal == 1 || checkVal == 9) {
+            hide1.style.display = "flex";
+            hide2.style.display = "none";
+        }
+        else {
+            hide1.style.display = "none";
+            hide2.style.display = "none";
+        }
+        sks = [];
+        sks_name = [];
+        selected_sks = []
+        $("#srk")[0].innerHTML=""
+        if ($("#GetDataTypeList option:selected").val() == undefined) {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        }
+        else {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+            if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+                url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList").find("option").remove();
+        $("#GetPointList").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList").bindSelect({
+            url: url_2_3,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+
+        $.ajax({
+            type: "GET",
+            url: url_2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+
+        //selected_sks = [];
+        //selected_sks_name = [];
+        //document.getElementById("srk").innerHTML = "";
+        //console.log($("#GetDataTypeList option:selected").val());
+        //console.log($("#GetDataTypeList"));
+    })
+    let srk = document.getElementById("srk");
+    $("#GetPointList").change(function () {
+        //if ($("#GetPointList option:selected").text() != "全部节点") {
+        //    //console.log($("#GetPointList option:selected").val());
+        //    let ls_selectedid = $("#GetPointList option:selected").val();
+        //}
+
+        if ($("#GetPointList option:selected").text() != "全部节点") {
+            let ls_selectedid = $("#GetPointList option:selected").val();
+            if (selected_sks.indexOf(ls_selectedid) != -1) {
+                alert("请勿重复添加同一节点！");
+            }else {
+                if (selected_sks_name.indexOf("全部节点") != -1) {
+                    srk.innerHTML = ""
+                    selected_sks = []
+                    selected_sks_name = []
+                    selected_sks.push($("#GetPointList option:selected").val());
+                    selected_sks_name.push($("#GetPointList option:selected").text());
+                    srk.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                    + $("#GetPointList option:selected").text() + '<button id="' + $("#GetPointList option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                } else {
+                    selected_sks.push($("#GetPointList option:selected").val());
+                    selected_sks_name.push($("#GetPointList option:selected").text());
+                    srk.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                    + $("#GetPointList option:selected").text() + '<button id="' + $("#GetPointList option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                }
+
+            }
+        } else if ($("#GetPointList option:selected").text() == "全部节点") {
+            srk.innerHTML = ""
+            selected_sks = []
+            selected_sks_name = ['全部节点']
+            srk.innerHTML +=
+                '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+            + $("#GetPointList option:selected").text() + '<button id="' + $("#GetPointList option:selected").val() + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                + '</div>'
+        }
+        //Rareajiekouid2 = $("#GetPointList").val();
+    })
+    function onclickdelete(node) {
+
+            for (let i = 0; i < selected_sks.length; i++) {
+                if (selected_sks[i] == node.id) {
+                    selected_sks.splice(i, 1);
+                    selected_sks_name.splice(i, 1);
+                }
+            }
+            let srk = document.getElementById("srk");
+            srk.innerHTML = '';
+            for (let j = 0; j < selected_sks.length; j++) {
+                srk.innerHTML +=
+                    '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                    + selected_sks_name[j] + '<button id="' + selected_sks[j] + '" onclick="onclickdelete(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                    + '</div>'
+            }
+
+
+    }
+    $("#GetSPList").change(function () {
+        srk.innerHTML = ""
+        sks = [];
+        sks_name = [];
+        selected_sks = []
+        if ($("#GetDataTypeList option:selected").val() == undefined) {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        }
+        else {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+            if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+                url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList").find("option").remove();
+        $("#GetPointList").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList").bindSelect({
+            url: url_2_3,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+
+        $.ajax({
+            type: "GET",
+            url: url_2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+    })
+
+    $("#GetSWaterList").change(function () {
+        srk.innerHTML = ""
+        sks = [];
+        sks_name = [];
+        selected_sks = []
+        if ($("#GetDataTypeList option:selected").val() == undefined) {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val();
+        }
+        else {
+            url_2_3 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region option:selected").val() + "&type=" + $("#GetDataTypeList option:selected").val();
+            if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val() + "&sWater=" + $("#GetSWaterList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() == "none" && $("#GetSPList option:selected").val() != "none") {
+                url_2_3 += "&sPoint=" + $("#GetSPList option:selected").val();
+            } else if ($("#GetSWaterList option:selected").val() != "none" && $("#GetSPList option:selected").val() == "none") {
+                url_2_3 += "&sWater=" + $("#GetSWaterList option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList").find("option").remove();
+        $("#GetPointList").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList").bindSelect({
+            url: url_2_3,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+
+        $.ajax({
+            type: "GET",
+            url: url_2_3,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks = [];
+                sks_name = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks.push(adata[i].Value);
+                    sks_name.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+    })
+
+
+
+    $("#Region2").change(function () {
+        sks2 = [];
+        sks_name2 = [];
+        selected_sks1 = [];
+        $("#GetDataTypeList2").find("option").remove();
+        document.getElementById("srk1").innerHTML = "";
+        $("#GetPointList2").append('<option value="all" selected>前五个节点</option>');
+        //console.log($("#Region option:selected").val());
+        $("#GetDataTypeList2").bindSelect({
+            url: "/DataSynthetical/DataSearch/GetDataTypeList?areaId=" + $("#Region2 option:selected").val(),
+            text: "Name",
+            id: "Value"
+        });
+
+        if ($("#GetDataTypeList2 option:selected").val() == undefined) {
+            url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val();
+        }
+        else {
+            url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val() + "&type=" + $("#GetDataTypeList2 option:selected").val();
+            if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() != "none") {
+                url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val() + "&sWater=" + $("#GetSWaterList2 option:selected").val();
+            } else if ($("#GetSWaterList2 option:selected").val() == "none" && $("#GetSPList2 option:selected").val() != "none") {
+                url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val();
+            } else if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() == "none") {
+                url_2_32 += "&sWater=" + $("#GetSWaterList2 option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList2").find("option").remove();
+        $("#GetPointList2").append('<option value="all" selected>前五个节点</option>');
+        $("#GetPointList2").bindSelect({
+            url: url_2_32,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+        $.ajax({
+            type: "GET",
+            url: url_2_32,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks2 = [];
+                sks_name2 = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks2.push(adata[i].Value);
+                    sks_name2.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+        //selected_sks = [];
+        //selected_sks_name = [];
+        //document.getElementById("srk").innerHTML = "";
+        //console.log($("#Region option:selected").val());
+        let checkVal = $("#GetDataTypeList2 option:selected").val()
+        //console.log($("#Region option:selected").val());
+        let hide1 = document.getElementById("hide12");
+        let hide2 = document.getElementById("hide22");
+        if (checkVal == 2 || checkVal == 3 || checkVal == 4) {
+            hide1.style.display = "flex";
+            hide2.style.display = "flex";
+        }
+        else if (checkVal == 1 || checkVal == 9) {
+            hide1.style.display = "flex";
+            hide2.style.display = "none";
+        }
+        else {
+            hide1.style.display = "none";
+            hide2.style.display = "none";
+        }
+    })
+
+    $("#GetDataTypeList2").change(function () {
+        let checkVal = $("#GetDataTypeList2 option:selected").val()
+        //console.log($("#Region option:selected").val());
+        let hide1 = document.getElementById("hide12");
+        let hide2 = document.getElementById("hide22");
+        if (checkVal == 2 || checkVal == 3 || checkVal == 4) {
+            hide1.style.display = "flex";
+            hide2.style.display = "flex";
+        }
+        else if (checkVal == 1 || checkVal == 9) {
+            hide1.style.display = "flex";
+            hide2.style.display = "none";
+        }
+        else {
+            hide1.style.display = "none";
+            hide2.style.display = "none";
+        }
+        sks2 = [];
+        sks_name2 = [];
+        selected_sks1 = [];
+        $("#srk1")[0].innerHTML=""
+        if ($("#GetDataTypeList2 option:selected").val() == undefined) {
+            url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val();
+        }
+        else {
+            url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val() + "&type=" + $("#GetDataTypeList2 option:selected").val();
+            if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() != "none") {
+                url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val() + "&sWater=" + $("#GetSWaterList2 option:selected").val();
+            } else if ($("#GetSWaterList2 option:selected").val() == "none" && $("#GetSPList2 option:selected").val() != "none") {
+                url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val();
+            } else if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() == "none") {
+                url_2_32 += "&sWater=" + $("#GetSWaterList2 option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList2").find("option").remove();
+        $("#GetPointList2").append('<option value="all" selected>前五个节点</option>');
+        $("#GetPointList2").bindSelect({
+            url: url_2_32,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+
+        $.ajax({
+            type: "GET",
+            url: url_2_32,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks2 = [];
+                sks_name2 = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks2.push(adata[i].Value);
+                    sks_name2.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+
+        //selected_sks = [];
+        //selected_sks_name = [];
+        //document.getElementById("srk").innerHTML = "";
+        //console.log($("#GetDataTypeList option:selected").val());
+        //console.log($("#GetDataTypeList"));
+    })
+
+    $("#GetPointList2").change(function () {
+        //if ($("#GetPointList2 option:selected").text() != "全部节点") {
+        //    //console.log($("#GetPointList option:selected").val());
+        //    let ls_selectedid = $("#GetPointList2 option:selected").val();
+        //}
+        let srk1 = document.getElementById("srk1");
+        if ($("#GetPointList2 option:selected").text() != "前五个节点") {
+            let ls_selectedid = $("#GetPointList2 option:selected").val();
+            if (selected_sks1.indexOf(ls_selectedid) != -1) {
+                alert("请勿重复添加同一节点！");
+            }
+            else {
+                if (selected_sks_name1.indexOf("前五个节点") != -1) {
+                    srk1.innerHTML = ""
+                    selected_sks1 = []
+                    selected_sks_name1 = []
+                    selected_sks1.push($("#GetPointList2 option:selected").val());
+                    selected_sks_name1.push($("#GetPointList2 option:selected").text());
+                    srk1.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                        + $("#GetPointList2 option:selected").text() + '<button id="' + $("#GetPointList2 option:selected").val() + '" onclick="onclickdelete1(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                } else {
+                    selected_sks1.push($("#GetPointList2 option:selected").val());
+                    selected_sks_name1.push($("#GetPointList2 option:selected").text());
+                    srk1.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                        + $("#GetPointList2 option:selected").text() + '<button id="' + $("#GetPointList2 option:selected").val() + '" onclick="onclickdelete1(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                }
+            }
+        } else if ($("#GetPointList2 option:selected").text() == "前五个节点") {
+            srk1.innerHTML = ""
+            selected_sks1 = []
+            selected_sks_name1 = ['前五个节点']
+            srk1.innerHTML +=
+                '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                + $("#GetPointList2 option:selected").text() + '<button id="' + $("#GetPointList2 option:selected").val() + '" onclick="onclickdelete1(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                + '</div>'
+        }
+        //Rareajiekouid2 = $("#GetPointList2").val();
+    })
+    function onclickdelete1(node) {
+
+            for (let i = 0; i < selected_sks1.length; i++) {
+                if (selected_sks1[i] == node.id) {
+                    selected_sks1.splice(i, 1);
+                    selected_sks_name1.splice(i, 1);
+                }
+            }
+            let srk1 = document.getElementById("srk1");
+            srk1.innerHTML = '';
+            for (let j = 0; j < selected_sks1.length; j++) {
+                srk1.innerHTML +=
+                    '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                    + selected_sks_name1[j] + '<button id="' + selected_sks1[j] + '" onclick="onclickdelete1(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                    + '</div>'
+            }
+
+
+    }
+    $("#GetSPList2").change(function () {
+        sks2 = [];
+        sks_name2 = [];
+        selected_sks1 = [];
+        document.getElementById("srk1").innerHTML = "";
+        if ($("#GetDataTypeList2 option:selected").val() == undefined) {
+            url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val();
+        }
+        else {
+            url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val() + "&type=" + $("#GetDataTypeList2 option:selected").val();
+            if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() != "none") {
+                url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val() + "&sWater=" + $("#GetSWaterList2 option:selected").val();
+            } else if ($("#GetSWaterList2 option:selected").val() == "none" && $("#GetSPList2 option:selected").val() != "none") {
+                url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val();
+            } else if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() == "none") {
+                url_2_32 += "&sWater=" + $("#GetSWaterList2 option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList2").find("option").remove();
+        $("#GetPointList2").append('<option value="all" selected>前五个节点</option>');
+        $("#GetPointList2").bindSelect({
+            url: url_2_32,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+
+        $.ajax({
+            type: "GET",
+            url: url_2_32,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks2 = [];
+                sks_name2 = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks2.push(adata[i].Value);
+                    sks_name2.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+    })
+
+    $("#GetSWaterList2").change(function () {
+        sks2 = [];
+        sks_name2 = [];
+        selected_sks1 = [];
+        document.getElementById("srk1").innerHTML = "";
+        if ($("#GetDataTypeList2 option:selected").val() == undefined) {
+            url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val();
+        }
+        else {
+            url_2_32 = "/DataSynthetical/DataSearch/GetPointList?areaId=" + $("#Region2 option:selected").val() + "&type=" + $("#GetDataTypeList2 option:selected").val();
+            if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() != "none") {
+                url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val() + "&sWater=" + $("#GetSWaterList2 option:selected").val();
+            } else if ($("#GetSWaterList2 option:selected").val() == "none" && $("#GetSPList2 option:selected").val() != "none") {
+                url_2_32 += "&sPoint=" + $("#GetSPList2 option:selected").val();
+            } else if ($("#GetSWaterList2 option:selected").val() != "none" && $("#GetSPList2 option:selected").val() == "none") {
+                url_2_32 += "&sWater=" + $("#GetSWaterList2 option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList2").find("option").remove();
+        $("#GetPointList2").append('<option value="all" selected>前五个节点</option>');
+        $("#GetPointList2").bindSelect({
+            url: url_2_32,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+
+        $.ajax({
+            type: "GET",
+            url: url_2_32,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks2 = [];
+                sks_name2 = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks2.push(adata[i].Value);
+                    sks_name2.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+    })
+
+    let srk2 = document.getElementById("srk2");
+    $("#Region3").change(function () {
+        srk2.innerHTML=""
+        sks3 = [];
+        sks_name3 = [];
+        selected_sks2 = [];
+        $("#GetDataTypeList3").find("option").remove();
+        //console.log($("#Region option:selected").val());
+        $("#GetDataTypeList3").bindSelect({
+            url: "/DataSynthetical/CurrentData/GetDataTypeList?areaId=" + $("#Region3 option:selected").val(),
+            text: "Name",
+            id: "Value"
+        });
+
+        if ($("#GetDataTypeList3 option:selected").val() == undefined) {
+            url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val();
+        }
+        else {
+            url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val() + "&type=" + $("#GetDataTypeList3 option:selected").val();
+            if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() != "none") {
+                url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val() + "&sWater=" + $("#GetSWaterList3 option:selected").val();
+            } else if ($("#GetSWaterList3 option:selected").val() == "none" && $("#GetSPList3 option:selected").val() != "none") {
+                url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val();
+            } else if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() == "none") {
+                url_2_33 += "&sWater=" + $("#GetSWaterList3 option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList3").find("option").remove();
+        $("#GetPointList3").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList3").bindSelect({
+            url: url_2_33,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+        $.ajax({
+            type: "GET",
+            url: url_2_33,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks3 = [];
+                sks_name3 = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks3.push(adata[i].Value);
+                    sks_name3.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+        //selected_sks = [];
+        //selected_sks_name = [];
+        //document.getElementById("srk").innerHTML = "";
+        //console.log($("#Region option:selected").val());
+        let checkVal = $("#GetDataTypeList3 option:selected").val()
+        //console.log($("#Region option:selected").val());
+        let hide1 = document.getElementById("hide13");
+        let hide2 = document.getElementById("hide23");
+        if (checkVal == 2 || checkVal == 3 || checkVal == 4) {
+            hide1.style.display = "flex";
+            hide2.style.display = "flex";
+        }
+        else if (checkVal == 1 || checkVal == 9) {
+            hide1.style.display = "flex";
+            hide2.style.display = "none";
+        }
+        else {
+            hide1.style.display = "none";
+            hide2.style.display = "none";
+        }
+    })
+
+    $("#GetDataTypeList3").change(function () {
+        let checkVal = $("#GetDataTypeList3 option:selected").val()
+        //console.log($("#Region option:selected").val());
+        let hide1 = document.getElementById("hide13");
+        let hide2 = document.getElementById("hide23");
+        if (checkVal == 2 || checkVal == 3 || checkVal == 4) {
+            hide1.style.display = "flex";
+            hide2.style.display = "flex";
+        }
+        else if (checkVal == 1 || checkVal == 9) {
+            hide1.style.display = "flex";
+            hide2.style.display = "none";
+        }
+        else {
+            hide1.style.display = "none";
+            hide2.style.display = "none";
+        }
+        srk2.innerHTML = ""
+        sks3 = [];
+        sks_name3 = [];
+        selected_sks2 = [];
+        if ($("#GetDataTypeList3 option:selected").val() == undefined) {
+            url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val();
+        }
+        else {
+            url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val() + "&type=" + $("#GetDataTypeList3 option:selected").val();
+            if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() != "none") {
+                url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val() + "&sWater=" + $("#GetSWaterList3 option:selected").val();
+            } else if ($("#GetSWaterList3 option:selected").val() == "none" && $("#GetSPList3 option:selected").val() != "none") {
+                url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val();
+            } else if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() == "none") {
+                url_2_33 += "&sWater=" + $("#GetSWaterList3 option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList3").find("option").remove();
+        $("#GetPointList3").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList3").bindSelect({
+            url: url_2_33,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+        $.ajax({
+            type: "GET",
+            url: url_2_33,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks3 = [];
+                sks_name3 = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks3.push(adata[i].Value);
+                    sks_name3.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+
+    })
+
+    $("#GetPointList3").change(function () {
+        //if ($("#GetPointList3 option:selected").text() != "全部节点") {
+        //    //console.log($("#GetPointList option:selected").val());
+        //    let ls_selectedid = $("#GetPointList3 option:selected").val();
+        //}
+        if ($("#GetPointList3 option:selected").text() != "全部节点") {
+            let ls_selectedid = $("#GetPointList3 option:selected").val();
+            if (selected_sks2.indexOf(ls_selectedid) != -1) {
+                alert("请勿重复添加同一节点！");
+            }
+            else {
+                if (selected_sks_name2.indexOf("全部节点") != -1) {
+                    srk2.innerHTML = ""
+                    selected_sks2 = []
+                    selected_sks_name2 = []
+                    selected_sks2.push($("#GetPointList3 option:selected").val());
+                    selected_sks_name2.push($("#GetPointList3 option:selected").text());
+                    srk2.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                        + $("#GetPointList3 option:selected").text() + '<button id="' + $("#GetPointList3 option:selected").val() + '" onclick="onclickdelete2(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                } else {
+                    selected_sks2.push($("#GetPointList3 option:selected").val());
+                    selected_sks_name2.push($("#GetPointList3 option:selected").text());
+                    srk2.innerHTML +=
+                        '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                        + $("#GetPointList3 option:selected").text() + '<button id="' + $("#GetPointList3 option:selected").val() + '" onclick="onclickdelete2(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                        + '</div>'
+                }
+            }
+        } else if ($("#GetPointList3 option:selected").text() == "全部节点") {
+            srk2.innerHTML = ""
+            selected_sks2 = []
+            selected_sks_name2 = ['全部节点']
+            srk2.innerHTML +=
+                '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                + $("#GetPointList3 option:selected").text() + '<button id="' + $("#GetPointList3 option:selected").val() + '" onclick="onclickdelete2(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                + '</div>'
+        }
+    })
+    function onclickdelete2(node) {
+
+            for (let i = 0; i < selected_sks2.length; i++) {
+                if (selected_sks2[i] == node.id) {
+                    selected_sks2.splice(i, 1);
+                    selected_sks_name2.splice(i, 1);
+                }
+            }
+            let srk2 = document.getElementById("srk2");
+            srk2.innerHTML = '';
+            for (let j = 0; j < selected_sks2.length; j++) {
+                srk2.innerHTML +=
+                    '<div class="" style="height: 20px; width: auto; min-width: 45px; margin-left: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 5px; color: #a29fa0; background-color: #f3f3f5;">'
+                    + selected_sks_name2[j] + '<button id="' + selected_sks2[j] + '" onclick="onclickdelete2(this)" class="glyphicon glyphicon-remove-circle" style="background-color: #c3c2c7; border-radius: 15px; color: #a29fa0; height: 15px; width: 15px; padding-left: 0%; border: transparent;"></button>'
+                    + '</div>'
+            }
+
+
+    }
+
+    $("#GetSPList3").change(function () {
+        srk2.innerHTML = ""
+        sks3 = [];
+        sks_name3 = [];
+        selected_sks2 = [];
+        if ($("#GetDataTypeList3 option:selected").val() == undefined) {
+            url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val();
+        }
+        else {
+            url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val() + "&type=" + $("#GetDataTypeList3 option:selected").val();
+            if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() != "none") {
+                url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val() + "&sWater=" + $("#GetSWaterList3 option:selected").val();
+            } else if ($("#GetSWaterList3 option:selected").val() == "none" && $("#GetSPList3 option:selected").val() != "none") {
+                url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val();
+            } else if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() == "none") {
+                url_2_33 += "&sWater=" + $("#GetSWaterList3 option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList3").find("option").remove();
+        $("#GetPointList3").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList3").bindSelect({
+            url: url_2_33,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+        $.ajax({
+            type: "GET",
+            url: url_2_33,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks3 = [];
+                sks_name3 = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks3.push(adata[i].Value);
+                    sks_name3.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+    })
+
+    $("#GetSWaterList3").change(function () {
+        srk2.innerHTML = ""
+        sks3 = [];
+        sks_name3 = [];
+        selected_sks2 = [];
+        if ($("#GetDataTypeList3 option:selected").val() == undefined) {
+            url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val();
+        }
+        else {
+            url_2_33 = "/DataSynthetical/CurrentData/GetPointList?areaId=" + $("#Region3 option:selected").val() + "&type=" + $("#GetDataTypeList3 option:selected").val();
+            if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() != "none") {
+                url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val() + "&sWater=" + $("#GetSWaterList3 option:selected").val();
+            } else if ($("#GetSWaterList3 option:selected").val() == "none" && $("#GetSPList3 option:selected").val() != "none") {
+                url_2_33 += "&sPoint=" + $("#GetSPList3 option:selected").val();
+            } else if ($("#GetSWaterList3 option:selected").val() != "none" && $("#GetSPList3 option:selected").val() == "none") {
+                url_2_33 += "&sWater=" + $("#GetSWaterList3 option:selected").val();
+            }
+        }
+        //console.log(url_2_3);
+        $("#GetPointList3").find("option").remove();
+        $("#GetPointList3").append('<option value="all" selected>全部节点</option>');
+        $("#GetPointList3").bindSelect({
+            url: url_2_33,
+            text: "Name",
+            id: "Value",
+            search: true
+            //multiple: true
+        });
+        $.ajax({
+            type: "GET",
+            url: url_2_33,
+            dataType: "JSON",
+            success: function (adata) {
+                //console.log(adata);
+                //Data24length = adata.length;
+                //console.log(Data24length);
+                sks3 = [];
+                sks_name3 = [];
+                for (let i = 0; i < adata.length; i++) {
+                    sks3.push(adata[i].Value);
+                    sks_name3.push(adata[i].Name);
+                }
+                //console.log(datadetail);
+                //console.log(sks);
+                //onclicknewsearch();
+            }
+        });
+    })
+    let labels = '数值'
+    function gridList() {
+        var $gridList = $("#gridList");
+        var url_search = "/DataSynthetical/DataSearch/GetHistoryData"
+        $gridList.jqGrid("clearGridData");
+
+        $gridList.dataGrid({
+            url: url_search,
+            height: 650,
+            postData: {
+                sTKey: '56_013_2_1,56_004_2_1,56_002_2_1,56_1019_2_1,56_1127_2_1,56_001_2_1,56_1033_2_1,56_1168_2_1,56_1162_2_1,56_1103_2_1,56_1024_2_1,56_1022_2_1,56_1118_2_1,56_062_2_1,56_1007_2_1,56_003_2_1,56_1154_2_1,56_050_2_1,56_005_2_1,56_208_2_1,56_206_2_1,56_1031_2_1,56_209_2_1,56_042_2_1,56_1165_2_1,56_1010_2_1,56_1085_2_1,56_006_2_1,56_1006_2_1,56_1032_2_1,56_1030_2_1,56_1087_2_1,56_210_2_1,56_009_2_1,56_1018_2_1,56_010_2_1,56_1157_2_1,56_052_2_1,56_1109_2_1,56_049_2_1,56_1095_2_1,56_021_2_1,56_1111_2_1,56_1167_2_1,56_053_2_1,56_044_2_1,56_1148_2_1,56_1091_2_1,56_1110_2_1,56_1125_2_1,56_1020_2_1,56_045_2_1,56_058_2_1,56_1153_2_1,56_029_2_1,56_1129_2_1,56_1149_2_1,56_1119_2_1,56_011_2_1,56_1150_2_1,56_1106_2_1,56_012_2_1,56_1112_2_1,56_048_2_1,56_1134_2_1,56_025_2_1,56_1140_2_1,56_063_2_1,56_1171_2_1,56_1135_2_1,56_040_2_1,56_1036_2_1,56_1120_2_1,56_016_2_1,56_008_2_1,56_054_2_1,56_1128_2_1,56_1122_2_1,56_1123_2_1,56_1116_2_1,56_1131_2_1,56_051_2_1,56_1035_2_1,56_036_2_1,56_022_2_1,56_1037_2_1,56_1104_2_1,56_205_2_1,56_1005_2_1,56_1004_2_1,56_059_2_1,56_1170_2_1,56_017_2_1,56_207_2_1,56_1097_2_1,56_203_2_1,56_1096_2_1,56_1108_2_1,56_1098_2_1,56_1166_2_1,56_212_2_1,56_1094_2_1,56_1143_2_1,56_019_2_1,56_1021_2_1,56_1159_2_1,56_1126_2_1,56_055_2_1,56_1163_2_1,56_1158_2_1,56_057_2_1,56_007_2_1,56_020_2_1,56_1092_2_1,56_1124_2_1,56_018_2_1,56_1090_2_1,56_1034_2_1,56_1147_2_1,56_201_2_1,56_014_2_1,56_1114_2_1,56_023_2_1,56_1026_2_1,56_1000_2_1,56_1144_2_1,56_032_2_1,56_1151_2_1,56_1008_2_1,56_1107_2_1,56_1136_2_1,56_1028_2_1,56_1121_2_1,56_1002_2_1,56_1009_2_1,56_1012_2_1,56_027_2_1,56_1132_2_1,56_056_2_1,56_039_2_1,56_1101_2_1,56_1027_2_1,56_1138_2_1,56_060_2_1,56_1161_2_1,56_026_2_1,56_028_2_1,56_1088_2_1,56_1137_2_1,56_031_2_1,56_046_2_1,56_1084_2_1,56_1139_2_1,56_1133_2_1,56_1160_2_1,56_030_2_1,56_211_2_1,56_1142_2_1,56_1093_2_1,56_204_2_1,56_015_2_1,56_1023_2_1,56_1146_2_1,56_1105_2_1,56_1152_2_1,56_1155_2_1,56_1086_2_1,56_1145_2_1,56_1083_2_1,56_999_2_1,56_1164_2_1,56_033_2_1,56_998_2_1,56_1089_2_1,56_1038_2_1,56_1003_2_1,56_1011_2_1,56_1029_2_1,56_034_2_1,56_024_2_1,56_1102_2_1,56_043_2_1,56_037_2_1,56_035_2_1,56_1117_2_1,56_038_2_1,56_1082_2_1,56_1156_2_1,56_1025_2_1,56_202_2_1'
+            },
+            colModel: [
+                //{ 'text-align': 'center', 'vertical-align': 'middle', width:100 },
+                { label: '主键', name: 'ID', hidden: true },
+                { label: '监测点名称', name: 'Station_key', width: 550, align: 'center' },
+                { label: '设备采集时间', name: 'Save_date', width: 510, align: 'center' },
+                { label: labels, name: 'Tag_value', width: 520, align: 'center' }
+            ],
+            pager: "#gridPager",
+            sortname: 'Save_date desc',
+            viewrecords: true,
+            rownumWidth: 60,
+
+        });
+
+        $("#btn_search").click(function () {
+            //console.log($("#GetDataTypeList option:selected").val())
+            //动态改变 数值列 表头
+            if ($("#GetDataTypeList option:selected").val() == 1 || $("#GetDataTypeList option:selected").val() == 8 || $("#GetDataTypeList option:selected").val() == 9 || $("#GetDataTypeList option:selected").val() == 83 || $("#GetDataTypeList option:selected").val() == 101 || $("#GetDataTypeList option:selected").val() == 106 || $("#GetDataTypeList option:selected").val() == 111 || $("#GetDataTypeList option:selected").val() == 131 || $("#GetDataTypeList option:selected").val() == 204 || $("#GetDataTypeList option:selected").val() == 451 || $("#GetDataTypeList option:selected").val() == 454 || $("#GetDataTypeList option:selected").val() == 455 || $("#GetDataTypeList option:selected").val() == 421 || $("#GetDataTypeList option:selected").val() == 24 || $("#GetDataTypeList option:selected").val() == 118) {
+                labels = "数值(m<sup>3</sup>/h)";
+            } else if ($("#GetDataTypeList option:selected").val() == 2 || $("#GetDataTypeList option:selected").val() == 6 || $("#GetDataTypeList option:selected").val() == 105 || $("#GetDataTypeList option:selected").val() == 117 || $("#GetDataTypeList option:selected").val() == 203 || $("#GetDataTypeList option:selected").val() == 221 || $("#GetDataTypeList option:selected").val() == 223 || $("#GetDataTypeList option:selected").val() == 224 || $("#GetDataTypeList option:selected").val() == 225 || $("#GetDataTypeList option:selected").val() == 226 || $("#GetDataTypeList option:selected").val() == 522 || $("#GetDataTypeList option:selected").val() == 25) {
+                labels = "数值(MPa)";
+            } else if ($("#GetDataTypeList option:selected").val() == 3 || $("#GetDataTypeList option:selected").val() == 11 || $("#GetDataTypeList option:selected").val() == 14 || $("#GetDataTypeList option:selected").val() == 15 || $("#GetDataTypeList option:selected").val() == 16 || $("#GetDataTypeList option:selected").val() == 17 || $("#GetDataTypeList option:selected").val() == 20 || $("#GetDataTypeList option:selected").val() == 21 || $("#GetDataTypeList option:selected").val() == 23 || $("#GetDataTypeList option:selected").val() == 40 || $("#GetDataTypeList option:selected").val() == 41 || $("#GetDataTypeList option:selected").val() == 44 || $("#GetDataTypeList option:selected").val() == 45 || $("#GetDataTypeList option:selected").val() == 46 || $("#GetDataTypeList option:selected").val() == 47 || $("#GetDataTypeList option:selected").val() == 50 || $("#GetDataTypeList option:selected").val() == 51 || $("#GetDataTypeList option:selected").val() == 26
+                || $("#GetDataTypeList option:selected").val() == 53 || $("#GetDataTypeList option:selected").val() == 54 || $("#GetDataTypeList option:selected").val() == 55 || $("#GetDataTypeList option:selected").val() == 56 || $("#GetDataTypeList option:selected").val() == 57 || $("#GetDataTypeList option:selected").val() == 58 || $("#GetDataTypeList option:selected").val() == 59 || $("#GetDataTypeList option:selected").val() == 501 || $("#GetDataTypeList option:selected").val() == 503 || $("#GetDataTypeList option:selected").val() == 505 || $("#GetDataTypeList option:selected").val() == 506 || $("#GetDataTypeList option:selected").val() == 509 || $("#GetDataTypeList option:selected").val() == 510 || $("#GetDataTypeList option:selected").val() == 512 || $("#GetDataTypeList option:selected").val() == 513 || $("#GetDataTypeList option:selected").val() == 514 || $("#GetDataTypeList option:selected").val() == 515 || $("#GetDataTypeList option:selected").val() == 516 || $("#GetDataTypeList option:selected").val() == 517 || $("#GetDataTypeList option:selected").val() == 519 || $("#GetDataTypeList option:selected").val() == 520) {
+                labels = "数值(mg/L)";
+            } else if ($("#GetDataTypeList option:selected").val() == 4 || $("#GetDataTypeList option:selected").val() == 12 || $("#GetDataTypeList option:selected").val() == 42 || $("#GetDataTypeList option:selected").val() == 511 || $("#GetDataTypeList option:selected").val() == 27) {
+                labels = "数值(NTU)";
+            } else if ($("#GetDataTypeList option:selected").val() == 5 || $("#GetDataTypeList option:selected").val() == 13 || $("#GetDataTypeList option:selected").val() == 43 || $("#GetDataTypeList option:selected").val() == 108 || $("#GetDataTypeList option:selected").val() == 120 || $("#GetDataTypeList option:selected").val() == 201  || $("#GetDataTypeList option:selected").val() == 303 || $("#GetDataTypeList option:selected").val() == 320 || $("#GetDataTypeList option:selected").val() == 453 || $("#GetDataTypeList option:selected").val() == 500) {
+                labels = "数值";
+            } else if ($("#GetDataTypeList option:selected").val() == 18 || $("#GetDataTypeList option:selected").val() == 48 || $("#GetDataTypeList option:selected").val() == 502) {
+                labels = "数值(μs/cm)";
+            } else if ($("#GetDataTypeList option:selected").val() == 19 || $("#GetDataTypeList option:selected").val() == 49 || $("#GetDataTypeList option:selected").val() == 507) {
+                labels = "数值(℃)";
+            } else if ($("#GetDataTypeList option:selected").val() == 22 || $("#GetDataTypeList option:selected").val() == 52) {
+                labels = "数值(mV)";
+            } else if ($("#GetDataTypeList option:selected").val() == 81 || $("#GetDataTypeList option:selected").val() == 91 || $("#GetDataTypeList option:selected").val() == 92 || $("#GetDataTypeList option:selected").val() == 93 || $("#GetDataTypeList option:selected").val() == 400 || $("#GetDataTypeList option:selected").val() == 401 || $("#GetDataTypeList option:selected").val() == 402 || $("#GetDataTypeList option:selected").val() == 403 || $("#GetDataTypeList option:selected").val() == 404
+                || $("#GetDataTypeList option:selected").val() == 405 || $("#GetDataTypeList option:selected").val() == 406 || $("#GetDataTypeList option:selected").val() == 407 || $("#GetDataTypeList option:selected").val() == 408 || $("#GetDataTypeList option:selected").val() == 409 || $("#GetDataTypeList option:selected").val() == 410 || $("#GetDataTypeList option:selected").val() == 411 || $("#GetDataTypeList option:selected").val() == 422 || $("#GetDataTypeList option:selected").val() == 211) {
+                labels = "数值(m)";
+            } else if ($("#GetDataTypeList option:selected").val() == 82 || $("#GetDataTypeList option:selected").val() == 202) {
+                labels = "数值(Hz)";
+            } else if ($("#GetDataTypeList option:selected").val() == 94 || $("#GetDataTypeList option:selected").val() == 115 || $("#GetDataTypeList option:selected").val() == 116 || $("#GetDataTypeList option:selected").val() == 205 || $("#GetDataTypeList option:selected").val() == 119 || $("#GetDataTypeList option:selected").val() == 112 || $("#GetDataTypeList option:selected").val() == 132) {
+                labels = "数值(万m<sup>3</sup>)";
+            } else if ($("#GetDataTypeList option:selected").val() == 135 || $("#GetDataTypeList option:selected").val() == 136 || $("#GetDataTypeList option:selected").val() == 102 || $("#GetDataTypeList option:selected").val() == 113 || $("#GetDataTypeList option:selected").val() == 114  || $("#GetDataTypeList option:selected").val() == 133 || $("#GetDataTypeList option:selected").val() == 134 || $("#GetDataTypeList option:selected").val() == 112
+                 || $("#GetDataTypeList option:selected").val() == 452 || $("#GetDataTypeList option:selected").val() == 107 || $("#GetDataTypeList option:selected").val() == 521 || $("#GetDataTypeList option:selected").val() == 112 || $("#GetDataTypeList option:selected").val() == 528 || $("#GetDataTypeList option:selected").val() == 524 || $("#GetDataTypeList option:selected").val() == 526 || $("#GetDataTypeList option:selected").val() == 527 || $("#GetDataTypeList option:selected").val() == 525 || $("#GetDataTypeList option:selected").val() == 103 || $("#GetDataTypeList option:selected").val() == 104) {
+                labels = "数值(m<sup>3</sup>)";
+            } else if ($("#GetDataTypeList option:selected").val() == 206 || $("#GetDataTypeList option:selected").val() == 222) {
+                labels = "数值(度)";
+            } else if ($("#GetDataTypeList option:selected").val() == 212 || $("#GetDataTypeList option:selected").val() == 213 || $("#GetDataTypeList option:selected").val() == 214 || $("#GetDataTypeList option:selected").val() == 215 || $("#GetDataTypeList option:selected").val() == 216 || $("#GetDataTypeList option:selected").val() == 217) {
+                labels = "数值(%)";
+            } else if ($("#GetDataTypeList option:selected").val() == 218) {
+                labels = "数值(cm)";
+            } else if ($("#GetDataTypeList option:selected").val() == 301) {
+                labels = "数值(kw)";
+            } else if ($("#GetDataTypeList option:selected").val() == 302) {
+                labels = "数值(kvar)";
+            } else if ($("#GetDataTypeList option:selected").val() == 304 || $("#GetDataTypeList option:selected").val() == 305 || $("#GetDataTypeList option:selected").val() == 306 || $("#GetDataTypeList option:selected").val() == 308) {
+                labels = "数值(A)";
+            } else if ($("#GetDataTypeList option:selected").val() == 307) {
+                labels = "数值(V)";
+            } 
+            //else if ( ) {
+            //    labels = "数值(km<sup>3</sup>/h)";
+            //}
+            else if ($("#GetDataTypeList option:selected").val() == 504) {
+                labels = "数值(cells/ml)";
+            } else if ($("#GetDataTypeList option:selected").val() == 508) {
+                labels = "数值(μg/L)";
+            } else if ($("#GetDataTypeList option:selected").val() == 518) {
+                labels = "数值(个/ml)";
+            } else if ($("#GetDataTypeList option:selected").val() == 530) {
+                labels = "数值(m<sup>3</sup>/s)";
+            } else if ($("#GetDataTypeList option:selected").val() == 450) {
+                labels = "数值(km<sup>3</sup>/h)";
+            }
+            else {
+                labels = "数值";
+               
+            }
+            //console.log("1111111111")
+            Rareajiekouid = ''
+            if ($("#GetPointList option:selected").val() == "all") {
+                //console.log("onclicknewsearch");
+                for (let i = 0; i < sks.length; i++) {
+                    if (i != (sks.length - 1)) {
+                        Rareajiekouid += sks[i] + ",";
+                    }
+                    else {
+                        Rareajiekouid += sks[i];
+                    }
+                }
+            }
+            else {
+                for (let i = 0; i < selected_sks.length; i++) {
+                    if (i != (selected_sks.length - 1)) {
+                        Rareajiekouid += selected_sks[i] + ",";
+                    }
+                    else {
+                        Rareajiekouid += selected_sks[i] ;
+                    }
+                }
+            }
+            if ($("#GetPointList option:selected").val() != "all" && selected_sks.length == 0) {
+                //console.log("1");
+                alert("请选择节点进行查询")
+            }
+            else {
+                var $gridList = $("#gridList");
+                $gridList.jqGrid("clearGridData");
+                //设置动态表头
+                $gridList.jqGrid('setLabel', 4, labels)
+                $gridList.jqGrid('setGridParam', {
+                    postData: {
+                        sTKey: Rareajiekouid,
+                        max: $("#max1").val(),
+                        min: $("#min1").val(),
+                        startDate: $("#sDate1").val(),
+                        endDate: $("#eDate1").val(),
+                        startTime: $("#sTime1").val(),
+                        endTime: $("#eTime1").val()
+                    },
+                }).trigger('reloadGrid');
+            }
+        });
+
+    }
+    $("#btn_download").click(function () {
+        Rareajiekouid = ''
+        if ($("#GetPointList option:selected").val() == "all") {
+            //console.log("onclicknewsearch");
+            for (let i = 0; i < sks.length; i++) {
+                if (i != (sks.length - 1)) {
+                    Rareajiekouid += sks[i] + ",";
+                }
+                else {
+                    Rareajiekouid += sks[i];
+                }
+            }
+        }
+        else {
+            for (let i = 0; i < selected_sks.length; i++) {
+                if (i != (selected_sks.length - 1)) {
+                    Rareajiekouid += selected_sks[i] + ",";
+                }
+                else {
+                    Rareajiekouid += selected_sks[i];
+                }
+            }
+        }
+        if ($("#Region").find("option:selected").text() != "请选择") {
+            $.loading(true);
+            $.ajax({
+                type: "POST",
+                url: "/DataSynthetical/DataSearch/GetDownloadJson",
+                data: { sTKey: Rareajiekouid, max: $("#max1").val(), min: $("#min1").val(), startDate: $("#sDate1").val(), endDate: $("#eDate1").val(), startTime: $("#sTime1").val(), endTime: $("#eTime1").val() },
+                success: function (adata) {
+                    let link = document.createElement('a');
+                    link.href = adata;
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    $.loading();
+                    $.modalMsg("导出Excel成功！", "success");
+                }
+            })
+        } else {
+            $.modalMsg("导出明细表请选择筛选条件！", "warning");
+        }
+
+    });
+
+
+    var right2_record = document.getElementById('right2_record');
+    var right3 = document.getElementById('right3');
+    var right4 = document.getElementById('right4');
+    var button3 = document.getElementById('button3');
+
+    function clickTab1() {
+          //  console.log("1");
+        $(".sumShow").css("display", "flex")
+        let Tab1 = document.getElementById('Tab1');
+        let Tab2 = document.getElementById('Tab2');
+        Tab1.style.backgroundColor = '#ff8824';
+        Tab2.style.backgroundColor = '#216fed';
+        document.getElementById("btn_download").style.display = "flex";
+        right2.style.display = "flex";
+        right3.style.display = "flex";
+        right4.style.display = "none";
+    }
+
+    function clickTab2() {
+        clickTab3()
+        $("input[type='checkbox']")[0].checked = false
+        $("input[type='checkbox']")[1].checked = false
+        $("input[type='checkbox']")[2].checked = false
+        $("#sumNum").html("")
+        $("#maxNum").html("")
+        $("#minNum").html("")
+        $(".sumShow").css("display","none")
+        let Tab1 = document.getElementById('Tab1');
+        let Tab2 = document.getElementById('Tab2');
+        document.getElementById("btn_download").style.display = "none";
+        Tab1.style.backgroundColor = '#216fed';
+        Tab2.style.backgroundColor = '#ff8824';
+        right2.style.display = "none";
+        right3.style.display = "none";
+        right4.style.display = "block";
+        myChart3.resize()
+        myChart4.resize()
+        myChart1.resize()
+        myChart2.resize()
+        $("#btn_search3").click()
+        $("#btn_search2").click()
+        
+    }
+    function sumChange() {
+        console.log($("input[type='checkbox']")[0].checked == true)
+        if ($("input[type='checkbox']")[0].checked == true) {
+            $.ajax({
+                type: "POST",
+                url: "/DataSynthetical/DataSearch/GetSumValue",
+                data: { sTKey: Rareajiekouid, max: $("#max1").val(), min: $("#min1").val(), startDate: $("#sDate1").val(), endDate: $("#eDate1").val(), startTime: $("#sTime1").val(), endTime: $("#eTime1").val() },
+                success: function (adata) {
+                    //console.log(adata)
+                    $("#sumNum").html(adata)
+                }
+            });
+        } else {
+            $("#sumNum").html("")
+        }
+   
+    }
+    function maxChange() {
+        if ($("input[type='checkbox']")[1].checked == true) {
+            $.ajax({
+                type: "POST",
+                url: "/DataSynthetical/DataSearch/GetMaxValue",
+                data: { sTKey: Rareajiekouid, max: $("#max1").val(), min: $("#min1").val(), startDate: $("#sDate1").val(), endDate: $("#eDate1").val(), startTime: $("#sTime1").val(), endTime: $("#eTime1").val() },
+                success: function (adata) {
+                    //console.log(adata)
+                    $("#maxNum").html(adata)
+                }
+            });
+        } else {
+            $("#maxNum").html("")
+        }
+    }
+    function minChange() {
+        if ($("input[type='checkbox']")[2].checked == true) {
+            $.ajax({
+                type: "POST",
+                url: "/DataSynthetical/DataSearch/GetMinValue",
+                data: { sTKey: Rareajiekouid, max: $("#max1").val(), min: $("#min1").val(), startDate: $("#sDate1").val(), endDate: $("#eDate1").val(), startTime: $("#sTime1").val(), endTime: $("#eTime1").val() },
+                success: function (adata) {
+                    //console.log(adata)
+                    $("#minNum").html(adata)
+                }
+            });
+        } else {
+            $("#minNum").html("")
+        }
+
+    }
+    let switchF =1
+    function clickTab3() {
+        let show5 = $("#show5")
+        show5[0].innerHTML = ""
+        show5[0].innerHTML = "提示:<span style='font-size:16px'>[ </span>开始日期(年-月-日 时:分:秒)结束日期(年-月-日 时:分:秒)<span style='font-size:16px'>] </span>"
+        document.querySelector("#sDate3").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' }) }
+        document.querySelector("#eDate3").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' }) }
+        document.querySelector("#sDate3").value = ''
+        document.querySelector("#eDate3").value=''
+        $("#sDate3").css("width", "155px")
+        $("#eDate3").css("width", "155px")
+        $("#right223").css("width", "405px")
+        downData.innerHTML = "最值趋势分析";
+        let Tab3 = document.getElementById('Tab3');
+        let Tab4 = document.getElementById('Tab4');
+        $(".dateTypes").css("display", "none")
+        Tab4.style.backgroundColor = '#216fed';
+        Tab3.style.backgroundColor = '#ff8824';
+        switchF = 1
+        $("#btn_search3").click()
+
+    }
+    $("#btn_search3").click(function () {
+        let text = $("#GetDataTypeList3 option:selected").text()
+        let value = $("#dateType").val()
+        Rareajiekouid3 = ''
+        if ($("#GetPointList3 option:selected").val() == "all") {
+            //console.log("onclicknewsearch");
+            for (let i = 0; i < sks3.length; i++) {
+                if (i != (sks3.length - 1)) {
+                    Rareajiekouid3 += sks3[i] + ",";
+                }
+                else {
+                    Rareajiekouid3 += sks3[i];
+                }
+            }
+        }
+        else {
+            for (let i = 0; i < selected_sks2.length; i++) {
+                if (i != (selected_sks2.length - 1)) {
+                    Rareajiekouid3 += selected_sks2[i] + ",";
+                }
+                else {
+                    Rareajiekouid3 += selected_sks2[i] ;
+                }
+            }
+        }
+        if ($("#GetPointList3 option:selected").val() != "all" && selected_sks2.length == 0) {
+            //console.log("1");
+            alert("请选择节点进行查询")
+        }
+        else {
+            $.loading("图表加载中");
+            myChart4.clear();
+
+            let areaId = Rareajiekouid3
+            if (switchF == 1) {
+                let link = "/DataSynthetical/DataSearch/GetMaxMinData"
+                $.ajax({
+                    type: "POST",
+                    url: link ,
+                    data: { stationKey: areaId, type: '', startDate: $("#sDate3").val(), endDate: $("#eDate3").val()},
+                    dataType: "JSON",
+                    success: function (adata) {
+                        //console.log(option3.series[0])
+                        option3.series[0].data = adata[0][0]
+                        option3.series[1].data = adata[0][1]
+                        option3.series[0].name = adata[2][0]
+                        option3.series[1].name = adata[2][1]
+                        option3.xAxis.data = adata[1]
+                        option3.dataZoom[0].start = (100 - adata[4])
+                        option3.yAxis.name = adata[3]
+                        option3 && myChart3.setOption(option3);
+                        $.loading();
+                        $.modalMsg("图表加载成功！", "success");
+                    }
+                });
+            } else {
+                let link = "/DataSynthetical/DataSearch/GetFlowData"
+                $.ajax({
+                    type: "POST",
+                    url: link ,
+                    data: { stationKey: areaId, type: $("#dateType").val(), startDate: $("#sDate3").val(), endDate: $("#eDate3").val()},
+                    dataType: "JSON",
+                    success: function (adata) {
+                        //console.log(option4.series)
+                        option4.series[0].data = adata[0]
+                        option4.series[1].data = adata[1]
+                        option4.series[2].data = adata[2]
+                        option4.series[0].name = adata[4][0]
+                        option4.series[1].name = adata[4][1]
+                        option4.series[2].name = adata[4][2]
+                        option4.xAxis.data = adata[3]
+                        option4.dataZoom[0].start = (100 - adata[6])
+                        option4.yAxis.name = adata[5]
+                        option4 && myChart4.setOption(option4);
+                        $.loading();
+                        $.modalMsg("图表加载成功！", "success");
+                    }
+                });
+            }}
+
+    })
+    function clickTab4() {
+        let show5 = $("#show5")
+        show5[0].innerHTML = ""
+        show5[0].innerHTML = "提示:<span style='font-size:16px'>[ </span>开始日期(年-月-日 00:00:00)结束日期(年-月-日 23:59:59)<span style='font-size:16px'>] </span>"
+        document.querySelector("#sDate3").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd' }) }
+        document.querySelector("#eDate3").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd' }) }
+        document.querySelector("#sDate3").value = ''
+        document.querySelector("#eDate3").value = ''
+        $("#sDate3").css("width", "100px")
+        $("#eDate3").css("width", "100px")
+        $("#right223").css("width", "300px")
+        downData.innerHTML = "同期对比分析";
+        let Tab3 = document.getElementById('Tab3');
+        let Tab4 = document.getElementById('Tab4');
+        $(".dateTypes").css("display", "block")
+        Tab3.style.backgroundColor = '#216fed';
+        Tab4.style.backgroundColor = '#ff8824';
+        myChart3.clear();
+        myChart4.clear();
+        loadchart4();
+        switchF = 2
+        $("#btn_search3").click()
+    }
+
+    $("#btn_search2").click(function () {
+
+        if ($("#GetPointList2 option:selected").val() != "all" && selected_sks1.length == 0) {
+            //console.log("1");
+            alert("请选择节点进行查询")
+        }
+        else {
+            myChart1.clear()
+            proportionData()
+        }
+
+
+    })
+    $("#btn_download2").click(function () {
+        Rareajiekouid2 = ""
+        if ($("#GetPointList2 option:selected").val() == "all") {
+            //console.log("onclicknewsearch");
+            for (let i = 0; i < sks2.length; i++) {
+                if (i != (sks2.length - 1)) {
+                    Rareajiekouid2 += sks2[i] + ",";
+                }
+                else {
+                    Rareajiekouid2 += sks2[i];
+                }
+            }
+        }
+        else {
+            for (let i = 0; i < selected_sks1.length; i++) {
+                if (i != (selected_sks1.length - 1)) {
+                    Rareajiekouid2 += selected_sks1[i] + ",";
+                }
+                else {
+                    Rareajiekouid2 += selected_sks1[i] ;
+                }
+            }
+        }
+        if ($("#GetPointList2 option:selected").val() != "all" && selected_sks1.length == 0) {
+            //console.log("1");
+            alert("请选择节点进行查询")
+        }
+        else {
+            if ($("#Region2").find("option:selected").text() != "请选择") {
+                $.loading(true)
+                let link = "/DataSynthetical/DataSearch/GetFlowRateDowdload"
+                $.ajax({
+                    type: "POST",
+                    url: link,
+                    data: {
+                        stationKey: Rareajiekouid2, type: $("#GetDataTypeList2").val(), startDate: $("#sDate2").val(), endDate: $("#eDate2").val() },
+                    success: function (adata) {
+                        let link = document.createElement('a');
+                        link.href = adata;
+                        link.target = '_blank';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        $.loading()
+                        $.modalMsg("导出占比分析明细表成功！", "success");
+                    }
+                });
+            } else {
+                $.modalMsg("导出明细表请选择筛选条件！", "warning");
+            }
+
+        }
+
+    })
+    $("#btn_download3").click(function () {
+        Rareajiekouid3 = ''
+        if ($("#GetPointList3 option:selected").val() == "all") {
+            //console.log("onclicknewsearch");
+            for (let i = 0; i < sks3.length; i++) {
+                if (i != (sks3.length - 1)) {
+                    Rareajiekouid3 += sks3[i] + ",";
+                }
+                else {
+                    Rareajiekouid3 += sks3[i];
+                }
+            }
+        }
+        else {
+            for (let i = 0; i < selected_sks2.length; i++) {
+                if (i != (selected_sks2.length - 1)) {
+                    Rareajiekouid3 += selected_sks2[i] + ",";
+                }
+                else {
+                    Rareajiekouid3 += selected_sks2[i] ;
+                }
+            }
+        }
+        if ($("#GetPointList3 option:selected").val() != "all" && selected_sks2.length == 0) {
+            //console.log("1");
+            alert("请选择节点进行查询")
+        } else {
+            if ($("#Region3").find("option:selected").text() != "请选择") {
+                if (switchF == 1) {
+                    $.loading(true)
+                    let link = "/DataSynthetical/DataSearch/GetMaxMinDowdload"
+                    $.ajax({
+                        type: "POST",
+                        url: link,
+                        data: { stationKey: Rareajiekouid3, type: 2, startDate: $("#sDate3").val(), endDate: $("#eDate3").val() },
+                        success: function (adata) {
+                            let link = document.createElement('a');
+                            link.href = adata;
+                            link.target = '_blank';
+                            document.body.appendChild(link);
+                            link.click();
+                            link.click();
+                            document.body.removeChild(link);
+                            $.loading()
+                            $.modalMsg("导出最值趋势明细表成功！", "success");
+                        }
+                    });
+                } else if (switchF == 2) {
+                    $.loading(true)
+                    let link = "/DataSynthetical/DataSearch/GetFlowDowdload?="
+                    $.ajax({
+                        type: "POST",
+                        url: link,
+                        data: { stationKey: Rareajiekouid3, type: $("#dateType").val(), startDate: $("#sDate3").val(), endDate: $("#eDate3").val() },
+                        success: function (adata) {
+                            let link = document.createElement('a');
+                            link.href = adata;
+                            link.target = '_blank';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            $.loading()
+                            $.modalMsg("导出同期对比明细表成功！", "success");
+                        }
+                    });
+                }
+            } else {
+                $.modalMsg("导出明细表请选择筛选条件！", "warning");
+            }
+
+        }
+    })
+    $("#dateType").change(function () {
+        let ids = $("#dateType").val()
+        let show5=$("#show5")
+        show5[0].innerHTML=""
+        console.log(ids)
+        if (ids == 1) {
+            document.querySelector("#sDate3").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd' }) }
+            document.querySelector("#eDate3").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM-dd' }) }
+            show5[0].innerHTML = "提示:<span style='font-size:16px'>[ </span>开始日期(年-月-日 00:00:00),结束日期(年-月-日 23:59:59)<span style='font-size:16px'>] </span>"
+        } else {
+            document.querySelector("#sDate3").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM' }) }
+            document.querySelector("#eDate3").onfocus = function () { WdatePicker({ dateFmt: 'yyyy-MM' }) }
+            show5[0].innerHTML = "提示:<span style='font-size:16px'>[ </span>开始日期(年-月 00:00:00),结束日期(年-月 23:59:59)<span style='font-size:16px'>] </span>"
+        }
+    })
+    function controlShow1() {
+        $("#show1").css("display", "block")
+    }
+    function controlfide1() {
+        $("#show1").css("display", "none")
+    }
+    function controlShow2() {
+        $("#show2").css("display", "block")
+    }
+    function controlfide2() {
+        $("#show2").css("display", "none")
+    }
+    function controlShow3() {
+        $("#show3").css("display", "block")
+    }
+    function controlfide3() {
+        $("#show3").css("display", "none")
+    }
+    function controlShow4() {
+        $("#show4").css("display", "block")
+    }
+    function controlfide4() {
+        $("#show4").css("display", "none")
+    }
+    function controlShow5() {
+        $("#show5").css("display", "block")
+    }
+    function controlfide5() {
+        $("#show5").css("display", "none")
+    }
+    window.onresize = function () {
+        var mainH = 0
+        var mainW = 0
+
+        mainH = $(window).height();
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        myChart3.resize()
+        myChart4.resize()
+        myChart1.resize()
+        myChart2.resize()
+    }
+    window.onload = function () {
+        var mainH = 0;
+        var mainW = 0;
+
+        mainH = $(window).height();
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        $("#gridList").setGridHeight($(window).height() * 0.8); // grid_selector 是 DIV 的 ID
+        myChart3.resize();
+        myChart4.resize();
+        myChart1.resize();
+        myChart2.resize();
+
+    }
+    $(window).resize(function () {
+        // 宽度自动适应
+        /* $("#gridList").setGridWidth($(window).width() - 30);*/
+        // 高度自动适应
+        $(window).unbind("onresize");
+        $("#gridList").setGridHeight($(window).height() * 0.8); // grid_selector 是 DIV 的 ID
+
+        $(window).bind("onresize", this);
+    });
+    //var jiekou2_1id = 2;
+    //var jiekou2_1name = '';
+    //var B1length = 0;
+    //var B2length = 0;
+    //var B3length = 0;
+    //var jiekou2_10value1 = 1;
+    //var jiekou2_10value2 = 0;
+    //var Button_ul_23_1_clength = 0;
+    //startDate1 = '';
+    //startDate2 = '';
+    //endDate1 = '';
+    //endDate2 = '';
+    //max1 = '';
+    //max2 = '';
+    //min1 = '';
+    //min2 = '';
+    //jiekou2_2id1 = null;
+    //jiekou2_2id2 = null;
+    //jiekou2_2value1 = null;
+    //jiekou2_2value2 = null;
+    //jiekou2_3value1 = null;
+    //jiekou2_3value2 = null;
+    //datadetaillength = 0;
+
+
+
+    //function jiekou2_1() {
+    //    var urlLink2_1 = '/SystemManage/SysDic/GetItemList?typeId=3';
+    //    var Button1 = document.getElementById("Button_1");
+    //    //console.log(L3);
+    //    $.ajax({
+    //        type: "GET",
+    //        url: urlLink2_1,
+    //        dataType: "JSON",
+    //        success: function (adata) {
+    //            //console.log(adata);
+    //            B1length = adata.length;
+    //            for (let i = 0; i < B1length; i++) {
+    //                let Button_ul_1 = document.getElementById("Button_ul_1");
+    //                Button_ul_1.innerHTML += '<li ><a name="' + adata[i].ItemName +'" id="Button_ul_1_' + adata[i].ItemID + '" onclick="onclickButton_ul_1(this)" href="#">' + adata[i].ItemName + '</a></li>';
+    //            }
+    //        }
+    //    });
+    //}
+
+    //function jiekou2_2() {
+    //    var urlLink2_2 = '/DataSynthetical/CurrentData/GetFactoryList';
+    //    //console.log(L3);
+    //    $.ajax({
+    //        type: "GET",
+    //        url: urlLink2_2,
+    //        dataType: "JSON",
+    //        success: function (adata) {
+    //            B2length = adata.length;
+    //            for (let i = 0; i < B2length; i++) {
+    //                let Button_ul_2_5_c = document.getElementById("Button_ul_2_5_c");
+    //                let Button_ul_3_5_c = document.getElementById("Button_ul_3_5_c");
+    //                Button_ul_2_5_c.innerHTML += '<li ><a id="Button_ul_2_5_c' + i + '" value = "' + adata[i].Value + '" onclick="onclickButton_ul_2_5_c(this)" href="#">' + adata[i].Name + '</a></li>';
+    //                Button_ul_3_5_c.innerHTML += '<li ><a id="Button_ul_3_5_c' + i + '" value = "' + adata[i].Value + '" onclick="onclickButton_ul_3_5_c(this)" href="#">' + adata[i].Name + '</a></li>';
+    //            }
+    //        }
+    //    });
+    //}
+
+    //function jiekou2_3() {
+    //    var urlLink2_3 = '/DataSynthetical/CurrentData/GetDistrictList';
+    //    //console.log(L3);
+    //    $.ajax({
+    //        type: "GET",
+    //        url: urlLink2_3,
+    //        dataType: "JSON",
+    //        success: function (adata) {
+    //            B3length = adata.length;
+    //            for (let i = 0; i < B3length; i++) {
+    //                let Button_ul_2_6_c = document.getElementById("Button_ul_2_6_c");
+    //                let Button_ul_3_6_c = document.getElementById("Button_ul_3_6_c");
+    //                Button_ul_2_6_c.innerHTML += '<li ><a id="Button_ul_2_6_c' + adata[i].Value + '" onclick="onclickButton_ul_2_6_c(this)" href="#">' + adata[i].Name + '</a></li>';
+    //                Button_ul_3_6_c.innerHTML += '<li ><a id="Button_ul_3_6_c' + adata[i].Value + '" onclick="onclickButton_ul_3_6_c(this)" href="#">' + adata[i].Name + '</a></li>';
+    //            }
+    //        }
+    //    });
+    //}
+
+    //function jiekou2_10() {
+    //    var urlLink2_10 = '/DataSynthetical/DataSearch/GetMeterInfoList?itemId=' + jiekou2_1id;
+    //    var Button1 = document.getElementById("Button_1");
+    //    //console.log(L3);
+    //    $.ajax({
+    //        type: "GET",
+    //        url: urlLink2_10,
+    //        dataType: "JSON",
+    //        success: function (adata) {
+    //            //console.log(adata);
+    //            Button_ul_23_1_clength = adata.length;
+    //            let Button_ul_2_1_c = document.getElementById("Button_ul_2_1_c");
+    //            let Button_ul_3_1_c = document.getElementById("Button_ul_3_1_c");
+    //            Button_ul_2_1_c.innerHTML = '';
+    //            Button_ul_3_1_c.innerHTML = '';
+    //            for (let i = 0; i < Button_ul_23_1_clength; i++) {
+    //                Button_ul_2_1_c.innerHTML += '<li ><a id="Button_ul_1_' + i + '" value = "' + adata[i].Value + '" onclick="onclickButton_ul_2_1_c(this)" href="#">' + adata[i].Name + '</a></li>';
+    //                Button_ul_3_1_c.innerHTML += '<li ><a id="Button_ul_1_' + i + '" value = "' + adata[i].Value + '" onclick="onclickButton_ul_3_1_c(this)" href="#">' + adata[i].Name + '</a></li>';
+    //                //console.log(Button_ul_2_1_c.innerHTML);
+    //            }
+    //        }
+    //    });
+    //}
+
+    //function jiekou2_11() {
+    //    var sDate1 = document.getElementById('sDate1').value;
+    //    var sTime1 = document.getElementById('sTime1').value;
+    //    var eDate1 = document.getElementById('eDate1').value;
+    //    var eTime1 = document.getElementById('eTime1').value;
+    //    var max1 = document.getElementById('max1').value;
+    //    var min1 = document.getElementById('min1').value;
+    //    //console.log(jiekou2_1id, jiekou2_10value1, sDate1, sTime1, eDate1, eTime1, max1, min1, jiekou2_2value1, jiekou2_3value1);
+    //    if (jiekou2_1id == 0) {
+    //        alert("请先选择监测数据类型！");
+    //    } else {
+    //        var urlLink2_11 = '/DataSynthetical/DataSearch/GetHistoryData?isOR=false'
+    //        if (jiekou2_10value1 != 0) {
+    //            urlLink2_11 += '&sTKey=' + jiekou2_10value1;
+    //        }
+    //        urlLink2_11 += '&tagKey=' + jiekou2_1id;
+    //        if (max1 != '') {
+    //            urlLink2_11 += '&max=' + max1;
+    //        }
+    //        if (min1 != '') {
+    //            urlLink2_11 += '&min=' + min1;
+    //        }
+    //        if (jiekou2_2value1 != null) {
+    //            urlLink2_11 += '&factory=' + jiekou2_2value1;
+    //        }
+    //        if (jiekou2_3value1 != null) {
+    //            urlLink2_11 += '&district=' + jiekou2_3value1;
+    //        }
+    //        if (sDate1 !='' && sTime1!='') {
+    //            urlLink2_11 += '&startDate=' + sDate1 + ' ' + sTime1 + ':00';
+    //        }
+    //        if (eDate1 != '' && eTime1!='') {
+    //            urlLink2_11 += '&endDate=' + eDate1 + ' ' + eTime1 + ':00';
+    //        }
+    //        console.log(urlLink2_11);
+    //        $.ajax({
+    //            type: "GET",
+    //            url: urlLink2_11,
+    //            dataType: "JSON",
+    //            success: function (adata) {
+    //                console.log(adata);
+    //                datadetaillength = adata.length;
+    //                let datadetail = document.getElementById("datadetail");
+    //                datadetail.innerHTML = '';
+    //                for (let i = 0; i < datadetaillength; i++) {
+    //                    if (i % 3 == 0) {
+    //                        datadetail.innerHTML += '<table class="right312_data" style="height:40px; width:565px;">'
+    //                            + '<tr class="right3121" style="width: 565px;">'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Station_key + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Save_date + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Tag_value + '</td>'
+    //                            + '<td class="right31211" style="width:45px;background-color: #f3f8fe;">' + '</td>';
+    //                            + '</tr>'
+    //                            + '</table>'
+    //                    }
+    //                    else if (i % 3 == 1) {
+    //                        datadetail.innerHTML += '<table class="right312_data" style="height:40px; width:565px;">'
+    //                            + '<tr class="right3121" style="width: 565px;">'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Station_key + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Save_date + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Tag_value + '</td>'
+    //                            + '<td class="right31211" style="width:45px;background-color: #f3f8fe;">' + '</td>';
+    //                            + '</tr>'
+    //                            + '</table>'
+    //                    }
+    //                    else if (i % 3 == 2) {
+    //                        datadetail.innerHTML += '<table class="right312_data" style="height:40px; width:520px;">'
+    //                            + '<tr class="right3121" style="width: 520px;">'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Station_key + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Save_date + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Tag_value + '</td>'
+    //                            + '</tr>'
+    //                            + '</table>'
+    //                    }
+    //                }
+    //                console.log(datadetail);
+    //                let Danwei0 = document.getElementById("danwei0");
+    //                //console.log(Danwei);
+    //                if (jiekou2_1id == 1) {
+    //                    Danwei0.innerHTML = "数值(m<sup>3</sup>)";
+    //                } else if (jiekou2_1id == 2) {
+    //                    Danwei0.innerHTML = "数值(Mpa)";
+    //                } else if (jiekou2_1id == 3) {
+    //                    Danwei0.innerHTML = "数值(mg/L)";
+    //                } else if (jiekou2_1id == 4) {
+    //                    Danwei0.innerHTML = "数值(NTU)";
+    //                }
+
+    //                let Danwei1 = document.getElementById("danwei1");
+    //                //console.log(Danwei);
+    //                if (jiekou2_1id == 1) {
+    //                    Danwei1.innerHTML = "数值(m<sup>3</sup>)";
+    //                } else if (jiekou2_1id == 2) {
+    //                    Danwei1.innerHTML = "数值(Mpa)";
+    //                } else if (jiekou2_1id == 3) {
+    //                    Danwei1.innerHTML = "数值(mg/L)";
+    //                } else if (jiekou2_1id == 4) {
+    //                    Danwei1.innerHTML = "数值(NTU)";
+    //                }
+
+    //                let Danwei2 = document.getElementById("danwei2");
+    //                //console.log(Danwei);
+    //                if (jiekou2_1id == 1) {
+    //                    Danwei2.innerHTML = "数值(m<sup>3</sup>)";
+    //                } else if (jiekou2_1id == 2) {
+    //                    Danwei2.innerHTML = "数值(Mpa)";
+    //                } else if (jiekou2_1id == 3) {
+    //                    Danwei2.innerHTML = "数值(mg/L)";
+    //                } else if (jiekou2_1id == 4) {
+    //                    Danwei2.innerHTML = "数值(NTU)";
+    //                }
+    //            }
+    //        });
+    //    }
+    //}
+
+    //function jiekou2_12() {
+    //    var sDate2 = document.getElementById('sDate2').value;
+    //    var sTime2 = document.getElementById('sTime2').value;
+    //    var eDate2 = document.getElementById('eDate2').value;
+    //    var eTime2 = document.getElementById('eTime2').value;
+    //    var max2 = document.getElementById('max2').value;
+    //    var min2 = document.getElementById('min2').value;
+    //    if (jiekou2_1id == 0) {
+    //        alert("请先选择监测数据类型！");
+    //    } else {
+    //        var urlLink2_12 = '/DataSynthetical/DataSearch/GetHistoryData?isOR=true'
+    //        if (jiekou2_10value2 != 0) {
+    //            urlLink2_12 += '&sTKey=' + jiekou2_10value2;
+    //        }
+    //        urlLink2_12 += '&tagKey=' + jiekou2_1id;
+    //        if (max2 != '') {
+    //            urlLink2_12 += '&max=' + max1;
+    //        }
+    //        if (min2 != '') {
+    //            urlLink2_12 += '&min=' + min1;
+    //        }
+    //        if (jiekou2_2value2 != null) {
+    //            urlLink2_12 += '&factory=' + jiekou2_2value2;
+    //        }
+    //        if (jiekou2_3value2 != null) {
+    //            urlLink2_12 += '&district=' + jiekou2_3value2;
+    //        }
+    //        if (sDate2 != '' && sTime2 != '') {
+    //            urlLink2_12 += '&startDate=' + sDate2 + ' ' + sTime2 + ':00';
+    //        }
+    //        if (eDate1 != '' && eTime1 != '') {
+    //            urlLink2_12 += '&endDate=' + eDate2 + ' ' + eTime2 + ':00';
+    //        }
+    //        console.log(urlLink2_12);
+    //        $.ajax({
+    //            type: "GET",
+    //            url: urlLink2_12,
+    //            dataType: "JSON",
+    //            success: function (adata) {
+    //                console.log(adata);
+    //                datadetaillength = adata.length;
+    //                let datadetail = document.getElementById("datadetail");
+    //                datadetail.innerHTML = '';
+    //                for (let i = 0; i < datadetaillength; i++) {
+    //                    if (i % 3 == 0) {
+    //                        datadetail.innerHTML += '<table class="right312_data" style="height:40px; width:565px;">'
+    //                            + '<tr class="right3121" style="width: 565px;">'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Station_key + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Save_date + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + jiekou2_1name + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Tag_value + '</td>'
+    //                            + '<td class="right31211" style="width:45px;background-color: #f3f8fe;">' + '</td>';
+    //                        + '</tr>'
+    //                            + '</table>'
+    //                    }
+    //                    else if (i % 3 == 1) {
+    //                        datadetail.innerHTML += '<table class="right312_data" style="height:40px; width:565px;">'
+    //                            + '<tr class="right3121" style="width: 565px;">'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Station_key + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Save_date + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + jiekou2_1name + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Tag_value + '</td>'
+    //                            + '<td class="right31211" style="width:45px;background-color: #f3f8fe;">' + '</td>';
+    //                        + '</tr>'
+    //                            + '</table>'
+    //                    }
+    //                    else if (i % 3 == 2) {
+    //                        datadetail.innerHTML += '<table class="right312_data" style="height:40px; width:520px;">'
+    //                            + '<tr class="right3121" style="width: 520px;">'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Station_key + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Save_date + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + jiekou2_1name + '</td>'
+    //                            + '<td class="right31211" style="width: 130px;">' + adata[i].Tag_value + '</td>'
+    //                            + '</tr>'
+    //                            + '</table>'
+    //                    }
+    //                }
+    //                console.log(datadetail);
+    //                let Danwei0 = document.getElementById("danwei0");
+    //                //console.log(Danwei);
+    //                if (jiekou2_1id == 1) {
+    //                    Danwei0.innerHTML = "数值(m<sup>3</sup>)";
+    //                } else if (jiekou2_1id == 2) {
+    //                    Danwei0.innerHTML = "数值(Mpa)";
+    //                } else if (jiekou2_1id == 3) {
+    //                    Danwei0.innerHTML = "数值(mg/L)";
+    //                } else if (jiekou2_1id == 4) {
+    //                    Danwei0.innerHTML = "数值(NTU)";
+    //                }
+
+    //                let Danwei1 = document.getElementById("danwei1");
+    //                //console.log(Danwei);
+    //                if (jiekou2_1id == 1) {
+    //                    Danwei1.innerHTML = "数值(m<sup>3</sup>)";
+    //                } else if (jiekou2_1id == 2) {
+    //                    Danwei1.innerHTML = "数值(Mpa)";
+    //                } else if (jiekou2_1id == 3) {
+    //                    Danwei1.innerHTML = "数值(mg/L)";
+    //                } else if (jiekou2_1id == 4) {
+    //                    Danwei1.innerHTML = "数值(NTU)";
+    //                }
+
+    //                let Danwei2 = document.getElementById("danwei2");
+    //                //console.log(Danwei);
+    //                if (jiekou2_1id == 1) {
+    //                    Danwei2.innerHTML = "数值(m<sup>3</sup>)";
+    //                } else if (jiekou2_1id == 2) {
+    //                    Danwei2.innerHTML = "数值(Mpa)";
+    //                } else if (jiekou2_1id == 3) {
+    //                    Danwei2.innerHTML = "数值(mg/L)";
+    //                } else if (jiekou2_1id == 4) {
+    //                    Danwei2.innerHTML = "数值(NTU)";
+    //                }
+    //            }
+    //        });
+    //    }
+    //}
+
+    //function onclickButton_ul_1(node) {
+    //    jiekou2_1id = parseInt(node.id.charAt(node.id.length - 1));
+    //    jiekou2_1name = node.getAttribute('name');
+    //    //console.log(jiekou2_1id);
+    //    let Button_1_c = document.getElementById("Button_1_c");
+    //    Button_1_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+    //    jiekou2_10();
+    //}
+
+    //function onclickButton_ul_2_1_c(node) {
+    //    jiekou2_10value1 = node.getAttribute("value");
+    //    let Button_2_1_c = document.getElementById("Button_2_1_c");
+    //    Button_2_1_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+    //}
+
+    //function onclickButton_ul_3_1_c(node) {
+    //    jiekou2_10value2 = node.getAttribute("value");
+    //    let Button_3_1_c = document.getElementById("Button_3_1_c");
+    //    Button_3_1_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+    //}
+
+    //function onclickButton_ul_2_5_c(node) {
+    //    jiekou2_2id1 = parseInt(node.id.charAt(node.id.length - 1)) + 1;
+    //    jiekou2_2value1 = node.getAttribute("value");
+    //    let Button_2_5_c = document.getElementById("Button_2_5_c");
+    //    Button_2_5_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+    //    jiekou2_3value1 = null;
+    //    let Button_2_6_c = document.getElementById("Button_2_6_c");
+    //    Button_2_6_c.innerHTML = "请选择 <span class='caret'></span>";
+    //}
+
+    //function onclickButton_ul_2_6_c(node) {
+    //    jiekou2_3value1 = parseInt(node.id.charAt(node.id.length - 1)) + 1;
+    //    let Button_2_6_c = document.getElementById("Button_2_6_c");
+    //    Button_2_6_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+    //    jiekou2_2value1 = null;
+    //    let Button_2_5_c = document.getElementById("Button_2_5_c");
+    //    Button_2_5_c.innerHTML = "请选择 <span class='caret'></span>";
+    //}
+
+    //function onclickButton_ul_3_5_c(node) {
+    //    jiekou2_2id2 = parseInt(node.id.charAt(node.id.length - 1)) + 1;
+    //    jiekou2_2value2 = node.getAttribute("value");
+    //    let Button_3_5_c = document.getElementById("Button_3_5_c");
+    //    Button_3_5_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+    //    jiekou2_3value2 = null;
+    //    let Button_3_6_c = document.getElementById("Button_3_6_c");
+    //    Button_3_6_c.innerHTML = "请选择 <span class='caret'></span>";
+    //}
+
+    //function onclickButton_ul_3_6_c(node) {
+    //    jiekou2_3value2 = parseInt(node.id.charAt(node.id.length - 1)) + 1;
+    //    let Button_3_6_c = document.getElementById("Button_3_6_c");
+    //    Button_3_6_c.innerHTML = node.innerHTML + "<span class='caret'></span>";
+    //    jiekou2_2value2 = null;
+    //    let Button_3_5_c = document.getElementById("Button_3_5_c");
+    //    Button_3_5_c.innerHTML = "请选择 <span class='caret'></span>";
+    //}
+
+    //function onclickSearch1() {
+    //    jiekou2_11();
+    //}
+
+    //function onclickSearch2() {
+    //    jiekou2_12()
+    //}
+
+    //function onclickB_1(node) {
+    //    //console.log(node);
+    //    let B_1_c = document.getElementById('B_1_c');
+    //    B_1_c.innerHTML = node.innerHTML + '<span class="caret"></span>';
+    //}
+</script>

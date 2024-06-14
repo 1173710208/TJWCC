@@ -1,0 +1,520 @@
+﻿.data_wrapper1 {
+    width: 1626px;
+    height: 680px;
+    margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.craftImg_wrapper1 {
+    position: absolute;
+    width: 100%;
+    height: 775px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.craftImg1 {
+    height: 775px;
+    margin: 0 auto;
+    display: block;
+}
+
+.container_wrapper1 {
+    width: 1626px;
+    height: 775px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#crafData_list1 > li {
+    border: 1px solid #787878;
+    position: absolute;
+    cursor: default;
+    list-style: none;
+}
+
+    #crafData_list1 > li > img {
+        position: absolute;
+    }
+
+.crafData_tital1 {
+    font-size: 12px;
+    background: #2e5e75;
+    text-align: center;
+    padding: 5px 0;
+    color: #fff;
+    font-weight: bold;
+}
+
+.crafData_cont1 {
+    font-size: 10px;
+    background: transparent;
+    color: #000;
+    padding: 2px 0;
+}
+
+    .crafData_cont1 > div {
+        overflow: hidden;
+        padding: 1px 5px;
+    }
+
+        .crafData_cont1 > div > div {
+            float: left;
+        }
+
+            .crafData_cont1 > div > div:last-child {
+                float: right;
+                background: #000;
+                color: #05d5dd;
+                padding: 0 2px;
+                min-width: 45px;
+            }
+
+
+
+.heng_content {
+    display: block;
+    /*border: 1px solid #787878;*/
+    position: relative;
+}
+
+    .heng_content > span:first-child {
+        font-size: 12px;
+        padding: 2px 10px;
+        background: #2e5e75;
+        color: #fff;
+        position: relative;
+        top: -2px;
+        height: 22px;
+        display: inline-block
+    }
+
+    .heng_content > span:last-child {
+        font-size: 10px;
+        display: inline-block;
+        background: #000;
+        color: #05d5dd;
+        padding: 0px 5px;
+        position: relative;
+        top: -1px;
+        height: 16px;
+        width: 30px;
+    }
+/* 灰色 */
+#crafData_list1 > li:nth-child(1) {
+    width: 110px;
+    left: 70px;
+    top: 270px;
+}
+
+#crafData_list1 > li:nth-child(2) {
+    width: 105px;
+    height: 22px;
+    top: 443px;
+    left: 65px
+}
+
+    #crafData_list1 > li:nth-child(2) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(3) {
+    width: 105px;
+    height: 22px;
+    top: 610px;
+    left: 160px
+}
+
+    #crafData_list1 > li:nth-child(3) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(4) {
+    width: 105px;
+    height: 22px;
+    top: 610px;
+    left: 295px
+}
+
+    #crafData_list1 > li:nth-child(4) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(5) {
+    width: 105px;
+    height: 22px;
+    top: 145px;
+    left: 640px
+}
+
+    #crafData_list1 > li:nth-child(5) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(6) {
+    width: 105px;
+    height: 22px;
+    top: 193px;
+    left: 620px
+}
+
+    #crafData_list1 > li:nth-child(6) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(7) {
+    width: 105px;
+    height: 22px;
+    top: 390px;
+    left: 463px
+}
+
+    #crafData_list1 > li:nth-child(7) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(8) {
+    width: 105px;
+    height: 22px;
+    top: 390px;
+    left: 620px
+}
+
+    #crafData_list1 > li:nth-child(8) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(9) {
+    width: 105px;
+    height: 22px;
+    top: 505px;
+    left: 430px
+}
+
+    #crafData_list1 > li:nth-child(9) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(10) .heng_content > span:first-child {
+    width: 96px
+}
+
+#crafData_list1 > li:nth-child(11) .heng_content > span:first-child {
+    width: 96px
+}
+
+#crafData_list1 > li:nth-child(12) .heng_content > span:first-child {
+    width: 96px
+}
+
+#crafData_list1 > li:nth-child(13) .heng_content > span:first-child {
+    width: 96px
+}
+
+#crafData_list1 > li:nth-child(10) {
+    width: 140px;
+    height: 22px;
+    top: 670px;
+    left: 400px
+}
+
+    #crafData_list1 > li:nth-child(10) .heng_content {
+        width: 140px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(11) {
+    width: 140px;
+    height: 22px;
+    top: 692px;
+    left: 400px
+}
+
+    #crafData_list1 > li:nth-child(11) .heng_content {
+        width: 140px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(12) {
+    width: 140px;
+    height: 22px;
+    top: 714px;
+    left: 400px
+}
+
+#crafData_list1 > li:nth-child(10) .heng_content {
+    width: 140px;
+    height: 22px;
+}
+
+#crafData_list1 > li:nth-child(13) {
+    width: 140px;
+    height: 22px;
+    top: 736px;
+    left: 400px
+}
+
+    #crafData_list1 > li:nth-child(13) .heng_content {
+        width: 140px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(14) {
+    width: 105px;
+    height: 22px;
+    top: 385px;
+    left: 745px
+}
+
+    #crafData_list1 > li:nth-child(14) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(15) {
+    width: 105px;
+    height: 22px;
+    top: 505px;
+    left: 710px
+}
+
+    #crafData_list1 > li:nth-child(15) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(16) {
+    width: 105px;
+    height: 22px;
+    top: 210px;
+    left: 1080px
+}
+
+    #crafData_list1 > li:nth-child(16) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(17) {
+    width: 105px;
+    height: 22px;
+    top: 234px;
+    left: 1080px
+}
+
+    #crafData_list1 > li:nth-child(17) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(18) {
+    width: 135px;
+    height: 22px;
+    top: 256px;
+    left: 1080px
+}
+
+    #crafData_list1 > li:nth-child(18) .heng_content {
+        width: 135px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(19) {
+    width: 105px;
+    height: 22px;
+    top: 325px;
+    left: 1100px
+}
+
+    #crafData_list1 > li:nth-child(19) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(20) {
+    width: 105px;
+    height: 22px;
+    top: 342px;
+    left: 1100px
+}
+
+    #crafData_list1 > li:nth-child(20) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(21) {
+    width: 105px;
+    height: 22px;
+    top: 405px;
+    left: 1100px
+}
+
+    #crafData_list1 > li:nth-child(21) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(22) {
+    width: 105px;
+    height: 22px;
+    top: 427px;
+    left: 1100px
+}
+
+    #crafData_list1 > li:nth-child(22) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafData_list1 > li:nth-child(23) {
+    width: 105px;
+    height: 22px;
+    top: 580px;
+    left: 990px
+}
+
+    #crafData_list1 > li:nth-child(23) .heng_content {
+        width: 105px;
+        height: 22px;
+    }
+
+#crafWater_list1 > li {
+    color: #fff;
+    position: absolute;
+    overflow: hidden;
+    cursor: default;
+}
+
+    #crafWater_list1 > li > div {
+        float: left;
+    }
+
+        #crafWater_list1 > li > div:first-child {
+            background: #2f753f;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 12px;
+        }
+
+        #crafWater_list1 > li > div:last-child {
+            border: 1px solid #787878;
+            font-size: 10px;
+            padding: 2px;
+        }
+
+            #crafWater_list1 > li > div:last-child > div {
+                background: #000;
+                padding: 0 5px;
+                color: #d5b604;
+                position: relative;
+                top: .5px;
+            }
+
+    #crafWater_list1 > li:nth-child(1) {
+        left: 125px;
+        top: 130px;
+    }
+
+    #crafWater_list1 > li:nth-child(2) {
+        left: 125px;
+        top: 155px;
+    }
+
+    #crafWater_list1 > li:nth-child(3) {
+        left: 100px;
+        top: 200px;
+    }
+
+    #crafWater_list1 > li:nth-child(4) {
+        left: 100px;
+        top: 225px;
+    }
+/*隐藏*/
+.hide_hoverBtn1 {
+    position: absolute;
+    /* border: 1px solid red; */
+}
+
+.hide_content1 {
+    display: none;
+    border: 1px solid #787878;
+    position: relative;
+}
+
+.hide_content2 {
+    display: none;
+    border: 1px solid #787878;
+    position: relative;
+}
+
+div.hide_hoverBtn1:hover .hide_content1 {
+    display: block;
+}
+
+div.hide_hoverBtn1:hover .hide_content2 {
+    display: block;
+}
+
+#crafData_list1 > li:nth-child(24) {
+    left: 780px;
+    top: 270px;
+    border: 0;
+}
+
+    #crafData_list1 > li:nth-child(24) .hide_content1 {
+        width: 140px;
+        position: absolute;
+        top: -30px;
+        right: 80px
+    }
+
+    #crafData_list1 > li:nth-child(24) .hide_content2 {
+        width: 100px;
+        position: absolute;
+        top: -30px;
+        left: 70px
+    }
+
+    #crafData_list1 > li:nth-child(24) .hide_hoverBtn1 {
+        width: 120px;
+        height: 180px;
+        left: 10px;
+        top: 10px;
+    }
+
+#crafData_list1 > li:nth-child(25) {
+    left: 740px;
+    top: 490px;
+    border: 0;
+}
+
+    #crafData_list1 > li:nth-child(25) .hide_content1 {
+        width: 140px;
+        position: absolute;
+        top: 10px;
+        right: 80px
+    }
+
+    #crafData_list1 > li:nth-child(25) .hide_content2 {
+        width: 140px;
+        position: absolute;
+        top: -20px;
+        left: 100px
+    }
+
+    #crafData_list1 > li:nth-child(25) .hide_hoverBtn1 {
+        width: 150px;
+        height: 130px;
+        left: 10px;
+        top: 10px;
+    }

@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script>
+    var keyValue = $.request("keyValue");
+    $(function () {
+        if (!!keyValue) {
+            $.ajax({
+                url: "/BaseData/MeterType/GetFormJson",
+                data: { TypeID: keyValue },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#form1").formSerialize(data);
+                }
+            });
+        }
+    });
+    ///提交form；新增
+    function submitForm() {
+        if (!$('#form1').formValid()) {
+            return false;
+        }
+        $.submitForm({
+            url: "/BaseData/MeterType/SubmitForm?keyValue=" + keyValue,
+            param: $("#form1").formSerialize(),
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+</script>
+
+<form id="form1">
+    <div style="padding-top: 20px; margin-right: 20px;">
+        <table class="form">
+            <tr>
+                <th class="formTitle">型号编号</th>
+                <td class="formValue">
+                    <input id="TYPEID" name="TYPEID" type="text" readonly hidden="hidden" class="form-control" placeholder="请输入型号编号" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">型号名称</th>
+                <td class="formValue">
+                    <input id="TYPENAME" name="TYPENAME" type="text" class="form-control required" placeholder="请输入型号名称" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">水表供应商</th>
+                <td class="formValue">
+                    <input id="MAKERID" name="MAKERID" type="text" class="form-control" placeholder="请输入水表供应商" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">管径(mm)</th>
+                <td class="formValue">
+                    <input id="DIAMETER" name="DIAMETER" type="text" class="form-control" placeholder="请输入管径(mm)" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">水表材质</th>
+                <td class="formValue">
+                    <input id="MATERIAL" name="MATERIAL" type="text" class="form-control" placeholder="请输入水表材质" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">计量等级</th>
+                <td class="formValue">
+                    <input id="GRADE" name="GRADE" type="text" class="form-control" placeholder="请输入计量等级" />
+                </td>
+            </tr>  
+            <tr>
+                <th class="formTitle" valign="top" style="padding-top: 5px;">
+                    备注
+                </th>
+                <td class="formValue">
+                    <textarea id="REMARK" name="REMARK" class="form-control" style="height: 60px;"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

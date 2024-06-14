@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script>
+    var keyValue = $.request("keyValue");
+    $(function () {
+        initControl();
+        if (!!keyValue) {
+            $.ajax({
+                url: "/SystemManage/Area/GetFormJson",
+                data: { keyValue: keyValue },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#form1").formSerialize(data);
+                }
+            });
+        }
+        $("#IssueDate").val(today());
+    });
+    function initControl() {
+        $("#Shift").bindSelect({
+            url: "/Scheduling/Log/GetShiftList",
+            id: "Value",
+            text: "Name"
+        });
+    }
+    function submitForm() {
+        if (!$('#form1').formValid()) {
+            return false;
+        }
+        $.submitForm({
+            url: "/Scheduling/Log/SubmitForm?keyValue=" + keyValue,
+            param: $("#form1").formSerialize(),
+            success: function () {
+                $.currentWindow().$("#gridList").resetSelection();
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+    function today() {
+        var today = new Date();
+        var h = today.getFullYear();
+        var m = today.getMonth() + 1;
+        var d = today.getDate();
+        var hh = today.getHours();
+        var mm = today.getMinutes();
+        var ss = today.getSeconds();
+        m = m < 10 ? "0" + m : m;
+        d = d < 10 ? "0" + d : d;
+        hh = hh < 10 ? "0" + hh : hh;
+        mm = mm < 10 ? "0" + mm : mm;
+        ss = ss < 10 ? "0" + ss : ss;
+        return h + "-" + m + "-" + d + " " + hh + ":" + mm + ":" + ss;
+    }
+</script>
+
+<form id="form1">
+    <div style="padding-top: 20px; margin-right: 20px;">
+        <table class="form">
+            <tr>
+                <th class="formTitle">日期时间</th>
+                <td class="formValue">
+                    <input id="IssueDate" name="IssueDate" type="text" class="form-control input-wdatepicker right1121" style="width: 160px" autocomplete="off" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                </td>
+            </tr>
+            @*<tr>
+                <th class="formTitle">班次</th>
+                <td class="formValue">
+                    <select id="Shift" name="Shift" class="form-control right1121" style="width:90px; margin-left:0px;">
+                        <option value="">请选择</option>
+                    </select>
+                </td>
+            </tr>*@
+            <tr>
+                <th class="formTitle">类型</th>
+                <td class="formValue">
+                    <input id="Effect" name="Effect" type="text" class="form-control" style="width: 200px;">
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle" valign="top" style="padding-top: 5px;">值班记录</th>
+                <td class="formValue">
+                    <textarea id="AccordingTo" name="AccordingTo" class="form-control" style="height: 60px;"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

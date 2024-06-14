@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<style>
+    .form .formTitle {
+        position: relative;
+        left: 0px;
+        text-align: right;
+        white-space: nowrap;
+        font-weight: normal;
+        width: 140px;
+        padding-right: 15px;
+    }
+</style>
+<script>
+    $(function () {
+
+        $("[role='presentation']").click(function () {
+            $("[role='presentation']").removeClass("active");
+            $(this).addClass("active");
+        });
+    });
+
+    function submitForm() { 
+        if (!$('#form1').formValid()) {
+            return false;
+        }
+        $.submitForm({
+            url: "/ToView/ToView/GetSendComm",
+            param: $("#form1").formSerialize(),
+            success: function (data) {
+                alert(JSON.stringify(data).message);
+            }, error: function (data) {
+                alert(data);
+            }
+        })
+    }
+</script>
+<form id="form1">
+    <div style="margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#tab">设置指令下发</a></li>
+            <li role="presentation"><a href="#tab">查询指令信息</a></li>
+        </ul>
+        <div id="tab" style="padding-top: 20px; margin-right: 30px;">
+            <table class="form">
+
+                <tr>
+                    <th class="formTitle">IMEI</th>
+                    <td class="formValue">
+                        <input id="IMEI" name="IMEI" type="text" class="form-control" placeholder="请输入IMEI" />
+                    </td>
+                    <th class="formTitle">过流告警阈值(L/h)</th>
+                    <td class="formValue">
+                        <input id="glgjyz" name="glgjyz" type="text" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                <tr>
+                    <th class="formTitle">持续过流时间(分钟)</th>
+                    <td class="formValue">
+                        <input id="cxglbjsj" name="cxglbjsj" type="text" class="form-control" />
+                    </td>
+                    <th class="formTitle">反流告警阈值(L/h)</th>
+                    <td class="formValue">
+                        <input id="flgjyz" name="flgjyz" type="text" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">持续反流告警时间(分钟)</th>
+                    <td class="formValue">
+                        <input id="cxflgjsj" name="cxflgjsj" type="text" class="form-control" />
+                    </td>
+                    <th class="formTitle">既时告警ID</th>
+                    <td class="formValue">
+                        <input id="jsgjid" name="jsgjid" type="text" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">服务器地址</th>
+                    <td class="formValue">
+                        <input id="ip" name="ip" type="text" class="form-control" />
+                    </td>
+                    <th class="formTitle">APN信息</th>
+                    <td class="formValue">
+                        <input id="apn" name="apn" type="text" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">周期上报离散起始时间</th>
+                    <td class="formValue">
+                        <input id="zqsblsqssj" name="zqsblsqssj" type="text" class="form-control" />
+                    </td>
+                    <th class="formTitle">周期上报离散结束时间</th>
+                    <td class="formValue">
+                        <input id="zqsblsjssj" name="zqsblsjssj" type="text" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">周期上报离散估长</th>
+                    <td class="formValue">
+                        <input id="zqsblsgc" name="zqsblsgc" type="text" class="form-control" />
+                    </td>
+                    <th class="formTitle">周期上报频率(1-24小时)</th>
+                    <td class="formValue">
+                        <input id="zqsbpl" name="zqsbpl" type="text" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">上报重发机制(0-4次)</th>
+                    <td class="formValue">
+                        <input id="sbcfjz" name="sbcfjz" type="text" class="form-control" />
+                    </td>
+                    <th class="formTitle">电池告警阈值(V)</th>
+                    <td class="formValue">
+                        <input id="dcgjyz" name="dcgjyz" type="text" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="formTitle">密集上报起始时间(整点)</th>
+                    <td class="formValue">
+                        <input id="mjsbqssj" name="mjsbqssj" type="text" class="form-control" />
+                    </td>
+                    <th class="formTitle">阀门开关指令(0关 1开)</th>
+                    <td class="formValue">
+                        <input id="fmkgzl" name="fmkgzl" type="text" class="form-control" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,433 @@
+﻿
+@{
+    ViewBag.Title = "短期预测";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script src="~/Areas/DataDisplay/Content/js/main.js"></script>
+
+<script src="~/Areas/DataDisplay/Content/js/echarts.min.js"></script>
+<link href="~/Areas/DataDisplay/Content/css/bootstrap.css" rel="stylesheet" />
+<link href="~/Areas/DataDisplay/Content/css/WaterPrediction.css" rel="stylesheet" />
+
+<style>
+    html {
+        overflow-y: hidden !important;
+    }
+
+    body {
+        overflow-y: hidden !important;
+    }
+</style>
+<div class="main-container" style="height:860px;">
+    <div class="right1">
+        <div class="right11">
+            <button class="font10 right111" onclick="xsData(this)" id="selectColor1">四十八小时</button>
+            <button class="font10 right111" onclick="dayData(this)" id="selectColor2">三天</button>
+            <button class="font10 right111" onclick="weekData(this)" id="selectColor3">三周</button>
+        </div>
+        <div class="right12" style="display:flex;justify-content:space-between;width:240px">
+            <select id="Region" name="Region" class="form-control right1121"  onchange="dayChange(this)" style="margin-left: 0px; height: 26px; width: 100px; background-color: #216fed; color: #fff; border: 0; border-radius: 10px; margin-left: 5px;margin-top:10px;font-size:10px;" >
+                <option value="3">三天</option>
+                <option value="4">四天</option>
+                <option value="5">五天</option>
+                <option value="6">六天</option>
+                <option value="7">七天</option>
+                @*<option value="8">八天</option>
+                <option value="9">九天</option>
+                <option value="10">十天</option>*@
+
+            </select>
+            <button class="font10 right121" onclick="ycbgClick(this)">预测报告</button>
+        </div>
+    </div>
+
+    <div class="right2">
+        <div class="dropdown font10">
+            <select id="ORGANIZEID" name="ORGANIZEID" class="form-control right1121 " style="display: inline; margin-left:820px;width:150px" onchange="organizeidSelect(this)" ></select>
+        </div>
+        <div id="echarts_bottom" style="width:100%;height:95%"></div>
+    </div>
+</div>
+
+<script>
+    //echarts 各节点
+    var chartDom = document.querySelector('#echarts_bottom');
+    var myChart = echarts.init(chartDom);
+    var option;
+    var R1jiekouid=0;
+    var areaName
+    var R1length;
+    function organizeidSelect() {
+        R1jiekouid = $("#ORGANIZEID").val()
+        areaName = jQuery("#ORGANIZEID  option:selected").text()
+        myChart.clear()
+        getLeftDate2();
+    }
+    var select1_type = document.getElementsByClassName("select1_type");
+    //完成接口1.2 获取一级菜单水厂工艺类别
+    var R2jiekouid = 2;
+    var selectColor1 = document.getElementById("selectColor1")
+    var selectColor2 = document.getElementById("selectColor2")
+    var selectColor3 = document.getElementById("selectColor3")
+    function xsData() {
+        $("#Region").css("display", "none")
+
+        selectColor1.style.backgroundColor = "#216fed"
+        selectColor2.style.backgroundColor = "#fff"
+        selectColor3.style.backgroundColor = "#fff"
+        selectColor1.style.color = "#fff"
+        selectColor2.style.color = "#000"
+        selectColor3.style.color = "#000"
+        R1jiekouid
+        R2jiekouid = 1
+        myChart.clear()
+        getLeftDate2()
+    }
+    //选中的天节点
+    var selectDayValue=3;
+    function dayChange(node) {
+        var select = document.getElementById("Region");
+        var index = select.selectedIndex;
+        document.getElementById("selectColor2").innerHTML = select.options[index].text;
+        selectDayValue = node.value;
+        dayData();
+
+    }
+    selectColor2.style.backgroundColor = "#216fed"
+    selectColor1.style.backgroundColor = "#fff"
+    selectColor3.style.backgroundColor = "#fff"
+    function dayData() {
+        selectColor2.style.backgroundColor = "#216fed"
+        selectColor1.style.backgroundColor = "#fff"
+        selectColor3.style.backgroundColor = "#fff"
+        selectColor2.style.color = "#fff"
+        selectColor1.style.color = "#000"
+        selectColor3.style.color = "#000"
+        R1jiekouid
+        R2jiekouid = 2
+        $("#Region").css("display","block")
+        myChart.clear()
+        getLeftDate2()
+
+    }
+    function weekData() {
+        $("#Region").css("display", "none")
+        selectColor3.style.backgroundColor = "#216fed"
+        selectColor2.style.backgroundColor = "#fff"
+        selectColor1.style.backgroundColor = "#fff"
+        selectColor3.style.color = "#fff"
+        selectColor1.style.color = "#000"
+        selectColor2.style.color = "#000"
+        R2jiekouid = 3
+        R1jiekouid
+        myChart.clear()
+        getLeftDate2()
+    }
+
+    var maxData;
+    var minData;
+    var maxdeviation;
+    var mindeviation;
+    var dataShu1 = [];
+    var xdataShu1 = [];
+    var dataShu2 = [];
+    var xdataShu2 = [];
+    var dataShu3 = [];
+    var xdataShu3 = [];
+    var dataShu4 = [];
+    var xdataShu4 = [];
+    var dataShu5;
+    var picBase64Info;
+    var originalVal;
+    function getLeftDate2() {
+        maxData = 0;
+        minData = 0;
+        maxdeviation = 0;
+        mindeviation = 0;
+        dataShu1 = [];
+        xdataShu1 = [];
+        dataShu2 = [];
+        xdataShu2 = [];
+        dataShu3 = [];
+        xdataShu3 = [];
+        dataShu4 = [];
+        xdataShu4 = [];
+        let jieKou1 = '/Scheduling/ShortTime/DemandPrediction?areaId='
+        
+        var urls = jieKou1 + R1jiekouid + '&type=' + R2jiekouid
+        if (R2jiekouid == 2) {
+            urls = jieKou1 + R1jiekouid + '&type=' + R2jiekouid + "&value=" + selectDayValue
+        }
+        $.ajax({
+            type: 'GET',
+            url: urls,
+            dataType: 'JSON',
+            success: function (adata) {
+                for (let i = 0; i < adata[0].length; i++) {
+                    dataShu1.push(adata[0][i][1])
+                    xdataShu1.push(adata[0][i][0])
+                }
+                for (let i = 0; i < adata[1].length; i++) {
+                    if (adata[1][i][1]) {
+                        dataShu2.push(adata[1][i][1])
+                        xdataShu2.push(adata[1][i][0])
+                    }
+
+                }
+                for (let i = 0; i < adata[2].length; i++) {
+                    dataShu3.push(adata[2][i][1])
+                    xdataShu3.push(adata[2][i][0])
+                }
+                for (let i = 0; i < adata[3].length; i++) {
+                    dataShu4.push(adata[3][i][1])
+                    xdataShu4.push(adata[3][i][0])
+                }
+                if (R2jiekouid == 1) {
+                    //option.yAxis[0].interval = 20000000
+                    //option.yAxis[1].interval = 0.1
+                    maxData = adata[4]
+                    minData = adata[5]
+                    maxdeviation = adata[6];
+                    mindeviation = adata[7];
+                    option.yAxis[0].name = '(m³/h)'
+                }
+                if (R2jiekouid == 2) {
+                    //option.yAxis[0].interval = 20000000
+                    //option.yAxis[1].interval = 0.1
+                    maxData = adata[4]
+                    minData = adata[5]
+                    maxdeviation = adata[6];
+                    mindeviation = adata[7];
+                    option.yAxis[0].name = '(m³/d)'
+                }
+                if (R2jiekouid == 3) {
+                    //option.yAxis[0].interval = 20000000
+                    //option.yAxis[1].interval = 0.1
+                    maxData = adata[4]
+                    minData = adata[5]
+                    maxdeviation = adata[6];
+                    mindeviation = adata[7];
+                    option.yAxis[0].name = '(m³/w)'
+                }
+                option.series[0].data = dataShu1
+                option.series[1].data = dataShu2
+                for (let i = 0; i < dataShu2.length; i++) {
+                    dataShu4.unshift("")
+                }
+                option.series[2].data = dataShu4
+                option.series[3].data = dataShu3
+                option.xAxis[0].data = [...xdataShu1, ...xdataShu4]
+                option.yAxis[0].max = maxData
+                option.yAxis[0].min = minData
+                option.yAxis[1].max = maxdeviation
+                option.yAxis[1].min = mindeviation
+                option && myChart.setOption(option);
+            }
+        })
+    }
+    //function onclick_area2(node) {
+    //    R1jiekouid = node.getAttribute("value");
+    //    //jiekou1_24();
+    //}
+    function inits() {
+        dayData()
+    }
+    window.onload = inits();
+    function ycbgClick() {
+        picBase64Info = myChart.getDataURL();
+        $.ajax({
+            url: "/Scheduling/ShortTime/CreatePDF",
+            data: {
+                areaId: R1jiekouid, name:areaName,type: R2jiekouid, base64Info: picBase64Info
+            },
+            type: "POST",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                originalVal = data
+            }
+        });
+        
+        let title = '短期预测：';
+        if (R2jiekouid == 2) {
+            title = title + '三天预测报告'
+        } else if (R2jiekouid == 3) {
+            title = title + '三周预测报告'
+        } else {
+            title = title + '四十八小时预测报告'
+        }
+        $.modalOpen({
+            id: "Details",
+            title: title,
+            url: "/Scheduling/ShortTime/Details?originalVal=" + originalVal,
+            width: "1100px",
+            height: "780px",
+            btn: null,
+        });
+    }
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            formatter: function (params) {
+                let str = '<strong style="color:#000">' + params[0].axisValue + ":" + '短期水量预测' + '</strong>' + "<br />";
+                params.forEach((item) => {
+                    
+                    if (item.data) {
+                        if (item.seriesName == "误差率") {
+                            str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "%" + '</strong>' + "<br />";
+                        } else { str += '<strong style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' + item.color + '"></strong>' + '<strong style="color:#000">' + item.seriesName + '</strong>' + " : " + '<strong style="color:#000">' + item.data + "m³" + '</strong>' + "<br />"; }
+                    }
+                });
+                return str;
+            }
+        },
+        toolbox: {
+
+        },
+        legend: {
+            data: ['实际水量', '预测水量', '预测未来水量', '误差率'],
+            left: 50,
+            top: 0
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: ['2-1', '2-2', '2-3', '2-4', '2-5', '2-6', '2-7', '2-8', '2-9', '2-10', '2-11', '2-12', '2-13', '2-14'],
+                axisPointer: {
+                    type: 'shadow'
+                }
+            }
+        ],
+        dataZoom: [{
+            backgroundColor: "rgba(245, 1, 50, 0)",
+            show: true,
+            type: 'slider',
+
+            height: 30
+        }],
+        yAxis: [
+            {
+                type: 'value',
+                name: '水量(m³/d)',
+                //min: 0,
+                //max: 0,
+                //interval: 80000,
+
+            },
+            {
+                type: 'value',
+                name: '误差率（%）',
+                //min: 0,
+                //max: 0,
+                //interval: 2.5,
+
+            }
+        ],
+        series: [
+            {
+                name: '实际水量',
+                type: 'line',
+                smooth: true,
+                tooltip: {
+                    valueFormatter: function (value) {
+                        return value + ' m³';
+                    }
+                },
+                symbol: "circle",
+                symbolSize: 9,
+                data: [
+                    27.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 72.6, 90.0, 116.4, 83.3
+                ],
+                itemStyle: {
+                    color: "#36bb02"
+                }
+            },
+            {
+                name: '预测水量',
+                type: 'line',
+                smooth: true,
+                symbol: "circle",
+                symbolSize: 7,
+                tooltip: {
+                    valueFormatter: function (value) {
+                        return value + '  m³';
+                    }
+                },
+                itemStyle: {
+                    color: "#ffba02"
+                },
+                data: [
+                    27.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 78.7, 98.8, 116.0, 82.3
+                ]
+            },
+            {
+                name: '预测未来水量',
+                type: 'line',
+                smooth: true,
+                symbol: "roundRect",
+                symbolSize: 7,
+                itemStyle: {
+                    color: "#ffba02",
+                  
+                },
+                lineStyle: {
+                    type: "dashed"
+                },
+                tooltip: {
+                    valueFormatter: function (value) {
+                        return value + '  m³';
+                    }
+                },
+                data: [,,,,,,,,,,,,92.0, 108.2]
+            },
+            {
+                name: '误差率',
+                type: 'bar',
+                yAxisIndex: 1,
+                barWidth: 30,
+                barMaxWidth: 40,
+                barMinWidth: 20,
+                tooltip: {
+                    valueFormatter: function (value) {
+                        return value + '%';
+                    }
+                },
+                data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
+                itemStyle: {
+                    color: "#7cb5ec"
+                },
+                barWidth: 15
+
+            }
+        ]
+    };
+    option && myChart.setOption(option);
+    $(function () {
+        $("#ORGANIZEID").bindSelect({
+            url: "/Scheduling/ShortTime/GetAreaList",
+            id: "Value",
+            text: "Name"
+        });
+        R1jiekouid = $("#ORGANIZEID").val()
+        areaName = jQuery("#ORGANIZEID  option:selected").text()
+    })
+    window.onresize = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height();
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        myChart.resize();
+
+    }
+    window.onload = function () {
+        var mainH = 0
+        var mainW = 0
+        mainH = $(window).height()
+        mainW = $(window).width();
+        $(".main-container").height(mainH);
+        $(".main-container").width(mainW);
+        myChart.resize();
+    }
+</script>

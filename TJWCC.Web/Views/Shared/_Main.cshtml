@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title-天津水务集团辅助调度管理平台</title>
+    <link href="~/Content/js/ALTE/css/AdminLTE.css" rel="stylesheet" />
+    <link href="~/Content/js/bootstrap/bootstrap.css" rel="stylesheet" />
+
+    <script src="~/Content/js/jquery/jquery.js"></script>
+    <script src="~/Content/js/bootstrap/bootstrap.js"></script>
+    <script src="~/Content/js/echarts/echarts.min.js"></script>
+    <script src="~/Content/js/ALTE/js/adminlte.js"></script>
+    <script src="~/Content/js/indextab.js"></script>
+    <!-- 引入地图数据 -->
+    <script src="~/Content/map_data/index_map.js"></script>
+    <script src="~/Content/map_data/second_map1.js"></script>
+    <script src="~/Content/map_data/second_map2.js"></script>
+    <script src="~/Content/map_data/second_map3.js"></script>
+
+    <link href="~/Areas/DataDisplay/Content/css/main.css" rel="stylesheet" />
+    <script src="~/Areas/DataDisplay/Content/js/main.js"></script>
+
+</head>
+@*<body style="background:url(../../Content/img/bg_big.jpg) 100% 100%;">*@
+<body style="background: #EDF2F6; height: 100%; width: 100%">
+    @RenderBody()
+    @Html.AntiForgeryToken()
+
+</body>
+</html>
